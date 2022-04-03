@@ -122,22 +122,6 @@ const App = () => {
 
 
   return (
-
-    // <PaperProvider >
-    //   <AuthContext.Provider value={authContext}>
-    //     <NavigationContainer>
-    //       {loginState.userToken !== null ? (
-    //         <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-    //           <Drawer.Screen name="HomeDrawer" component={NewsFeed} />
-    //         </Drawer.Navigator>
-    //       )
-    //         :
-    //         <RootStackScreen />
-    //       }
-    //     </NavigationContainer>
-    //   </AuthContext.Provider>
-    // </PaperProvider>
-
     <PaperProvider >
       <AuthContext.Provider value={authContext}>
         <NavigationContainer>
@@ -173,7 +157,4 @@ const styles = StyleSheet.create({
   }
 })
 
-export default App
-
-
-// drawerContent={props => <DrawerContent {...props} />}
+export default App;
