@@ -33,7 +33,7 @@ const SignInScreen = ({ navigation }) => {
 
     const { colors } = useTheme();
 
-    const { signIn } = React.useContext(AuthContext);
+    const { authContext: { signIn } } = React.useContext(AuthContext);
 
     const textInputChange = (val) => {
         if (val.trim().length >= 4) {
@@ -135,13 +135,8 @@ const SignInScreen = ({ navigation }) => {
         //     return;
         // }
         let foundUser = {
-            id: 1,
-            email: 'user1@email.com',
-            username: 'charab',
-            password: '8522',
-            userToken: 'token123',
-            userToken: 'hdjasgdbnsvcjhvcs',
-            newUser: true
+            email: userName,
+            password: password
         }
         console.log(foundUser)
         signIn(foundUser);

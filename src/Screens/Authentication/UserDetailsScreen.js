@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
@@ -17,127 +17,20 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
-
+import { GetCollegesData, GetCoursesData } from '../../API/services';
 const UserDetailsScreen = ({ navigation }) => {
-    const courseOptions = [
-        {
-            "id": 1,
-            "name": "btech"
-        },
-        {
-            "id": 2,
-            "name": "BBA"
-        },
-        {
-            "id": 3,
-            "name": "BBM"
-        },
-        {
-            "id": 4,
-            "name": "Pharmacy"
-        }
-    ]
-
-    const collegeOptions = [
-        {
-            "id": 1,
-            "name": "AEC",
-            "cId": 1
-        },
-        {
-            "id": 2,
-            "name": "ACET",
-            "cId": 1
-        },
-        {
-            "id": 3,
-            "name": "ACE",
-            "cId": 1
-        },
-        {
-            "id": 4,
-            "name": "BBA Aditya1",
-            "cId": 2
-        },
-        {
-            "id": 5,
-            "name": "BBA Aditya2",
-            "cId": 2
-        },
-        {
-            "id": 6,
-            "name": "BBM Aditya1",
-            "cId": 3
-        },
-        {
-            "id": 7,
-            "name": "BBM Aditya2",
-            "cId": 3
-        },
-        {
-            "id": 8,
-            "name": "Pharmacy Aditya1",
-            "cId": 4
-        },
-        {
-            "id": 9,
-            "name": "Pharmacy Aditya2",
-            "cId": 4
-        }
-    ]
-
-    const departmentOptions = [
-        {
-            "id": 1,
-            "name": "",
-            "cId": 1
-        },
-        {
-            "id": 2,
-            "name": "ACET",
-            "cId": 1
-        },
-        {
-            "id": 3,
-            "name": "ACE",
-            "cId": 1
-        },
-        {
-            "id": 4,
-            "name": "BBA Aditya1",
-            "cId": 2
-        },
-        {
-            "id": 5,
-            "name": "BBA Aditya2",
-            "cId": 2
-        },
-        {
-            "id": 6,
-            "name": "BBM Aditya1",
-            "cId": 3
-        },
-        {
-            "id": 7,
-            "name": "BBM Aditya2",
-            "cId": 3
-        },
-        {
-            "id": 8,
-            "name": "Pharmacy Aditya1",
-            "cId": 4
-        },
-        {
-            "id": 9,
-            "name": "Pharmacy Aditya2",
-            "cId": 4
-        }
-    ]
 
 
-    const [colleges, setColleges] = React.useState([{}]);
+    const initState = {
+        mobileNumber: '',
+        empId: '',
+        courseId: '',
+        collegeId: '',
+        DeptId: '',
+    }
 
     const [data, setData] = React.useState({
+        id: '',
         uId: '',
         mobileNumber: '',
         check_uIdInputChange: false,
@@ -147,6 +40,60 @@ const UserDetailsScreen = ({ navigation }) => {
         deptId: '',
 
     });
+
+    const { authContext: { detailsUpdate }, loginState } = React.useContext(AuthContext);
+
+    const [colleges, setColleges] = React.useState([{}]);
+    const [courses, setCourses] = React.useState([{}]);
+    const [filteredColleges, setFilteredColleges] = React.useState([{}]);
+    const [depts, setDepts] = React.useState([]);
+
+    useEffect(() => {
+        getColleges();
+        getCourses();
+    }, [])
+
+    const getColleges = () => {
+        GetCollegesData()
+            .then((data) => {
+                console.log(data.data.colleges);
+                setColleges(data.data.colleges)
+                let Engineering_colleges = data.data.colleges.filter(college => college.courseId.courseName === 'Engineering')
+                setFilteredColleges(Engineering_colleges)
+                setDepts(Engineering_colleges[0].departments)
+            })
+            .catch((error) => { console.log(error) })
+    };
+
+    const getCourses = () => {
+        GetCoursesData()
+            .then((data) => {
+                console.log(data.data.result)
+                setCourses(data.data.result)
+            })
+            .catch((error) => { console.log(error) })
+    };
+
+    const filterColleges = (course_Id) => {
+        setData({ ...data, courseId: course_Id })
+        console.log(course_Id)
+        let cols = colleges.filter(college => college.courseId._id === course_Id)
+        setFilteredColleges(cols)
+    }
+
+    const filterDepartment = (college_Id) => {
+        console.log(college_Id)
+        setData({ ...data, collegeId: college_Id })
+        setDepts(colleges.filter(college => college._id === college_Id)[0].departments)
+    }
+
+    const deptSelected = (val) => {
+        console.log(loginState)
+        console.log(val);
+        setData({ ...data, deptId: val, id: loginState.id });
+    }
+
+
 
     const uIdInputChange = (val) => {
         if (val.length == 10) {
@@ -180,27 +127,10 @@ const UserDetailsScreen = ({ navigation }) => {
         }
     }
 
-    const courseInputChange = (val) => {
-        setData({
-            ...data,
-            courseId: val
-        });
-        var temp = collegeOptions.filter(college => college.cId === val);
-        setColleges(temp);
-    }
-
-    const collegeInputChange = (val) => {
-        setData({
-            ...data,
-            collegeId: val
-        });
-    }
-
-    const { detailsUpdate } = React.useContext(AuthContext);
 
     const updateUserProfile = () => {
         console.log(data);
-        detailsUpdate();
+        detailsUpdate(data);
     }
 
     return (
@@ -270,10 +200,11 @@ const UserDetailsScreen = ({ navigation }) => {
                         <Picker
                             selectedValue={data.courseId}
                             onValueChange={(itemValue, itemIndex) =>
-                                courseInputChange(itemValue)}>
+                                filterColleges(itemValue)}>
+                            <Picker.Item label={"--Select Course--"} />
                             {
-                                courseOptions.map((course, myIndex) =>
-                                    <Picker.Item key={myIndex} label={course.name} value={course.id} />
+                                courses.map((course, myIndex) =>
+                                    <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
                                 )
                             }
                         </Picker>
@@ -284,28 +215,29 @@ const UserDetailsScreen = ({ navigation }) => {
                         <Picker
                             selectedValue={data.collegeId}
                             onValueChange={(itemValue, itemIndex) =>
-                                collegeInputChange(itemValue)}>
+                                filterDepartment(itemValue)}>
+                            <Picker.Item label={"--Select College--"} />
                             {
-                                colleges.map((coll, myIndex) =>
-                                    <Picker.Item key={myIndex} label={coll.name} value={coll.id} />
+                                filteredColleges.map((coll, myIndex) =>
+                                    <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
                                 )
                             }
                         </Picker>
                     </View>
-
-                    {/* <Text style={[styles.text_footer, { marginTop: 35 }]}>Department</Text>
+                    <Text style={[styles.text_footer, { marginTop: 35 }]}>Department</Text>
                     <View>
                         <Picker
-                            selectedValue={data.collegeId}
+                            selectedValue={data.deptId}
                             onValueChange={(itemValue, itemIndex) =>
-                                courseInputChange(itemValue)}>
+                                deptSelected(itemValue)}>
+                            <Picker.Item label={"--Select Department--"} />
                             {
-                                colleges.map((coll, myIndex) =>
-                                    <Picker.Item key={myIndex} label={coll.name} value={coll.id} />
+                                depts.map((dept, myIndex) =>
+                                    <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
                                 )
                             }
                         </Picker>
-                    </View> */}
+                    </View>
 
                     <View style={styles.button}>
                         <TouchableOpacity

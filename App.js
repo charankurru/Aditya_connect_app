@@ -11,11 +11,13 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 const Drawer = createDrawerNavigator();
 import { DrawerContent } from './src/Components/DrawerContent';
 import UserDetailsScreen from './src/Screens/Authentication/UserDetailsScreen';
+import { Login, updateUser, SignUp } from './src/API/services'
 
 const App = () => {
 
   const initialLoginState = {
     isLoading: true,
+    id: null,
     userName: null,
     userToken: null,
     newUser: true,
@@ -25,13 +27,17 @@ const App = () => {
       case 'RETRIEVE_TOKEN':
         return {
           ...prevState,
+          id: action.id,
+          userName: action.userName,
           userToken: action.token,
           isLoading: false,
+          newUser: action.newUser
         };
       case 'LOGIN':
         return {
           ...prevState,
-          userName: action.id,
+          id: action.id,
+          userName: action.userName,
           userToken: action.token,
           isLoading: false,
           newUser: action.newUser
@@ -53,6 +59,7 @@ const App = () => {
       case 'DETAILS_SUBMITTED':
         return {
           ...prevState,
+          userToken: action.token,
           newUser: false
         };
     }
@@ -60,20 +67,47 @@ const App = () => {
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
+  const decodeJWT = (jwt) => {
+    return
+  }
+
   const authContext = React.useMemo(() => ({
     signIn: async (foundUser) => {
+      // const userToken = String(foundUser.userToken);
+      // const userName = foundUser.username;
+      // try {
+      //   await AsyncStorage.setItem('userToken', userToken);
+      // } catch (e) {
+      //   console.log(e);
+      // }
+      // dispatch({ type: 'LOGIN', id: userName, token: userToken, newUser: true });
       // setUserToken('fgkj');
       // setIsLoading(false);
       console.log(foundUser);
-      const userToken = String(foundUser.userToken);
-      const userName = foundUser.username;
       try {
-        await AsyncStorage.setItem('userToken', userToken);
-      } catch (e) {
-        console.log(e);
+        const res = await Login(foundUser);
+        console.log(res);
+        if (!res.data.token) {
+          console.log(res.data.message);
+        }
+        else {
+          const userToken = res.data.token;
+          const userdata = JSON.parse(atob(userToken.split('.')[1]));
+          let username = userdata['fullName'];
+          let id = userdata._id;
+          console.log(userdata);
+          try {
+            await AsyncStorage.setItem('userToken', userToken);
+          } catch (e) {
+            console.log(e);
+          }
+          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
+        }
+
+      } catch (error) {
+        console.log(error);
       }
-      // console.log('user token: ', userToken);
-      dispatch({ type: 'LOGIN', id: userName, token: userToken, newUser: foundUser.newUser });
+
     },
     signOut: async () => {
       // setUserToken(null);
@@ -85,30 +119,49 @@ const App = () => {
       }
       dispatch({ type: 'LOGOUT' });
     },
-    signUp: () => {
+    signUp: async (data) => {
       // setUserToken('fgkj');
       // setIsLoading(false);
+      const res = await SignUp(data);
+      console.log(res);
+
     },
     toggleTheme: () => {
       setIsDarkTheme(isDarkTheme => !isDarkTheme);
     },
-    detailsUpdate: () => {
-      dispatch({ type: 'DETAILS_SUBMITTED' });
+    detailsUpdate: async (updateData) => {
+      try {
+        const res = await updateUser(updateData);
+        let userToken;
+        if (res.data.token) {
+          userToken = res.data.token
+          await AsyncStorage.setItem('userToken', userToken);
+          dispatch({ type: 'DETAILS_SUBMITTED', token: userToken });
+        }
+        else {
+          console.log("something went wrong in updating the data")
+        }
+      } catch (error) {
+        console.log(error);
+      }
     }
   }), []);
 
   useEffect(() => {
     setTimeout(async () => {
       // setIsLoading(false);
-      let userToken;
+      let userToken, username, id, isnewUser;
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
+        const userdata = JSON.parse(atob(userToken.split('.')[1]));
+        username = userdata['fullName'];
+        id = userdata._id;
+        isnewUser = userdata['newUser']
       } catch (e) {
         console.log(e);
       }
-      // console.log('user token: ', userToken);
-      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken });
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken, userName: username, id: id, newUser: isnewUser });
     }, 1000);
   }, []);
 
@@ -123,7 +176,7 @@ const App = () => {
 
   return (
     <PaperProvider >
-      <AuthContext.Provider value={authContext}>
+      <AuthContext.Provider value={{ authContext, loginState }}>
         <NavigationContainer>
           {
             loginState.userToken !== null ? (
