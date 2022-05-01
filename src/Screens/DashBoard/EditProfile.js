@@ -28,13 +28,14 @@ import {
 
 const EditProfile = ({ route, navigation }) => {
 
-    const [editData, setEditData] = useState(route.params);
+    // const [editData, setEditData] = useState(route.params);
     console.log(editData)
+    const editData = route.params;
 
     const [colleges, setColleges] = React.useState([{}]);
     const [courses, setCourses] = React.useState([{}]);
     const [filteredColleges, setFilteredColleges] = React.useState([{}]);
-    const [depts, setDepts] = React.useState([]);
+    const [depts, setDepts] = React.useState([{}]);
 
     const [data, setData] = React.useState({
         fullName: editData.fullName,
@@ -42,9 +43,9 @@ const EditProfile = ({ route, navigation }) => {
         id: editData._id,
         rollNumber: editData.rollNumber,
         mobileNumber: editData.mobileNumber,
-        courseId: editData.courseId._id,
-        collegeId: editData.collegeId._id,
-        deptId: editData.departmentId._id,
+        courseId: editData.courseId ? editData.courseId._id : "",
+        collegeId: editData.collegeId ? editData.collegeId._id : "",
+        deptId: editData.departmentId ? editData.departmentId._id : "",
         check_uIdInputChange: false,
         check_mobileInputChange: false,
 
@@ -89,6 +90,10 @@ const EditProfile = ({ route, navigation }) => {
         setDepts(colleges.filter(college => college._id === college_Id)[0].departments)
     }
 
+    const deptSelected = (dept) => {
+        setData({ ...data, deptId: dept })
+    }
+
     const updateUserProfile = () => {
         console.log(data);
     }
@@ -102,9 +107,7 @@ const EditProfile = ({ route, navigation }) => {
                     flexDirection: 'row', marginTop: 15,
                 }}>
                     <Avatar.Image
-                        source={{
-                            uri: avatar7,
-                        }}
+                        source={avatar7}
                         size={80}
                     />
 
@@ -227,9 +230,9 @@ const EditProfile = ({ route, navigation }) => {
                         onValueChange={(itemValue, itemIndex) =>
                             filterColleges(itemValue)}>
                         {
-                            courses.map((course, myIndex) =>
+                            courses.length > 1 ? courses.map((course, myIndex) =>
                                 <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
-                            )
+                            ) : null
                         }
                     </Picker>
                 </View>
@@ -240,11 +243,11 @@ const EditProfile = ({ route, navigation }) => {
                         selectedValue={data.collegeId}
                         onValueChange={(itemValue, itemIndex) =>
                             filterDepartment(itemValue)}>
-                        <Picker.Item label={"--Select College--"} />
+
                         {
-                            filteredColleges.map((coll, myIndex) =>
+                            filteredColleges.length > 1 ? filteredColleges.map((coll, myIndex) =>
                                 <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
-                            )
+                            ) : null
                         }
                     </Picker>
                 </View>
@@ -254,11 +257,11 @@ const EditProfile = ({ route, navigation }) => {
                         selectedValue={data.deptId}
                         onValueChange={(itemValue, itemIndex) =>
                             deptSelected(itemValue)}>
-                        <Picker.Item label={"--Select Department--"} />
+
                         {
-                            depts.map((dept, myIndex) =>
+                            depts ? depts.map((dept, myIndex) =>
                                 <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
-                            )
+                            ) : null
                         }
                     </Picker>
                 </View>

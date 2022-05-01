@@ -40,9 +40,7 @@ const UserProfile = ({ navigation }) => {
                     flexDirection: 'row', marginTop: 15,
                 }}>
                     <Avatar.Image
-                        source={{
-                            uri: avatar7,
-                        }}
+                        source={avatar7}
                         size={80}
                     />
                     <View style={{
@@ -56,35 +54,24 @@ const UserProfile = ({ navigation }) => {
                         <Caption style={styles.caption}>{data ? data.rollNumber : null}</Caption>
                     </View>
 
-                    <TouchableRipple onPress={() => { navigation.navigate('EditProfile', data) }}>
-                        <View style={{
-                            marginLeft: 20
-                        }}>
-                            <Title style={[styles.title, {
-                                marginTop: 15,
-                                marginBottom: 5,
-                            }]}> <Icon name="account-edit" color="#FF6347" size={40} /></Title>
-                        </View>
-                    </TouchableRipple>
+
+                    <View style={{
+                        marginLeft: 20
+                    }}>
+                        <Title style={[styles.title, {
+                            marginTop: 15,
+                            marginBottom: 5,
+                        }]}>
+                            <TouchableRipple onPress={() => { navigation.navigate('EditProfile', data) }}>
+                                <Icon name="account-edit" color="#FF6347" size={40} />
+                            </TouchableRipple>
+                        </Title>
+                    </View>
+
 
 
                 </View>
             </View>
-
-            {/* <View style={styles.userInfoSection}>
-                <View style={styles.row}>
-                    <Icon name="map-marker-radius" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>Kolkata, India</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="phone" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>+91-900000009</Text>
-                </View>
-                <View style={styles.row}>
-                    <Icon name="email" color="#777777" size={20} />
-                    <Text style={{ color: "#777777", marginLeft: 20 }}>john_doe@email.com</Text>
-                </View>
-            </View> */}
 
             <View style={styles.menuWrapper}>
                 <TouchableRipple onPress={() => { }}>
@@ -141,7 +128,34 @@ const UserProfile = ({ navigation }) => {
                     </View>
                 </TouchableRipple>
             </View>
-        </SafeAreaView>
+
+            <View style={styles.infoBoxWrapper}>
+                <View style={[styles.infoBox, {
+                    borderRightColor: '#dddddd',
+                    borderRightWidth: 1
+                }]}>
+                    <Title>₹140.50</Title>
+                    <Caption>Wallet</Caption>
+                </View>
+                <View style={styles.infoBox}>
+                    <Title>12</Title>
+                    <Caption>Orders</Caption>
+                </View>
+            </View>
+            <View style={styles.infoBoxWrapper}>
+                <View style={[styles.infoBox, {
+                    borderRightColor: '#dddddd',
+                    borderRightWidth: 1
+                }]}>
+                    <Title>₹140.50</Title>
+                    <Caption>Wallet</Caption>
+                </View>
+                <View style={styles.infoBox}>
+                    <Title>12</Title>
+                    <Caption>Orders</Caption>
+                </View>
+            </View>
+        </SafeAreaView >
     )
 }
 
@@ -171,6 +185,7 @@ const styles = StyleSheet.create({
         marginBottom: 10,
     },
     infoBoxWrapper: {
+        marginTop: 20,
         borderBottomColor: '#dddddd',
         borderBottomWidth: 1,
         borderTopColor: '#dddddd',

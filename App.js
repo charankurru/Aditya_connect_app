@@ -165,11 +165,11 @@ const App = () => {
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        // const userdata = JSON.parse(atob(userToken.split('.')[1]));
         const userdata = parseJwt(userToken);
         username = userdata['fullName'];
         id = userdata._id;
         isnewUser = userdata['newUser']
+
       } catch (e) {
         console.log(e);
       }
