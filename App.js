@@ -17,9 +17,16 @@ import { Login, updateUser, SignUp } from './src/API/services'
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 import EditProfile from './src/Screens/DashBoard/EditProfile'
-
+import jwt_decode from "jwt-decode";
 
 const App = () => {
+
+  function parseJwt(token) {
+    // var base64Payload = token.split('.')[1];
+    // var payload = Buffer.from(base64Payload, 'base64');
+    // return JSON.parse(payload.toString());
+    return jwt_decode(token);
+  }
 
   const initialLoginState = {
     isLoading: true,
@@ -89,20 +96,21 @@ const App = () => {
       console.log(foundUser);
       try {
         const res = await Login(foundUser);
-        console.log(res);
+        // console.log(res);
         if (!res.data.token) {
           console.log(res.data.message);
         }
         else {
           const userToken = res.data.token;
-          const userdata = JSON.parse(atob(userToken.split('.')[1]));
+          const userdata = parseJwt(userToken);
           let username = userdata['fullName'];
           let id = userdata._id;
           console.log(userdata);
           try {
             await AsyncStorage.setItem('userToken', userToken);
           } catch (e) {
-            console.log(e);
+            console.log("hello");
+
           }
           dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
         }
@@ -157,7 +165,8 @@ const App = () => {
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        const userdata = JSON.parse(atob(userToken.split('.')[1]));
+        // const userdata = JSON.parse(atob(userToken.split('.')[1]));
+        const userdata = parseJwt(userToken);
         username = userdata['fullName'];
         id = userdata._id;
         isnewUser = userdata['newUser']
@@ -166,6 +175,7 @@ const App = () => {
       }
       dispatch({ type: 'RETRIEVE_TOKEN', token: userToken, userName: username, id: id, newUser: isnewUser });
     }, 1000);
+
   }, []);
 
   if (loginState.isLoading) {

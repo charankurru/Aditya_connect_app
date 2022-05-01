@@ -1,6 +1,7 @@
 import axios from "axios";
 import { REACT_APP_API_KEY } from '@env'
-const API = REACT_APP_API_KEY;
+const API = "https://ac-backendtestbeta.herokuapp.com"
+// const API = REACT_APP_API_KEY;
 const api = axios.create({
     baseURL: `${API}`,
     headers: {
