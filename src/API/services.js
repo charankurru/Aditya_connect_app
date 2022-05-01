@@ -1,15 +1,14 @@
 import API from '../API/api';
 import { REACT_APP_API_KEY } from '@env'
+
 export const Login = (user) => {
-    console.log(user);
-    console.log(REACT_APP_API_KEY);
+    console.log(REACT_APP_API_KEY)
     return API.post('/users/login', user);
 }
 export const SignUp = (user) => {
     console.log(user);
     return API.post('/users/register', user);
 }
-
 
 export const updateUser = (userdata) => {
     return API.post('/users/update-details', userdata);
@@ -37,5 +36,9 @@ export const GetAdminsData = async () => {
 
 export const InsertAdminData = async (admin) => {
     return await API.post('/admin/addAdmin', admin)
+}
+
+export const GetUserbyId = async (userId) => {
+    return await API.get(`/users/get-user/${userId}`)
 }
 

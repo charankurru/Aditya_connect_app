@@ -3,6 +3,8 @@ import { View, ActivityIndicator, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import NewsFeed from './src/Screens/DashBoard/NewsFeed';
+import UserProfile from './src/Screens/DashBoard/UserProfile'
+import Feedback from './src/Screens/DashBoard/Feedback'
 import { AuthContext } from './src/Components/context';
 import RootStackScreen from './src/Screens/Authentication/RootStackScreen'
 import { Provider as PaperProvider } from 'react-native-paper';
@@ -12,6 +14,10 @@ const Drawer = createDrawerNavigator();
 import { DrawerContent } from './src/Components/DrawerContent';
 import UserDetailsScreen from './src/Screens/Authentication/UserDetailsScreen';
 import { Login, updateUser, SignUp } from './src/API/services'
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+const Stack = createNativeStackNavigator();
+import EditProfile from './src/Screens/DashBoard/EditProfile'
+
 
 const App = () => {
 
@@ -67,9 +73,6 @@ const App = () => {
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
-  const decodeJWT = (jwt) => {
-    return
-  }
 
   const authContext = React.useMemo(() => ({
     signIn: async (foundUser) => {
@@ -173,6 +176,17 @@ const App = () => {
     );
   }
 
+  function Root() {
+    return (
+      <Stack.Navigator initialRouteName="InProfile" screenOptions={{
+        headerShown: false,
+      }}>
+        <Stack.Screen name="InProfile" component={UserProfile} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
+      </Stack.Navigator>
+    );
+  }
+
 
   return (
     <PaperProvider >
@@ -182,7 +196,9 @@ const App = () => {
             loginState.userToken !== null ? (
               loginState.newUser == true ? <UserDetailsScreen /> : (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                  <Drawer.Screen name="HomeDrawer" component={NewsFeed} />
+                  <Drawer.Screen name="Home" component={NewsFeed} />
+                  <Drawer.Screen name="Profile" component={Root} />
+                  <Drawer.Screen name="Feedback" component={Feedback} />
                 </Drawer.Navigator>
               )
             ) :

@@ -24,7 +24,7 @@ export function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
-    const { signOut, toggleTheme } = React.useContext(AuthContext);
+    const { authContext: { signOut, toggleTheme } } = React.useContext(AuthContext);
 
     return (
         <View style={{ flex: 1 }}>
@@ -66,7 +66,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Home"
-                        // onPress={() => { props.navigation.navigate('Home') }}
+                            onPress={() => { props.navigation.navigate('Home') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -77,7 +77,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Profile"
-                        // onPress={() => { props.navigation.navigate('Profile') }}
+                            onPress={() => { props.navigation.navigate('Profile') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -87,8 +87,8 @@ export function DrawerContent(props) {
                                     size={size}
                                 />
                             )}
-                            label="Categories"
-                        // onPress={() => { props.navigation.navigate('BookmarkScreen') }}
+                            label="FeedBack"
+                            onPress={() => { props.navigation.navigate('Feedback') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -99,7 +99,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Settings"
-                        //onPress={() => { props.navigation.navigate('SettingsScreen') }}
+                            onPress={() => { props.navigation.navigate('NewProfile') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
