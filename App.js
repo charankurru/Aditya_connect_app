@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, ActivityIndicator, StyleSheet } from 'react-native';
+import { View, Alert, StyleSheet } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import NewsFeed from './src/Screens/DashBoard/NewsFeed';
@@ -22,12 +22,10 @@ import jwt_decode from "jwt-decode";
 const App = () => {
 
   function parseJwt(token) {
-    // var base64Payload = token.split('.')[1];
-    // var payload = Buffer.from(base64Payload, 'base64');
-    // return JSON.parse(payload.toString());
-    return jwt_decode(token);
+    if (token) {
+      return jwt_decode(token);
+    }
   }
-
   const initialLoginState = {
     isLoading: true,
     id: null,
@@ -80,49 +78,31 @@ const App = () => {
 
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
-
   const authContext = React.useMemo(() => ({
+
     signIn: async (foundUser) => {
-      // const userToken = String(foundUser.userToken);
-      // const userName = foundUser.username;
-      // try {
-      //   await AsyncStorage.setItem('userToken', userToken);
-      // } catch (e) {
-      //   console.log(e);
-      // }
-      // dispatch({ type: 'LOGIN', id: userName, token: userToken, newUser: true });
-      // setUserToken('fgkj');
-      // setIsLoading(false);
-      console.log(foundUser);
+      let res;
       try {
-        const res = await Login(foundUser);
-        // console.log(res);
-        if (!res.data.token) {
-          console.log(res.data.message);
-        }
-        else {
+        res = await Login(foundUser);
+        if (res.data && res.data.token) {
           const userToken = res.data.token;
           const userdata = parseJwt(userToken);
           let username = userdata['fullName'];
           let id = userdata._id;
           console.log(userdata);
-          try {
-            await AsyncStorage.setItem('userToken', userToken);
-          } catch (e) {
-            console.log("hello");
-
-          }
-          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
+          await AsyncStorage.setItem('userToken', userToken);
+          // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
+          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
         }
-
       } catch (error) {
         console.log(error);
+        Alert.alert('Oops!', "something went wrong please try again in a while", [
+          { text: 'Okay' }
+        ]);
       }
-
+      return res;
     },
     signOut: async () => {
-      // setUserToken(null);
-      // setIsLoading(false);
       try {
         await AsyncStorage.removeItem('userToken');
       } catch (e) {
@@ -131,10 +111,17 @@ const App = () => {
       dispatch({ type: 'LOGOUT' });
     },
     signUp: async (data) => {
-      // setUserToken('fgkj');
-      // setIsLoading(false);
-      const res = await SignUp(data);
-      console.log(res);
+      let res
+      try {
+        res = await SignUp(data);
+        console.log(res);
+      } catch (error) {
+        console.log(error.message);
+        Alert.alert('Invalid User!', "something went wrong please try again in a while", [
+          { text: 'Okay' }
+        ]);
+      }
+      return res;
 
     },
     toggleTheme: () => {
@@ -144,32 +131,40 @@ const App = () => {
       try {
         const res = await updateUser(updateData);
         let userToken;
-        if (res.data.token) {
+        if (res && res.data.token) {
           userToken = res.data.token
           await AsyncStorage.setItem('userToken', userToken);
+          Alert.alert('yeah....!', "Details submited Successfully", [
+            { text: 'Okay' }
+          ]);
           dispatch({ type: 'DETAILS_SUBMITTED', token: userToken });
         }
         else {
-          console.log("something went wrong in updating the data")
+          Alert.alert('Oops!', "something went wrong in updating the data", [
+            { text: 'Okay' }
+          ]);
         }
       } catch (error) {
-        console.log(error);
+        console.log(error.message);
+        Alert.alert('Oops!', "something went wrong please try again in a while", [
+          { text: 'Okay' }
+        ]);
       }
     }
   }), []);
 
   useEffect(() => {
     setTimeout(async () => {
-      // setIsLoading(false);
       let userToken, username, id, isnewUser;
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
-        const userdata = parseJwt(userToken);
-        username = userdata['fullName'];
-        id = userdata._id;
-        isnewUser = userdata['newUser']
-
+        if (userToken) {
+          const userdata = parseJwt(userToken);
+          username = userdata['fullName'];
+          id = userdata._id;
+          isnewUser = userdata['newUser']
+        }
       } catch (e) {
         console.log(e);
       }
@@ -177,14 +172,6 @@ const App = () => {
     }, 1000);
 
   }, []);
-
-  if (loginState.isLoading) {
-    return (
-      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  }
 
   function Root() {
     return (

@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import {
     View,
     Text,
-    Button,
+    Alert,
     TouchableOpacity,
-    Dimensions,
+    ActivityIndicator,
     TextInput,
     Platform,
     StyleSheet,
@@ -20,6 +20,7 @@ import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData } from '../../API/services';
 const UserDetailsScreen = ({ navigation }) => {
 
+    const [isLoad, setIsLoad] = React.useState(false);
 
     const initState = {
         mobileNumber: '',
@@ -129,8 +130,10 @@ const UserDetailsScreen = ({ navigation }) => {
 
 
     const updateUserProfile = () => {
+        setIsLoad(true)
         console.log(data);
         detailsUpdate(data);
+        setIsLoad(false)
     }
 
     return (
@@ -203,9 +206,9 @@ const UserDetailsScreen = ({ navigation }) => {
                                 filterColleges(itemValue)}>
                             <Picker.Item label={"--Select Course--"} />
                             {
-                                courses.map((course, myIndex) =>
+                                courses.length > 1 ? courses.map((course, myIndex) =>
                                     <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
-                                )
+                                ) : null
                             }
                         </Picker>
                     </View>
@@ -218,9 +221,9 @@ const UserDetailsScreen = ({ navigation }) => {
                                 filterDepartment(itemValue)}>
                             <Picker.Item label={"--Select College--"} />
                             {
-                                filteredColleges.map((coll, myIndex) =>
+                                filteredColleges.length > 1 ? filteredColleges.map((coll, myIndex) =>
                                     <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
-                                )
+                                ) : null
                             }
                         </Picker>
                     </View>
@@ -232,9 +235,9 @@ const UserDetailsScreen = ({ navigation }) => {
                                 deptSelected(itemValue)}>
                             <Picker.Item label={"--Select Department--"} />
                             {
-                                depts.map((dept, myIndex) =>
+                                depts ? depts.map((dept, myIndex) =>
                                     <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
-                                )
+                                ) : null
                             }
                         </Picker>
                     </View>
@@ -248,9 +251,11 @@ const UserDetailsScreen = ({ navigation }) => {
                                 marginTop: 15
                             }]}
                         >
-                            <Text style={[styles.textSign, {
+                            {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
+                                <ActivityIndicator size="large" color="#009387" />
+                            </View> : <Text style={[styles.textSign, {
                                 color: '#009387'
-                            }]}>Submit</Text>
+                            }]}>Submit</Text>}
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -304,7 +309,8 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 20,
+        marginBottom: 30
     },
     signIn: {
         width: '100%',

@@ -7,7 +7,8 @@ import {
     Platform,
     StyleSheet,
     StatusBar,
-    Alert
+    Alert,
+    ActivityIndicator
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 //import LinearGradient from 'react-native-linear-gradient';
@@ -30,6 +31,8 @@ const SignInScreen = ({ navigation }) => {
         isValidUser: true,
         isValidPassword: true,
     });
+
+    const [isLoad, setIsLoad] = React.useState(false);
 
     const { colors } = useTheme();
 
@@ -90,32 +93,7 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
-    const loginHandle = (userName, password) => {
-        // export default 
-        console.log(userName);
-        const Users = [
-            {
-                id: 1,
-                email: 'user1@email.com',
-                username: 'charab',
-                password: '8522',
-                userToken: 'token123'
-            },
-            {
-                id: 2,
-                email: 'user2@email.com',
-                username: 'user2',
-                password: 'pass1234',
-                userToken: 'token12345'
-            },
-            {
-                id: 3,
-                email: 'testuser@email.com',
-                username: 'testuser',
-                password: 'testpass',
-                userToken: 'testtoken'
-            },
-        ];
+    const loginHandle = async (userName, password) => {
 
         // const foundUser = Users.filter(item => {
         //     return userName == item.username && password == item.password;
@@ -134,13 +112,25 @@ const SignInScreen = ({ navigation }) => {
         //     ]);
         //     return;
         // }
+        setIsLoad(true);
         let foundUser = {
             email: userName,
             password: password
         }
         console.log(foundUser)
-        signIn(foundUser);
-
+        let isLoginData = await signIn(foundUser);
+        setIsLoad(false);
+        console.log(isLoginData)
+        if (isLoginData) {
+            let { message, token } = isLoginData.data;
+            if (!token) {
+                console.log(message);
+                Alert.alert('Invalid User!', message, [
+                    { text: 'Okay' }
+                ]);
+                setIsLoad(false);
+            }
+        }
     }
 
     return (
@@ -188,10 +178,9 @@ const SignInScreen = ({ navigation }) => {
                     </Animatable.View>
                 }
 
-
                 <Text style={[styles.text_footer, {
                     color: colors.text,
-                    marginTop: 10
+                    marginTop: 30
                 }]}>Password</Text>
                 <View style={styles.action}>
                     <Feather
@@ -235,14 +224,22 @@ const SignInScreen = ({ navigation }) => {
                 <TouchableOpacity>
                     <Text style={{ color: '#009387', marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
+
                 <View style={styles.button}>
                     <TouchableOpacity
-                        style={styles.signIn}
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                            marginTop: 15
+                        }]}
                         onPress={() => { loginHandle(data.username, data.password) }}
                     >
-                        <Text style={[styles.textSign, {
-                            color: 'Black'
+                        {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
+                            <ActivityIndicator size="large" color="#009387" />
+                        </View> : <Text style={[styles.textSign, {
+                            color: '#009387'
                         }]}>Sign In</Text>
+                        }
                     </TouchableOpacity>
 
                     <TouchableOpacity
@@ -319,7 +316,7 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 30
     },
     signIn: {
         width: '100%',

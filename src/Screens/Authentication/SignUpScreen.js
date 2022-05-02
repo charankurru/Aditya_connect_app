@@ -2,9 +2,9 @@ import React from 'react';
 import {
     View,
     Text,
-    Button,
+    ActivityIndicator,
     TouchableOpacity,
-    Dimensions,
+    Alert,
     TextInput,
     Platform,
     StyleSheet,
@@ -15,10 +15,14 @@ import * as Animatable from 'react-native-animatable';
 //import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { AuthContext } from '../../Components/context';
 
 const SignInScreen = ({ navigation }) => {
 
+    const { authContext: { signUp } } = React.useContext(AuthContext);
+
     const [data, setData] = React.useState({
+        email: '',
         username: '',
         password: '',
         confirm_password: '',
@@ -26,6 +30,8 @@ const SignInScreen = ({ navigation }) => {
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     });
+
+    const [isLoad, setIsLoad] = React.useState(false);
 
     const textInputChange = (val) => {
         if (val.length !== 0) {
@@ -41,6 +47,13 @@ const SignInScreen = ({ navigation }) => {
                 check_textInputChange: false
             });
         }
+    }
+
+    const handleEmailChange = (val) => {
+        setData({
+            ...data,
+            email: val
+        });
     }
 
     const handlePasswordChange = (val) => {
@@ -71,6 +84,33 @@ const SignInScreen = ({ navigation }) => {
         });
     }
 
+    const register = async () => {
+        setIsLoad(true);
+        console.log(data);
+        let registerData = {
+            email: data.email,
+            fullName: data.username,
+            password: data.password
+        }
+        let isSuccess = await signUp(registerData);
+        setIsLoad(false);
+        if (isSuccess) {
+            let { doc, message } = isSuccess.data;
+            if (doc) {
+                Alert.alert('Ola....!', message, [
+                    { text: 'Okay' }
+                ]);
+                navigation.goBack()
+            }
+            else {
+                Alert.alert('Invalid User!', message, [
+                    { text: 'Okay' }
+                ]);
+            }
+        }
+
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
@@ -93,7 +133,7 @@ const SignInScreen = ({ navigation }) => {
                             placeholder="Your Email"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            onChangeText={(val) => textInputChange(val)}
+                            onChangeText={(val) => handleEmailChange(val)}
                         />
                         {data.check_textInputChange ?
                             <Animatable.View
@@ -108,7 +148,7 @@ const SignInScreen = ({ navigation }) => {
                             : null}
                     </View>
 
-                    <Text style={[styles.text_footer, { marginTop: 35 }]}>Username</Text>
+                    <Text style={[styles.text_footer, { marginTop: 35 }]}>FullName</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="user-o"
@@ -203,6 +243,7 @@ const SignInScreen = ({ navigation }) => {
                             }
                         </TouchableOpacity>
                     </View>
+
                     <View style={styles.textPrivate}>
                         <Text style={styles.color_textPrivate}>
                             By signing up you agree to our
@@ -213,8 +254,12 @@ const SignInScreen = ({ navigation }) => {
                     </View>
                     <View style={styles.button}>
                         <TouchableOpacity
-                            style={styles.signIn}
-                            onPress={() => { }}
+                            style={[styles.signIn, {
+                                borderColor: '#009387',
+                                borderWidth: 1,
+                                marginTop: 15
+                            }]}
+                            onPress={() => register()}
                         >
                             {/* <LinearGradient
                                 colors={['#08d4c4', '#01ab9d']}
@@ -225,9 +270,11 @@ const SignInScreen = ({ navigation }) => {
                                 }]}>Sign Up</Text>
                             </LinearGradient> */}
 
-                            <Text style={[styles.textSign, {
-                                color: 'black'
-                            }]}>Sign Up</Text>
+                            {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
+                                <ActivityIndicator size="large" color="#009387" />
+                            </View> : <Text style={[styles.textSign, {
+                                color: '#009387'
+                            }]}>Sign Up</Text>}
                         </TouchableOpacity>
 
                         <TouchableOpacity
@@ -294,7 +341,8 @@ const styles = StyleSheet.create({
     },
     button: {
         alignItems: 'center',
-        marginTop: 50
+        marginTop: 20,
+        marginBottom: 30
     },
     signIn: {
         width: '100%',
