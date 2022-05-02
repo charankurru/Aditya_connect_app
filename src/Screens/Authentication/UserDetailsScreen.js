@@ -78,8 +78,10 @@ const UserDetailsScreen = ({ navigation }) => {
     const filterColleges = (course_Id) => {
         setData({ ...data, courseId: course_Id })
         console.log(course_Id)
-        let cols = colleges.filter(college => college.courseId._id === course_Id)
-        setFilteredColleges(cols)
+        if (colleges.length > 1) {
+            let cols = colleges.filter(college => college.courseId._id === course_Id)
+            setFilteredColleges(cols)
+        }
     }
 
     const filterDepartment = (college_Id) => {

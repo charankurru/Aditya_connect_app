@@ -24,8 +24,7 @@ export function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
-    const { authContext: { signOut, toggleTheme } } = React.useContext(AuthContext);
-
+    const { authContext: { signOut, toggleTheme }, loginState } = React.useContext(AuthContext);
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
@@ -39,21 +38,11 @@ export function DrawerContent(props) {
                                 size={50}
                             />
                             <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>John Doe</Title>
-                                <Caption style={styles.caption}>@j_doe</Caption>
+                                <Title style={styles.title}>{loginState.userName}</Title>
+                                <Caption style={styles.caption}>{loginState.email}</Caption>
                             </View>
                         </View>
 
-                        <View style={styles.row}>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>80</Paragraph>
-                                <Caption style={styles.caption}>Following</Caption>
-                            </View>
-                            <View style={styles.section}>
-                                <Paragraph style={[styles.paragraph, styles.caption]}>100</Paragraph>
-                                <Caption style={styles.caption}>Followers</Caption>
-                            </View>
-                        </View>
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
@@ -112,16 +101,6 @@ export function DrawerContent(props) {
                             label="Support"
                         // onPress={() => { props.navigation.navigate('SupportScreen') }}
                         />
-                    </Drawer.Section>
-                    <Drawer.Section title="Preferences">
-                        <TouchableRipple onPress={() => { toggleTheme() }}>
-                            <View style={styles.preference}>
-                                <Text>Dark Theme</Text>
-                                <View pointerEvents="none">
-                                    <Switch value={paperTheme.dark} />
-                                </View>
-                            </View>
-                        </TouchableRipple>
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>

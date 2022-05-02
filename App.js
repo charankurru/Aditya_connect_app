@@ -91,8 +91,8 @@ const App = () => {
           let id = userdata._id;
           console.log(userdata);
           await AsyncStorage.setItem('userToken', userToken);
-          // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
-          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
+          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
+          // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
         }
       } catch (error) {
         console.log(error);
@@ -125,7 +125,7 @@ const App = () => {
 
     },
     toggleTheme: () => {
-      setIsDarkTheme(isDarkTheme => !isDarkTheme);
+
     },
     detailsUpdate: async (updateData) => {
       try {
