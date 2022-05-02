@@ -193,7 +193,7 @@ const App = () => {
             loginState.userToken !== null ? (
               loginState.newUser == true ? <UserDetailsScreen /> : (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                  <Drawer.Screen name="Home" component={NewsFeed} />
+                  <Drawer.Screen options={{ backgroundColor: '#e7305b' }} name="Home" component={NewsFeed} />
                   <Drawer.Screen name="Profile" component={Root} />
                   <Drawer.Screen name="Feedback" component={Feedback} />
                 </Drawer.Navigator>
