@@ -15,174 +15,157 @@ import avatar7 from '../../../assets/avatar7.png';
 
 const UserProfile = ({ navigation }) => {
 
-    const [data, setData] = useState({});
-    const [isLoad, setIsLoad] = useState(true);
+    const [data, setData] = useState(undefined);
 
     const { loginState } = React.useContext(AuthContext);
-    useEffect(() => {
-        console.log(loginState)
-        getUserdata();
+    useEffect(async () => {
+        await getUserdata();
     }, [])
 
     const getUserdata = async () => {
         GetUserbyId(loginState.id)
             .then(res => {
-                console.log(res);
-                setData(res.data[0])
                 if (res.data) {
-                    setIsLoad(false)
+                    setData(res.data[0])
                 }
             })
             .catch(err => console.log(err))
+
     }
-
+    if (data == undefined) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#009387" />
+            </View>
+        )
+    }
     return (
-
-
-        <View>
-            {isLoad ?
-
-                <View style={{
-                    display: 'flex',
-                    alignItems: 'stretch', backgroundColor: '#FF6666',
-                    marginBottom: 'auto'
-                }}>
-                    <ActivityIndicator size="large" color="#009387" />
-                </View>
-                :
-                <SafeAreaView style={styles.container}>
-
-                    <View style={styles.userInfoSection}>
+        <SafeAreaView style={styles.container}>
+            {data && <>
+                {console.log(data)}
+                <View style={styles.userInfoSection}>
+                    <View style={{
+                        flexDirection: 'row', marginTop: 15,
+                    }}>
+                        <Avatar.Image
+                            source={avatar7}
+                            size={80}
+                        />
                         <View style={{
-                            flexDirection: 'row', marginTop: 15,
+                            marginLeft: 20, borderBottomColor: 'black',
+                            borderBottomWidth: 1,
                         }}>
-                            <Avatar.Image
-                                source={avatar7}
-                                size={80}
-                            />
-                            <View style={{
-                                marginLeft: 20, borderBottomColor: 'black',
-                                borderBottomWidth: 1,
-                            }}>
-                                <Title style={[styles.title, {
-                                    marginTop: 15,
-                                    marginBottom: 5,
-                                }]}>{data ? data.fullName : null}</Title>
-                                <Caption style={styles.caption}>{data ? data.rollNumber : null}</Caption>
-                            </View>
-                        </View>
-
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                                onPress={() => { navigation.navigate('EditProfile', data) }}
-                                style={[styles.signIn, {
-                                    borderColor: 'black',
-                                    borderWidth: 1,
-                                    marginTop: 15
-                                }]}
-                            >
-                                <Text style={[styles.textSign, {
-                                    color: 'black'
-                                }]}>Edit Profile</Text>
-                            </TouchableOpacity>
-                            {/* <Title style={[styles.title, {
-            marginTop: 15,
-            marginBottom: 5,
-        }]}>
-            <TouchableRipple onPress={() => { navigation.navigate('EditProfile', data) }}>
-                <Icon name="account-edit" color="#FF6347" size={40} />
-            </TouchableRipple>
-        </Title> */}
+                            <Title style={[styles.title, {
+                                marginTop: 15,
+                                marginBottom: 5,
+                            }]}>{data ? data.fullName : null}</Title>
+                            <Caption style={styles.caption}>{data ? data.rollNumber : null}</Caption>
                         </View>
                     </View>
 
-                    <View style={styles.menuWrapper}>
-                        <TouchableRipple onPress={() => { }}>
-                            <View style={styles.menuItem}>
-                                <Icon name="email" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data ? data.email : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
+                    <View style={styles.button}>
+                        <TouchableOpacity
+                            onPress={() => { navigation.navigate('EditProfile', data) }}
+                            style={[styles.signIn, {
+                                borderColor: 'black',
+                                borderWidth: 1,
+                                marginTop: 15
+                            }]}
+                        >
+                            <Text style={[styles.textSign, {
+                                color: 'black'
+                            }]}>Edit Profile</Text>
+                        </TouchableOpacity>
 
-                        <TouchableRipple onPress={() => { }}>
-                            <View style={styles.menuItem}>
-                                <Icon name="phone" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data ? data.mobileNumber : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
-
-                        <TouchableRipple onPress={() => { }}>
-                            <View style={styles.menuItem}>
-                                <Icon name="heart-outline" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data.roleId ? data.roleId.roleName : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
-
-
-                        <TouchableRipple onPress={() => { }}>
-                            <View style={styles.menuItem}>
-                                <Icon name="school" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data.courseId ? data.courseId.courseName : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
-                        <TouchableRipple onPress={() => { }}>
-                            <View style={styles.menuItem}>
-                                <Icon name="google-classroom" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data.collegeId ? data.collegeId.collegeName : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
-                        {/* onPress={myCustomShare} */}
-                        <TouchableRipple >
-                            <View style={styles.menuItem}>
-                                <Icon name="doorbell-video" color="#FF6347" size={25} />
-                                <Text style={styles.menuItemText}>
-                                    {data.departmentId ? data.departmentId.deptName : null}
-                                </Text>
-                            </View>
-                        </TouchableRipple>
                     </View>
+                </View>
 
-                    <View style={styles.infoBoxWrapper}>
-                        <View style={[styles.infoBox, {
-                            borderRightColor: '#dddddd',
-                            borderRightWidth: 1
-                        }]}>
-                            <Title>₹140.50</Title>
-                            <Caption>Wallet</Caption>
+                <View style={styles.menuWrapper}>
+                    <TouchableRipple onPress={() => { }}>
+                        <View style={styles.menuItem}>
+                            <Icon name="email" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data?.email}
+                            </Text>
                         </View>
-                        <View style={styles.infoBox}>
-                            <Title>12</Title>
-                            <Caption>Orders</Caption>
+                    </TouchableRipple>
+
+                    <TouchableRipple onPress={() => { }}>
+                        <View style={styles.menuItem}>
+                            <Icon name="phone" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data ? data.mobileNumber : null}
+                            </Text>
                         </View>
+                    </TouchableRipple>
+
+                    <TouchableRipple onPress={() => { }}>
+                        <View style={styles.menuItem}>
+                            <Icon name="heart-outline" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data.roleId ? data.roleId.roleName : null}
+                            </Text>
+                        </View>
+                    </TouchableRipple>
+
+
+                    <TouchableRipple onPress={() => { }}>
+                        <View style={styles.menuItem}>
+                            <Icon name="school" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data.courseId ? data.courseId.courseName : null}
+                            </Text>
+                        </View>
+                    </TouchableRipple>
+                    <TouchableRipple onPress={() => { }}>
+                        <View style={styles.menuItem}>
+                            <Icon name="google-classroom" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data.collegeId ? data.collegeId.collegeName : null}
+                            </Text>
+                        </View>
+                    </TouchableRipple>
+                    {/* onPress={myCustomShare} */}
+                    <TouchableRipple >
+                        <View style={styles.menuItem}>
+                            <Icon name="doorbell-video" color="#FF6347" size={25} />
+                            <Text style={styles.menuItemText}>
+                                {data.departmentId ? data.departmentId.deptName : null}
+                            </Text>
+                        </View>
+                    </TouchableRipple>
+                </View>
+
+                <View style={styles.infoBoxWrapper}>
+                    <View style={[styles.infoBox, {
+                        borderRightColor: '#dddddd',
+                        borderRightWidth: 1
+                    }]}>
+                        <Title>₹140.50</Title>
+                        <Caption>Wallet</Caption>
                     </View>
-                    <View style={styles.infoBoxWrapper}>
-                        <View style={[styles.infoBox, {
-                            borderRightColor: '#dddddd',
-                            borderRightWidth: 1
-                        }]}>
-                            <Title>₹140.50</Title>
-                            <Caption>Wallet</Caption>
-                        </View>
-                        <View style={styles.infoBox}>
-                            <Title>12</Title>
-                            <Caption>Orders</Caption>
-                        </View>
+                    <View style={styles.infoBox}>
+                        <Title>12</Title>
+                        <Caption>Orders</Caption>
                     </View>
-                </SafeAreaView >
-            }
-        </View >
+                </View>
+                <View style={styles.infoBoxWrapper}>
+                    <View style={[styles.infoBox, {
+                        borderRightColor: '#dddddd',
+                        borderRightWidth: 1
+                    }]}>
+                        <Title>₹140.50</Title>
+                        <Caption>Wallet</Caption>
+                    </View>
+                    <View style={styles.infoBox}>
+                        <Title>12</Title>
+                        <Caption>Orders</Caption>
+                    </View>
+                </View>
 
+            </>}
 
+        </SafeAreaView >
     )
 }
 
@@ -197,6 +180,7 @@ const styles = StyleSheet.create({
         marginLeft: 1,
         marginRight: 2,
     },
+
     signIn: {
         width: '100%',
         height: 40,
@@ -210,7 +194,6 @@ const styles = StyleSheet.create({
     },
     userInfoSection: {
         marginLeft: 5,
-        // paddingHorizontal: 30,
         marginBottom: 5,
     },
     title: {

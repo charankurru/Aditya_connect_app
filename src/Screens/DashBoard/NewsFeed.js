@@ -1,9 +1,12 @@
-import React from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { View, Text, ScrollView } from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 
-const Posts = [
-    {
+
+const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+
+const NewsFeed = () => {
+    const [Posts, setPosts] = useState([{
         id: '1',
         userName: 'Jenny Doe',
 
@@ -62,14 +65,13 @@ const Posts = [
         liked: false,
         likes: '0',
         comments: '0',
-    },
-];
+    }]);
 
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
-const NewsFeed = () => {
+    useEffect(() => {
+    }, [])
+
     return (
         <View style={{ flex: 1, }}>
-
             <ScrollView style={{ paddingLeft: 2, paddingRight: 5 }}>
                 {Posts ? Posts.map((post, index) =>
                     <Card key={index} elevation={5}>

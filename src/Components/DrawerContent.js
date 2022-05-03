@@ -5,11 +5,7 @@ import {
     Avatar,
     Title,
     Caption,
-    Paragraph,
     Drawer,
-    Text,
-    TouchableRipple,
-    Switch
 } from 'react-native-paper';
 import {
     DrawerContentScrollView,
@@ -25,6 +21,7 @@ export function DrawerContent(props) {
     const paperTheme = useTheme();
 
     const { authContext: { signOut, toggleTheme }, loginState } = React.useContext(AuthContext);
+    // console.log(loginState)
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>

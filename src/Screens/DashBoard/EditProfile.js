@@ -4,12 +4,11 @@ import {
     Text,
     Button,
     TouchableOpacity,
-    Dimensions,
+    SafeAreaView,
     TextInput,
     Platform,
     StyleSheet,
     ScrollView,
-    ActivityIndicator
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 //import LinearGradient from 'react-native-linear-gradient';
@@ -21,16 +20,11 @@ import { GetCollegesData, GetCoursesData } from '../../API/services';
 import avatar7 from '../../../assets/avatar7.png';
 import {
     Avatar,
-    Title,
-    Caption,
-    TouchableRipple,
 } from 'react-native-paper';
 
 const EditProfile = ({ route, navigation }) => {
 
-    // const [editData, setEditData] = useState(route.params);
     const editData = route.params;
-    const [isLoad, setIsLoad] = useState(true);
 
     const [colleges, setColleges] = React.useState([{}]);
     const [courses, setCourses] = React.useState([{}]);
@@ -59,7 +53,7 @@ const EditProfile = ({ route, navigation }) => {
     const getColleges = () => {
         GetCollegesData()
             .then((data) => {
-                console.log(data.data.colleges);
+                // console.log(data.data.colleges);
                 setColleges(data.data.colleges)
                 let Engineering_colleges = data.data.colleges.filter(college => college.courseId.courseName === 'Engineering')
                 setFilteredColleges(Engineering_colleges)
@@ -68,25 +62,24 @@ const EditProfile = ({ route, navigation }) => {
             .catch((error) => { console.log(error) })
     };
 
-    const getCourses = () => {
+    const getCourses = async () => {
         GetCoursesData()
             .then((data) => {
-                console.log(data.data.result)
                 setCourses(data.data.result)
-                setIsLoad(false)
             })
             .catch((error) => { console.log(error) })
+
     };
 
     const filterColleges = (course_Id) => {
         setData({ ...data, courseId: course_Id })
-        console.log(course_Id)
+        // console.log(course_Id)
         let cols = colleges.filter(college => college.courseId._id === course_Id)
         setFilteredColleges(cols)
     }
 
     const filterDepartment = (college_Id) => {
-        console.log(college_Id)
+        // console.log(college_Id)
         setData({ ...data, collegeId: college_Id })
         setDepts(colleges.filter(college => college._id === college_Id)[0].departments)
     }
@@ -101,201 +94,188 @@ const EditProfile = ({ route, navigation }) => {
 
 
     return (
+        <SafeAreaView style={styles.container}>
 
-        <View>
-            {isLoad ?
-
+            <View style={styles.userInfoSection}>
                 <View style={{
-                    display: 'flex',
-                    alignItems: 'stretch', backgroundColor: '#FF6666',
-                    marginBottom: 'auto'
+                    flexDirection: 'row', marginTop: 15,
                 }}>
-                    <ActivityIndicator size="large" color="#009387" />
+                    <Avatar.Image
+                        source={avatar7}
+                        size={80}
+                    />
+
+                </View>
+            </View>
+
+            <ScrollView>
+                <View style={[styles.action, { marginTop: 25 }]}>
+                    <FontAwesome
+                        name="user-o"
+                        color="#05375a"
+                        size={20}
+                    />
+                    <TextInput
+                        value={data.fullName}
+                        placeholder="Your Id number"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => setData({ ...data, fullName: val })}
+                    />
+                    {data.check_textInputChange ?
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                color="green"
+                                size={20}
+                            />
+                        </Animatable.View>
+                        : null}
                 </View>
 
-                : <View style={styles.container}>
 
-                    <View style={styles.userInfoSection}>
-                        <View style={{
-                            flexDirection: 'row', marginTop: 15,
-                        }}>
-                            <Avatar.Image
-                                source={avatar7}
-                                size={80}
-                            />
-
-                        </View>
-                    </View>
-
-                    <ScrollView>
-                        <View style={[styles.action, { marginTop: 25 }]}>
-                            <FontAwesome
-                                name="user-o"
-                                color="#05375a"
+                <View style={[styles.action, { marginTop: 25 }]}>
+                    <FontAwesome
+                        name="envelope-o"
+                        color="#05375a"
+                        size={20}
+                    />
+                    <TextInput
+                        value={data.email}
+                        placeholder="Your Id number"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => setData({ ...data, email: val })}
+                    />
+                    {data.check_textInputChange ?
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                color="green"
                                 size={20}
                             />
-                            <TextInput
-                                value={data.fullName}
-                                placeholder="Your Id number"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                onChangeText={(val) => setData({ ...data, fullName: val })}
-                            />
-                            {data.check_textInputChange ?
-                                <Animatable.View
-                                    animation="bounceIn"
-                                >
-                                    <Feather
-                                        name="check-circle"
-                                        color="green"
-                                        size={20}
-                                    />
-                                </Animatable.View>
-                                : null}
-                        </View>
+                        </Animatable.View>
+                        : null}
+                </View>
 
 
-                        <View style={[styles.action, { marginTop: 25 }]}>
-                            <FontAwesome
-                                name="envelope-o"
-                                color="#05375a"
+                <View style={[styles.action, { marginTop: 25 }]}>
+                    <FontAwesome
+                        name="id-badge"
+                        color="#05375a"
+                        size={20}
+                    />
+                    <TextInput
+                        value={data.rollNumber}
+                        placeholder="Your Id number"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => setData({ ...data, rollNumber: val })}
+                    />
+                    {data.check_textInputChange ?
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                color="green"
                                 size={20}
                             />
-                            <TextInput
-                                value={data.email}
-                                placeholder="Your Id number"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                onChangeText={(val) => setData({ ...data, email: val })}
-                            />
-                            {data.check_textInputChange ?
-                                <Animatable.View
-                                    animation="bounceIn"
-                                >
-                                    <Feather
-                                        name="check-circle"
-                                        color="green"
-                                        size={20}
-                                    />
-                                </Animatable.View>
-                                : null}
-                        </View>
+                        </Animatable.View>
+                        : null}
+                </View>
 
 
-                        <View style={[styles.action, { marginTop: 25 }]}>
-                            <FontAwesome
-                                name="id-badge"
-                                color="#05375a"
+                <View style={[styles.action, { marginTop: 25 }]}>
+                    <FontAwesome
+                        name="phone"
+                        color="#05375a"
+                        size={20}
+                    />
+                    <TextInput
+                        value={data.mobileNumber}
+                        placeholder="Your Mobile Number"
+                        style={styles.textInput}
+                        autoCapitalize="none"
+                        onChangeText={(val) => setData({ ...data, mobileNumber: val })}
+                    />
+                    {data.check_mobileInputChange ?
+                        <Animatable.View
+                            animation="bounceIn"
+                        >
+                            <Feather
+                                name="check-circle"
+                                color="green"
                                 size={20}
                             />
-                            <TextInput
-                                value={data.rollNumber}
-                                placeholder="Your Id number"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                onChangeText={(val) => setData({ ...data, rollNumber: val })}
-                            />
-                            {data.check_textInputChange ?
-                                <Animatable.View
-                                    animation="bounceIn"
-                                >
-                                    <Feather
-                                        name="check-circle"
-                                        color="green"
-                                        size={20}
-                                    />
-                                </Animatable.View>
-                                : null}
-                        </View>
+                        </Animatable.View>
+                        : null}
+                </View>
 
 
-                        <View style={[styles.action, { marginTop: 25 }]}>
-                            <FontAwesome
-                                name="phone"
-                                color="#05375a"
-                                size={20}
-                            />
-                            <TextInput
-                                value={data.mobileNumber}
-                                placeholder="Your Mobile Number"
-                                style={styles.textInput}
-                                autoCapitalize="none"
-                                onChangeText={(val) => setData({ ...data, mobileNumber: val })}
-                            />
-                            {data.check_mobileInputChange ?
-                                <Animatable.View
-                                    animation="bounceIn"
-                                >
-                                    <Feather
-                                        name="check-circle"
-                                        color="green"
-                                        size={20}
-                                    />
-                                </Animatable.View>
-                                : null}
-                        </View>
+                <Text style={[styles.text_footer, { marginTop: 25 }]}>Course</Text>
+                <View>
+                    <Picker
+                        selectedValue={data.courseId}
+                        onValueChange={(itemValue, itemIndex) =>
+                            filterColleges(itemValue)}>
+                        {
+                            courses.length > 1 ? courses.map((course, myIndex) =>
+                                <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
+                            ) : null
+                        }
+                    </Picker>
+                </View>
 
+                <Text style={[styles.text_footer, { marginTop: 25 }]}>Colleges</Text>
+                <View>
+                    <Picker
+                        selectedValue={data.collegeId}
+                        onValueChange={(itemValue, itemIndex) =>
+                            filterDepartment(itemValue)}>
 
-                        <Text style={[styles.text_footer, { marginTop: 25 }]}>Course</Text>
-                        <View>
-                            <Picker
-                                selectedValue={data.courseId}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    filterColleges(itemValue)}>
-                                {
-                                    courses.length > 1 ? courses.map((course, myIndex) =>
-                                        <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
-                                    ) : null
-                                }
-                            </Picker>
-                        </View>
+                        {
+                            filteredColleges.length > 1 ? filteredColleges.map((coll, myIndex) =>
+                                <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
+                            ) : null
+                        }
+                    </Picker>
+                </View>
+                <Text style={[styles.text_footer, { marginTop: 25 }]}>Department</Text>
+                <View>
+                    <Picker
+                        selectedValue={data.deptId}
+                        onValueChange={(itemValue, itemIndex) =>
+                            deptSelected(itemValue)}>
 
-                        <Text style={[styles.text_footer, { marginTop: 25 }]}>Colleges</Text>
-                        <View>
-                            <Picker
-                                selectedValue={data.collegeId}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    filterDepartment(itemValue)}>
+                        {
+                            depts ? depts.map((dept, myIndex) =>
+                                <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
+                            ) : null
+                        }
+                    </Picker>
+                </View>
 
-                                {
-                                    filteredColleges.length > 1 ? filteredColleges.map((coll, myIndex) =>
-                                        <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
-                                    ) : null
-                                }
-                            </Picker>
-                        </View>
-                        <Text style={[styles.text_footer, { marginTop: 25 }]}>Department</Text>
-                        <View>
-                            <Picker
-                                selectedValue={data.deptId}
-                                onValueChange={(itemValue, itemIndex) =>
-                                    deptSelected(itemValue)}>
-
-                                {
-                                    depts ? depts.map((dept, myIndex) =>
-                                        <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
-                                    ) : null
-                                }
-                            </Picker>
-                        </View>
-
-                        <View style={styles.button}>
-                            <TouchableOpacity
-                                onPress={() => updateUserProfile()}
-                                style={[styles.signIn, {
-                                    borderColor: '#009387',
-                                    borderWidth: 1,
-                                    marginTop: 5
-                                }]}
-                            >
-                                <Text style={[styles.textSign, {
-                                    color: '#009387'
-                                }]}>Submit</Text>
-                            </TouchableOpacity>
-                        </View>
-                    </ScrollView>
-                </View >}
-        </View>
+                <View style={styles.button}>
+                    <TouchableOpacity
+                        onPress={() => updateUserProfile()}
+                        style={[styles.signIn, {
+                            borderColor: '#009387',
+                            borderWidth: 1,
+                            marginTop: 5
+                        }]}
+                    >
+                        <Text style={[styles.textSign, {
+                            color: '#009387'
+                        }]}>Submit</Text>
+                    </TouchableOpacity>
+                </View>
+            </ScrollView>
+        </SafeAreaView >
     )
 }
 
@@ -379,3 +359,200 @@ const styles = StyleSheet.create({
     },
     dropdown2RowTxtStyle: { color: "#444", textAlign: "left" },
 });
+
+
+
+// <View>
+//     {isLoad ?
+
+//         <View style={{
+//             display: 'flex',
+//             alignItems: 'stretch', backgroundColor: '#FF6666',
+//             marginBottom: 'auto'
+//         }}>
+//             <ActivityIndicator size="large" color="#009387" />
+//         </View>
+
+//         : <View style={styles.container}>
+
+//             <View style={styles.userInfoSection}>
+//                 <View style={{
+//                     flexDirection: 'row', marginTop: 15,
+//                 }}>
+//                     <Avatar.Image
+//                         source={avatar7}
+//                         size={80}
+//                     />
+
+//                 </View>
+//             </View>
+
+//             <ScrollView>
+//                 <View style={[styles.action, { marginTop: 25 }]}>
+//                     <FontAwesome
+//                         name="user-o"
+//                         color="#05375a"
+//                         size={20}
+//                     />
+//                     <TextInput
+//                         value={data.fullName}
+//                         placeholder="Your Id number"
+//                         style={styles.textInput}
+//                         autoCapitalize="none"
+//                         onChangeText={(val) => setData({ ...data, fullName: val })}
+//                     />
+//                     {data.check_textInputChange ?
+//                         <Animatable.View
+//                             animation="bounceIn"
+//                         >
+//                             <Feather
+//                                 name="check-circle"
+//                                 color="green"
+//                                 size={20}
+//                             />
+//                         </Animatable.View>
+//                         : null}
+//                 </View>
+
+
+//                 <View style={[styles.action, { marginTop: 25 }]}>
+//                     <FontAwesome
+//                         name="envelope-o"
+//                         color="#05375a"
+//                         size={20}
+//                     />
+//                     <TextInput
+//                         value={data.email}
+//                         placeholder="Your Id number"
+//                         style={styles.textInput}
+//                         autoCapitalize="none"
+//                         onChangeText={(val) => setData({ ...data, email: val })}
+//                     />
+//                     {data.check_textInputChange ?
+//                         <Animatable.View
+//                             animation="bounceIn"
+//                         >
+//                             <Feather
+//                                 name="check-circle"
+//                                 color="green"
+//                                 size={20}
+//                             />
+//                         </Animatable.View>
+//                         : null}
+//                 </View>
+
+
+//                 <View style={[styles.action, { marginTop: 25 }]}>
+//                     <FontAwesome
+//                         name="id-badge"
+//                         color="#05375a"
+//                         size={20}
+//                     />
+//                     <TextInput
+//                         value={data.rollNumber}
+//                         placeholder="Your Id number"
+//                         style={styles.textInput}
+//                         autoCapitalize="none"
+//                         onChangeText={(val) => setData({ ...data, rollNumber: val })}
+//                     />
+//                     {data.check_textInputChange ?
+//                         <Animatable.View
+//                             animation="bounceIn"
+//                         >
+//                             <Feather
+//                                 name="check-circle"
+//                                 color="green"
+//                                 size={20}
+//                             />
+//                         </Animatable.View>
+//                         : null}
+//                 </View>
+
+
+//                 <View style={[styles.action, { marginTop: 25 }]}>
+//                     <FontAwesome
+//                         name="phone"
+//                         color="#05375a"
+//                         size={20}
+//                     />
+//                     <TextInput
+//                         value={data.mobileNumber}
+//                         placeholder="Your Mobile Number"
+//                         style={styles.textInput}
+//                         autoCapitalize="none"
+//                         onChangeText={(val) => setData({ ...data, mobileNumber: val })}
+//                     />
+//                     {data.check_mobileInputChange ?
+//                         <Animatable.View
+//                             animation="bounceIn"
+//                         >
+//                             <Feather
+//                                 name="check-circle"
+//                                 color="green"
+//                                 size={20}
+//                             />
+//                         </Animatable.View>
+//                         : null}
+//                 </View>
+
+
+//                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Course</Text>
+//                 <View>
+//                     <Picker
+//                         selectedValue={data.courseId}
+//                         onValueChange={(itemValue, itemIndex) =>
+//                             filterColleges(itemValue)}>
+//                         {
+//                             courses.length > 1 ? courses.map((course, myIndex) =>
+//                                 <Picker.Item key={myIndex} label={course.courseName} value={course._id} />
+//                             ) : null
+//                         }
+//                     </Picker>
+//                 </View>
+
+//                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Colleges</Text>
+//                 <View>
+//                     <Picker
+//                         selectedValue={data.collegeId}
+//                         onValueChange={(itemValue, itemIndex) =>
+//                             filterDepartment(itemValue)}>
+
+//                         {
+//                             filteredColleges.length > 1 ? filteredColleges.map((coll, myIndex) =>
+//                                 <Picker.Item key={myIndex} label={coll.collegeName} value={coll._id} />
+//                             ) : null
+//                         }
+//                     </Picker>
+//                 </View>
+//                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Department</Text>
+//                 <View>
+//                     <Picker
+//                         selectedValue={data.deptId}
+//                         onValueChange={(itemValue, itemIndex) =>
+//                             deptSelected(itemValue)}>
+
+//                         {
+//                             depts ? depts.map((dept, myIndex) =>
+//                                 <Picker.Item key={myIndex} label={dept.deptName} value={dept._id} />
+//                             ) : null
+//                         }
+//                     </Picker>
+//                 </View>
+
+//                 <View style={styles.button}>
+//                     <TouchableOpacity
+//                         onPress={() => updateUserProfile()}
+//                         style={[styles.signIn, {
+//                             borderColor: '#009387',
+//                             borderWidth: 1,
+//                             marginTop: 5
+//                         }]}
+//                     >
+//                         <Text style={[styles.textSign, {
+//                             color: '#009387'
+//                         }]}>Submit</Text>
+//                     </TouchableOpacity>
+//                 </View>
+//             </ScrollView>
+//         </View >}
+// </View>

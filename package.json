@@ -20,6 +20,9 @@
     "@react-navigation/stack": "^6.1.1",
     "axios": "^0.26.1",
     "expo": "~44.0.0",
+    "expo-device": "~4.1.0",
+    "expo-linear-gradient": "~11.0.3",
+    "expo-notifications": "~0.14.0",
     "expo-status-bar": "~1.2.0",
     "jwt-decode": "^3.1.2",
     "native-base": "^3.3.7",
@@ -30,13 +33,11 @@
     "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-paper": "^4.12.1",
-    "react-native-reanimated": "~2.3.1",
     "react-native-safe-area-context": "~3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-skeleton-placeholder": "^5.0.0",
     "react-native-vector-icons": "^9.1.0",
-    "react-native-web": "0.17.1",
-    "expo-linear-gradient": "~11.0.3"
+    "react-native-web": "0.17.1"
   },
   "devDependencies": {
     "@babel/core": "^7.12.9"

@@ -27,11 +27,14 @@ const App = () => {
     }
   }
   const initialLoginState = {
-    isLoading: true,
+    email: null,
     id: null,
     userName: null,
     userToken: null,
     newUser: true,
+    collegeId: null,
+    courseId: null,
+    departmentId: null
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -41,8 +44,11 @@ const App = () => {
           id: action.id,
           userName: action.userName,
           userToken: action.token,
-          isLoading: false,
-          newUser: action.newUser
+          email: action.email,
+          newUser: action.newUser,
+          collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId
         };
       case 'LOGIN':
         return {
@@ -50,22 +56,25 @@ const App = () => {
           id: action.id,
           userName: action.userName,
           userToken: action.token,
-          isLoading: false,
-          newUser: action.newUser
+          email: action.email,
+          newUser: action.newUser,
+          collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId
         };
       case 'LOGOUT':
         return {
           ...prevState,
           userName: null,
           userToken: null,
-          isLoading: false,
+          email: null
         };
       case 'REGISTER':
         return {
           ...prevState,
           userName: action.id,
           userToken: action.token,
-          isLoading: false,
+          email: action.email,
         };
       case 'DETAILS_SUBMITTED':
         return {
@@ -87,11 +96,26 @@ const App = () => {
         if (res.data && res.data.token) {
           const userToken = res.data.token;
           const userdata = parseJwt(userToken);
+          console.log(userdata);
           let username = userdata['fullName'];
           let id = userdata._id;
-          console.log(userdata);
+          let email = userdata.email;
+          let userRecord = res.data.userRecord
+          console.log(userRecord)
+          let { collegeId, courseId, departmentId } = userRecord;
           await AsyncStorage.setItem('userToken', userToken);
-          dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: userdata.newUser });
+          dispatch(
+            {
+              type: 'LOGIN',
+              id: id,
+              userName: username,
+              token: userToken,
+              newUser: userdata.newUser,
+              email: email,
+              collegeId: collegeId,
+              courseId: courseId,
+              departmentId: departmentId
+            });
           // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
         }
       } catch (error) {
