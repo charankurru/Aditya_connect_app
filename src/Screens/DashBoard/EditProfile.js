@@ -92,6 +92,13 @@ const EditProfile = ({ route, navigation }) => {
         console.log(data);
     }
 
+    if (courses.length <= 1) {
+        return (
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                <ActivityIndicator size="large" color="#009387" />
+            </View>
+        )
+    }
 
     return (
         <SafeAreaView style={styles.container}>
