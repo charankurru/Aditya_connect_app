@@ -33,8 +33,6 @@ const App = () => {
     userToken: null,
     newUser: true,
     collegeId: null,
-    courseId: null,
-    departmentId: null
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -47,8 +45,6 @@ const App = () => {
           email: action.email,
           newUser: action.newUser,
           collegeId: action.collegeId,
-          courseId: action.courseId,
-          departmentId: action.departmentId
         };
       case 'LOGIN':
         return {
@@ -59,8 +55,6 @@ const App = () => {
           email: action.email,
           newUser: action.newUser,
           collegeId: action.collegeId,
-          courseId: action.courseId,
-          departmentId: action.departmentId
         };
       case 'LOGOUT':
         return {
@@ -80,6 +74,7 @@ const App = () => {
         return {
           ...prevState,
           userToken: action.token,
+          collegeId: action.collegeId,
           newUser: false
         };
     }
@@ -97,24 +92,17 @@ const App = () => {
           const userToken = res.data.token;
           const userdata = parseJwt(userToken);
           console.log(userdata);
-          let username = userdata['fullName'];
-          let id = userdata._id;
-          let email = userdata.email;
-          let userRecord = res.data.userRecord
-          console.log(userRecord)
-          let { collegeId, courseId, departmentId } = userRecord;
+          let { fullName, email, _id, collegeId } = userdata;
           await AsyncStorage.setItem('userToken', userToken);
           dispatch(
             {
               type: 'LOGIN',
-              id: id,
-              userName: username,
+              id: _id,
+              userName: fullName,
               token: userToken,
               newUser: userdata.newUser,
               email: email,
               collegeId: collegeId,
-              courseId: courseId,
-              departmentId: departmentId
             });
           // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
         }
@@ -148,20 +136,19 @@ const App = () => {
       return res;
 
     },
-    toggleTheme: () => {
-
-    },
     detailsUpdate: async (updateData) => {
       try {
         const res = await updateUser(updateData);
         let userToken;
         if (res && res.data.token) {
           userToken = res.data.token
+          const userdata = parseJwt(userToken);
+          let collegeId = userdata['collegeId'];
           await AsyncStorage.setItem('userToken', userToken);
           Alert.alert('yeah....!', "Details submited Successfully", [
             { text: 'Okay' }
           ]);
-          dispatch({ type: 'DETAILS_SUBMITTED', token: userToken });
+          dispatch({ type: 'DETAILS_SUBMITTED', token: userToken, collegeId: collegeId });
         }
         else {
           Alert.alert('Oops!', "something went wrong in updating the data", [
@@ -179,7 +166,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(async () => {
-      let userToken, username, id, isnewUser;
+      let userToken, username, id, isnewUser, email;
       userToken = null;
       try {
         userToken = await AsyncStorage.getItem('userToken');
@@ -188,11 +175,12 @@ const App = () => {
           username = userdata['fullName'];
           id = userdata._id;
           isnewUser = userdata['newUser']
+          email = userdata['email'];
         }
       } catch (e) {
         console.log(e);
       }
-      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken, userName: username, id: id, newUser: isnewUser });
+      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken, userName: username, id: id, newUser: isnewUser, email: email });
     }, 1000);
 
   }, []);
