@@ -9,20 +9,20 @@ export default function fetchPostsHook(pageNumber, channelId) {
     const [hasMore, setHasMore] = useState(false)
 
     useEffect(() => {
-        setLoading(true)
-        setError(false)
+        let isMounted = true;
+        // setLoading(true)
         GetPosts({ channelId: channelId, pageNumber: pageNumber, limit: 5 })
             .then(res => {
                 console.log(res)
-                // setUsers(prevUsers => {
-                //     return [...new Set([...prevUsers, ...res.data.results.map(b => b.name)])]
-                // })
-                setPosts([...posts, ...res.data.result])
-                setHasMore(res.data.result.length > 0)
-                setLoading(false)
+                if (isMounted) {
+                    setPosts([...posts, ...res.data.result])
+                    setHasMore(res.data.result.length > 0)
+                    setLoading(false)
+                }
             }).catch(e => {
                 setError(true)
             })
+        return () => isMounted = false;
     }, [pageNumber])
     return { loading, error, posts, hasMore }
 }

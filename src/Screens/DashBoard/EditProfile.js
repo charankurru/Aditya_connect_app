@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import {
     View,
     Text,
-    Button,
+    ActivityIndicator,
     TouchableOpacity,
     SafeAreaView,
     TextInput,

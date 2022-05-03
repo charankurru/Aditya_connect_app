@@ -1,4 +1,4 @@
-import React, { useEffect, Component, useState } from 'react'
+import React, { useEffect, Component, useState, useRef } from 'react'
 import { View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
 import {
     Avatar,
@@ -14,19 +14,21 @@ import avatar7 from '../../../assets/avatar7.png';
 
 
 const UserProfile = ({ navigation }) => {
-
+    const isMountedRef = useRef(null);
     const [data, setData] = useState(undefined);
 
     const { loginState } = React.useContext(AuthContext);
-    useEffect(async () => {
-        await getUserdata();
+    useEffect(() => {
+        isMountedRef.current = true;
+        getUserdata();
+        return () => isMountedRef.current = false;
     }, [])
 
     const getUserdata = async () => {
         GetUserbyId(loginState.id)
             .then(res => {
                 if (res.data) {
-                    setData(res.data[0])
+                    if (isMountedRef.current) { setData(res.data[0]) }
                 }
             })
             .catch(err => console.log(err))
