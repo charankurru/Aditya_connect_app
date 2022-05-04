@@ -45,11 +45,10 @@ const NewsFeed = () => {
 
     const loadingIndicator = () => {
         return (
-
-            <View>
-                {loading && <ActivityIndicator size="large" color="#009387" />}
-            </View>
-
+            loading ?
+                <View>
+                    <ActivityIndicator size="large" color="#009387" />
+                </View> : null
         )
     }
 

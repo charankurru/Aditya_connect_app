@@ -26,7 +26,7 @@ const SignInScreen = ({ navigation }) => {
     const [data, setData] = React.useState({
         username: '',
         password: '',
-        check_textInputChange: false,
+        check_emailInputChange: false,
         secureTextEntry: true,
         isValidUser: true,
         isValidPassword: true,
@@ -38,26 +38,26 @@ const SignInScreen = ({ navigation }) => {
 
     const { authContext: { signIn } } = React.useContext(AuthContext);
 
-    const textInputChange = (val) => {
+    const emailInputChange = (val) => {
         if (val.trim().length >= 4) {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: true,
+                check_emailInputChange: true,
                 isValidUser: true
             });
         } else {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: false,
+                check_emailInputChange: false,
                 isValidUser: false
             });
         }
     }
 
     const handlePasswordChange = (val) => {
-        if (val.trim().length >= 2) {
+        if (val.trim().length >= 6) {
             setData({
                 ...data,
                 password: val,
@@ -112,23 +112,24 @@ const SignInScreen = ({ navigation }) => {
         //     ]);
         //     return;
         // }
-        setIsLoad(true);
+        // setIsLoad(true);
         let foundUser = {
             email: userName,
             password: password
         }
         console.log(foundUser)
         let isLoginData = await signIn(foundUser);
-        setIsLoad(false);
+
         console.log(isLoginData)
         if (isLoginData) {
+            // setIsLoad(false);
             let { message, token } = isLoginData.data;
             if (!token) {
                 console.log(message);
                 Alert.alert('Invalid User!', message, [
                     { text: 'Okay' }
                 ]);
-                setIsLoad(false);
+                // setIsLoad(false);
             }
         }
     }
@@ -157,10 +158,10 @@ const SignInScreen = ({ navigation }) => {
                         placeholderTextColor="#666666"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => textInputChange(val)}
+                        onChangeText={(val) => emailInputChange(val)}
                         onEndEditing={(e) => handleValidUser(e.nativeEvent.text)}
                     />
-                    {data.check_textInputChange ?
+                    {data.check_emailInputChange ?
                         <Animatable.View
                             animation="bounceIn"
                         >

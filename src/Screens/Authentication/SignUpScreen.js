@@ -26,48 +26,86 @@ const SignInScreen = ({ navigation }) => {
         username: '',
         password: '',
         confirm_password: '',
-        check_textInputChange: false,
+        isValidPasword: true,
+        isValidCPasword: true,
+        check_userInputChange: false,
+        isValidUser: true,
+        check_EmailInputChange: false,
+        isValidEmail: true,
         secureTextEntry: true,
         confirm_secureTextEntry: true,
     });
 
     const [isLoad, setIsLoad] = React.useState(false);
 
-    const textInputChange = (val) => {
+    const emailInputChange = (val) => {
         if (val.length !== 0) {
             setData({
                 ...data,
+                email: val,
+                check_emailInputChange: true,
+                isValidEmail: true
+            });
+        } else {
+            setData({
+                ...data,
+                email: val,
+                check_emailInputChange: false,
+                isValidEmail: false
+            });
+        }
+    }
+    const userInputChange = (val) => {
+        if (val.length >= 6) {
+            setData({
+                ...data,
                 username: val,
-                check_textInputChange: true
+                check_userInputChange: true,
+                isValidUser: true
             });
         } else {
             setData({
                 ...data,
                 username: val,
-                check_textInputChange: false
+                check_userInputChange: false,
+                isValidUser: false
             });
         }
     }
 
-    const handleEmailChange = (val) => {
-        setData({
-            ...data,
-            email: val
-        });
-    }
-
     const handlePasswordChange = (val) => {
-        setData({
-            ...data,
-            password: val
-        });
+        if (val.trim().length >= 6) {
+            setData({
+                ...data,
+                password: val,
+                isValidPasword: true
+            });
+        } else {
+            setData({
+                ...data,
+                password: val,
+                isValidPasword: false
+            });
+        }
+
     }
 
     const handleConfirmPasswordChange = (val) => {
-        setData({
-            ...data,
-            confirm_password: val
-        });
+        if (val.trim() == data.password) {
+            setData({
+                ...data,
+                confirm_password: val,
+                isValidCPasword: true
+            });
+        }
+        else {
+            setData({
+                ...data,
+                confirm_password: val,
+                isValidCPasword: false
+            });
+        }
+
     }
 
     const updateSecureTextEntry = () => {
@@ -85,6 +123,20 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const register = async () => {
+        console.log(data);
+        console.log(data.username.length);
+        if (data.password !== data.confirm_password) {
+            Alert.alert('Sorry !', "Please Provide valid data", [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
+        if (data.username.length < 6 && data.password.length < 6 && data.password.length < 6 && data.confirm_password.length < 6) {
+            Alert.alert('Sorry !', "Please Provide valid data", [
+                { text: 'Okay' }
+            ]);
+            return;
+        }
         setIsLoad(true);
         console.log(data);
         let registerData = {
@@ -125,7 +177,7 @@ const SignInScreen = ({ navigation }) => {
                     <Text style={styles.text_footer}>Email</Text>
                     <View style={styles.action}>
                         <FontAwesome
-                            name="user-o"
+                            name="envelope-o"
                             color="#05375a"
                             size={20}
                         />
@@ -133,9 +185,9 @@ const SignInScreen = ({ navigation }) => {
                             placeholder="Your Email"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            onChangeText={(val) => handleEmailChange(val)}
+                            onChangeText={(val) => emailInputChange(val)}
                         />
-                        {data.check_textInputChange ?
+                        {data.check_emailInputChange ?
                             <Animatable.View
                                 animation="bounceIn"
                             >
@@ -147,6 +199,11 @@ const SignInScreen = ({ navigation }) => {
                             </Animatable.View>
                             : null}
                     </View>
+                    {data.isValidEmail ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Please provide valid email address</Text>
+                        </Animatable.View>
+                    }
 
                     <Text style={[styles.text_footer, { marginTop: 35 }]}>FullName</Text>
                     <View style={styles.action}>
@@ -159,9 +216,9 @@ const SignInScreen = ({ navigation }) => {
                             placeholder="Your Username"
                             style={styles.textInput}
                             autoCapitalize="none"
-                            onChangeText={(val) => textInputChange(val)}
+                            onChangeText={(val) => userInputChange(val)}
                         />
-                        {data.check_textInputChange ?
+                        {data.check_userInputChange ?
                             <Animatable.View
                                 animation="bounceIn"
                             >
@@ -173,6 +230,11 @@ const SignInScreen = ({ navigation }) => {
                             </Animatable.View>
                             : null}
                     </View>
+                    {data.isValidUser ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Username must be 6 characters long.</Text>
+                        </Animatable.View>
+                    }
 
                     <Text style={[styles.text_footer, {
                         marginTop: 35
@@ -208,6 +270,11 @@ const SignInScreen = ({ navigation }) => {
                             }
                         </TouchableOpacity>
                     </View>
+                    {data.isValidPasword ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Password must be 6 characters long.</Text>
+                        </Animatable.View>
+                    }
 
                     <Text style={[styles.text_footer, {
                         marginTop: 35
@@ -243,6 +310,11 @@ const SignInScreen = ({ navigation }) => {
                             }
                         </TouchableOpacity>
                     </View>
+                    {data.isValidCPasword ? null :
+                        <Animatable.View animation="fadeInLeft" duration={500}>
+                            <Text style={styles.errorMsg}>Password doesnt match with above one</Text>
+                        </Animatable.View>
+                    }
 
                     <View style={styles.textPrivate}>
                         <Text style={styles.color_textPrivate}>
@@ -335,9 +407,10 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     button: {
         alignItems: 'center',
@@ -354,6 +427,7 @@ const styles = StyleSheet.create({
     textSign: {
         fontSize: 18,
         fontWeight: 'bold'
+
     },
     textPrivate: {
         flexDirection: 'row',
@@ -362,5 +436,9 @@ const styles = StyleSheet.create({
     },
     color_textPrivate: {
         color: 'grey'
-    }
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
+    },
 });
