@@ -11,7 +11,7 @@ import {
     ActivityIndicator
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-//import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 
@@ -138,7 +138,9 @@ const SignInScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome!</Text>
+                <Animatable.View animation="fadeInLeft" duration={800}>
+                    <Text style={styles.text_header}>Welcome to Aditya Connect!</Text>
+                </Animatable.View>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
@@ -229,31 +231,40 @@ const SignInScreen = ({ navigation }) => {
                 <View style={styles.button}>
                     <TouchableOpacity
                         style={[styles.signIn, {
-                            borderColor: '#009387',
-                            borderWidth: 1,
                             marginTop: 15
                         }]}
                         onPress={() => { loginHandle(data.username, data.password) }}
                     >
-                        {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
-                            <ActivityIndicator size="large" color="#009387" />
-                        </View> : <Text style={[styles.textSign, {
-                            color: '#009387'
-                        }]}>Sign In</Text>
-                        }
+                        <LinearGradient
+                            colors={['#08d4c4', '#01ab9d']}
+                            style={styles.signIn}
+                        >
+                            {isLoad ?
+                                <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                    <ActivityIndicator size="large" color="#009387" />
+                                </View>
+                                :
+                                <Text style={[styles.textSign, {
+                                    color: '#fff'
+                                }]}>Login</Text>
+                            }
+                        </LinearGradient>
                     </TouchableOpacity>
 
                     <TouchableOpacity
                         onPress={() => navigation.navigate('SignUpScreen')}
                         style={[styles.signIn, {
-                            borderColor: '#009387',
-                            borderWidth: 1,
                             marginTop: 15
                         }]}
                     >
-                        <Text style={[styles.textSign, {
-                            color: '#009387'
-                        }]}>Sign Up</Text>
+                        <LinearGradient
+                            colors={['#08d4c4', '#01ab9d']}
+                            style={styles.signIn}
+                        >
+                            <Text style={[styles.textSign, {
+                                color: '#fff'
+                            }]}>Register</Text>
+                        </LinearGradient>
                     </TouchableOpacity>
                 </View>
             </Animatable.View>

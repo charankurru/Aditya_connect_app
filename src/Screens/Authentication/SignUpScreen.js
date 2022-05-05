@@ -12,7 +12,7 @@ import {
     StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-//import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../../Components/context';
@@ -167,7 +167,9 @@ const SignInScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Register Now!</Text>
+                <Animatable.View animation="fadeInLeft" duration={800}>
+                    <Text style={styles.text_header}>Register Now!</Text>
+                </Animatable.View>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
@@ -295,7 +297,7 @@ const SignInScreen = ({ navigation }) => {
                         <TouchableOpacity
                             onPress={updateConfirmSecureTextEntry}
                         >
-                            {data.secureTextEntry ?
+                            {data.confirm_secureTextEntry ?
                                 <Feather
                                     name="eye-off"
                                     color="grey"
@@ -327,39 +329,41 @@ const SignInScreen = ({ navigation }) => {
                     <View style={styles.button}>
                         <TouchableOpacity
                             style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
                                 marginTop: 15
                             }]}
                             onPress={() => register()}
                         >
-                            {/* <LinearGradient
+                            <LinearGradient
                                 colors={['#08d4c4', '#01ab9d']}
                                 style={styles.signIn}
                             >
-                                <Text style={[styles.textSign, {
-                                    color: '#fff'
-                                }]}>Sign Up</Text>
-                            </LinearGradient> */}
-
-                            {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
-                                <ActivityIndicator size="large" color="#009387" />
-                            </View> : <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Sign Up</Text>}
+                                {isLoad ?
+                                    <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                                        <ActivityIndicator size="large" color="#009387" />
+                                    </View>
+                                    :
+                                    <Text style={[styles.textSign, {
+                                        color: '#fff'
+                                    }]}>Register</Text>
+                                }
+                            </LinearGradient>
                         </TouchableOpacity>
 
                         <TouchableOpacity
                             onPress={() => navigation.goBack()}
                             style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
                                 marginTop: 15
                             }]}
                         >
-                            <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Sign In</Text>
+
+                            <LinearGradient
+                                colors={['#08d4c4', '#01ab9d']}
+                                style={styles.signIn}
+                            >
+                                <Text style={[styles.textSign, {
+                                    color: '#fff'
+                                }]}>Login</Text>
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>

@@ -100,11 +100,11 @@ const App = () => {
               id: _id,
               userName: fullName,
               token: userToken,
-              newUser: userdata.newUser,
+              // newUser: userdata.newUser,
+              newUser: true,
               email: email,
               collegeId: collegeId,
             });
-          // dispatch({ type: 'LOGIN', id: id, userName: username, token: userToken, newUser: true });
         }
       } catch (error) {
         console.log(error);

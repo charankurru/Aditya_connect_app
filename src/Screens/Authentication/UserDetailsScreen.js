@@ -12,12 +12,13 @@ import {
     StatusBar
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-//import LinearGradient from 'react-native-linear-gradient';
+import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData } from '../../API/services';
+import { Animated } from 'react-native-web';
 const UserDetailsScreen = ({ navigation }) => {
 
     const [isLoad, setIsLoad] = React.useState(false);
@@ -142,14 +143,16 @@ const UserDetailsScreen = ({ navigation }) => {
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.header}>
-                <Text style={styles.text_header}>Few Moments..... Please provide you information</Text>
+                <Animatable.View animation="fadeInLeft" duration={800}>
+                    <Text style={styles.text_header}>Few Moments..... Please provide you information</Text>
+                </Animatable.View>
             </View>
             <Animatable.View
                 animation="fadeInUpBig"
                 style={styles.footer}
             >
                 <ScrollView>
-                    <Text style={styles.text_footer}>Id</Text>
+                    <Text style={styles.text_footer}>Rollnumber</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="user-o"
@@ -248,16 +251,19 @@ const UserDetailsScreen = ({ navigation }) => {
                         <TouchableOpacity
                             onPress={() => updateUserProfile()}
                             style={[styles.signIn, {
-                                borderColor: '#009387',
-                                borderWidth: 1,
                                 marginTop: 15
                             }]}
                         >
-                            {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', color: 'black' }}>
-                                <ActivityIndicator size="large" color="#009387" />
-                            </View> : <Text style={[styles.textSign, {
-                                color: '#009387'
-                            }]}>Submit</Text>}
+                            <LinearGradient
+                                colors={['#08d4c4', '#01ab9d']}
+                                style={styles.signIn}
+                            >
+                                {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
+                                    <ActivityIndicator size="large" color="#fff" />
+                                </View> : <Text style={[styles.textSign, {
+                                    color: '#fff'
+                                }]}>Submit</Text>}
+                            </LinearGradient>
                         </TouchableOpacity>
                     </View>
                 </ScrollView>
@@ -305,9 +311,10 @@ const styles = StyleSheet.create({
     },
     textInput: {
         flex: 1,
-        marginTop: Platform.OS === 'ios' ? 0 : -12,
         paddingLeft: 10,
         color: '#05375a',
+        fontSize: 18,
+        fontWeight: 'bold'
     },
     button: {
         alignItems: 'center',

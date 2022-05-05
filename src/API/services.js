@@ -43,6 +43,6 @@ export const GetUserbyId = async (userId) => {
 }
 
 export const GetPosts = async (queryData) => {
-    return await API.get("users/fetchposts", { params: queryData });
+    return await API.get("/users/fetchposts", { params: queryData });
 }
 
