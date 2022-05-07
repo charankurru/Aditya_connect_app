@@ -1,5 +1,5 @@
 import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 
 const FeedBackTextInput = (props) => {
@@ -20,6 +20,7 @@ const Feedback = () => {
 
     return (
         <View style={styles.container}>
+            <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <Card>
                 <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
             </Card>
@@ -35,8 +36,6 @@ const Feedback = () => {
                             fontSize: 18,
                             fontWeight: 'bold',
                             padding: 7,
-
-
                         }}
                         placeholder="Please Provide your Valuable Feedback here..."
                         multiline

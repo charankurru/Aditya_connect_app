@@ -38,11 +38,15 @@ export const InsertAdminData = async (admin) => {
     return await API.post('/admin/addAdmin', admin)
 }
 
-export const GetUserbyId = async (userId) => {
-    return await API.get(`/users/get-user/${userId}`)
+export const GetUserbyId = (userId) => {
+    return API.get(`/users/get-user/${userId}`)
 }
 
 export const GetPosts = async (queryData) => {
     return await API.get("/users/fetchposts", { params: queryData });
+}
+
+export const SendMessage = (data) => {
+    return API.post("/users/post-message", data)
 }
 

@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react'
-import { View, ActivityIndicator, ScrollView, FlatList } from 'react-native'
+import { View, ActivityIndicator, StatusBar, FlatList } from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
 import { AuthContext } from '../../Components/context';
 import fetchPostsHook from './fetchPostsHook';
@@ -55,6 +55,7 @@ const NewsFeed = () => {
     console.log()
     return (
         <View style={{ flex: 1, }}>
+            <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <FlatList
                 data={posts}
                 onEndReached={() => { loadMore() }}

@@ -1,5 +1,5 @@
 import React, { useEffect, Component, useState, useRef } from 'react'
-import { View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import {
     Avatar,
     Title,
@@ -43,6 +43,7 @@ const UserProfile = ({ navigation }) => {
     }
     return (
         <SafeAreaView style={styles.container}>
+            <StatusBar backgroundColor='#009387' barStyle="light-content" />
             {data && <>
                 {console.log(data)}
                 <View style={styles.userInfoSection}>
@@ -176,6 +177,7 @@ export default UserProfile
 const styles = StyleSheet.create({
     container: {
         flex: 1,
+        backgroundColor: '#fff'
     },
     button: {
         alignItems: 'center',

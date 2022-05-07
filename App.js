@@ -18,8 +18,21 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 const Stack = createNativeStackNavigator();
 import EditProfile from './src/Screens/DashBoard/EditProfile'
 import jwt_decode from "jwt-decode";
+import { GetUserbyId } from './src/API/services';
+
 
 const App = () => {
+
+  const navigationOptions = () => {
+    return {
+      headerStyle: {
+        backgroundColor: '#009387',
+      },
+      headerTitleStyle: {
+        color: '#fff',
+      }
+    }
+  }
 
   function parseJwt(token) {
     if (token) {
@@ -33,6 +46,9 @@ const App = () => {
     userToken: null,
     newUser: true,
     collegeId: null,
+    courseId: null,
+    departmentId: null,
+    messagesList: null
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -45,6 +61,9 @@ const App = () => {
           email: action.email,
           newUser: action.newUser,
           collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId,
+          messagesList: action.messagesList,
         };
       case 'LOGIN':
         return {
@@ -55,6 +74,9 @@ const App = () => {
           email: action.email,
           newUser: action.newUser,
           collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId,
+          messagesList: action.messagesList,
         };
       case 'LOGOUT':
         return {
@@ -75,11 +97,13 @@ const App = () => {
           ...prevState,
           userToken: action.token,
           collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId,
+          messagesList: action.messagesList,
           newUser: false
         };
     }
   };
-
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
 
   const authContext = React.useMemo(() => ({
@@ -88,23 +112,34 @@ const App = () => {
       let res;
       try {
         res = await Login(foundUser);
+        console.log(res)
         if (res.data && res.data.token) {
           const userToken = res.data.token;
           const userdata = parseJwt(userToken);
           console.log(userdata);
           let { fullName, email, _id, collegeId } = userdata;
-          await AsyncStorage.setItem('userToken', userToken);
-          dispatch(
-            {
-              type: 'LOGIN',
-              id: _id,
-              userName: fullName,
-              token: userToken,
-              // newUser: userdata.newUser,
-              newUser: true,
-              email: email,
-              collegeId: collegeId,
-            });
+          if (res.data.userRecord[0]) {
+            let { collegeId, courseId, departmentId, messagesList } = res.data.userRecord[0];
+            await AsyncStorage.setItem('userToken', userToken);
+            dispatch(
+              {
+                type: 'LOGIN',
+                id: _id,
+                userName: fullName,
+                token: userToken,
+                newUser: userdata.newUser,
+                // newUser: true,
+                email: email,
+                collegeId: collegeId,
+                courseId: courseId,
+                departmentId: departmentId,
+                messagesList: messagesList
+              });
+          } else {
+            Alert.alert('Oops!', "something went wrong please try again in a while", [
+              { text: 'Okay' }
+            ]);
+          }
         }
       } catch (error) {
         console.log(error);
@@ -141,14 +176,25 @@ const App = () => {
         const res = await updateUser(updateData);
         let userToken;
         if (res && res.data.token) {
+          console.log(res)
           userToken = res.data.token
           const userdata = parseJwt(userToken);
-          let collegeId = userdata['collegeId'];
           await AsyncStorage.setItem('userToken', userToken);
           Alert.alert('yeah....!', "Details submited Successfully", [
             { text: 'Okay' }
           ]);
-          dispatch({ type: 'DETAILS_SUBMITTED', token: userToken, collegeId: collegeId });
+          if (res.data.userRecord) {
+            let { collegeId, courseId, departmentId, messagesList } = res.data.userRecord
+            dispatch(
+              {
+                type: 'DETAILS_SUBMITTED',
+                token: userToken,
+                collegeId: collegeId,
+                courseId: courseId,
+                departmentId: departmentId,
+                messagesList: messagesList
+              });
+          }
         }
         else {
           Alert.alert('Oops!', "something went wrong in updating the data", [
@@ -176,14 +222,50 @@ const App = () => {
           id = userdata._id;
           isnewUser = userdata['newUser']
           email = userdata['email'];
+
+          let userRec = await getUserById(id);
+          console.log(userRec);
+          let { collegeId, courseId, departmentId, messagesList } = userRec
+          dispatch(
+            {
+              type: 'RETRIEVE_TOKEN',
+              token: userToken,
+              userName: username,
+              id: id,
+              newUser: isnewUser,
+              email: email,
+              collegeId: collegeId,
+              courseId: courseId,
+              departmentId: departmentId,
+              messagesList: messagesList
+            });
         }
       } catch (e) {
         console.log(e);
       }
-      dispatch({ type: 'RETRIEVE_TOKEN', token: userToken, userName: username, id: id, newUser: isnewUser, email: email });
     }, 1000);
-
   }, []);
+
+  const getUserById = async (userId) => {
+    try {
+      const res = await GetUserbyId(userId)
+      return res.data[0];
+    } catch (error) {
+      console.log(error);
+    }
+    // return new Promise(function (resolve, reject) {
+    //   GetUserbyId(userId).then(
+    //     (response) => {
+    //       var result = response.data[0];
+    //       console.log('Processing Request');
+    //       resolve(result);
+    //     },
+    //     (error) => {
+    //       reject(error);
+    //     }
+    //   );
+    // });
+  }
 
   function Root() {
     return (
@@ -196,7 +278,6 @@ const App = () => {
     );
   }
 
-
   return (
     <PaperProvider >
       <AuthContext.Provider value={{ authContext, loginState }}>
@@ -205,9 +286,9 @@ const App = () => {
             loginState.userToken !== null ? (
               loginState.newUser == true ? <UserDetailsScreen /> : (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                  <Drawer.Screen options={{ backgroundColor: '#e7305b' }} name="Home" component={NewsFeed} />
-                  <Drawer.Screen name="Profile" component={Root} />
-                  <Drawer.Screen name="Feedback" component={Feedback} />
+                  <Drawer.Screen options={navigationOptions()} name="Home" component={NewsFeed} />
+                  <Drawer.Screen options={navigationOptions()} name="Profile" component={Root} />
+                  <Drawer.Screen options={navigationOptions()} name="Feedback" component={Feedback} />
                 </Drawer.Navigator>
               )
             ) :
@@ -216,8 +297,6 @@ const App = () => {
         </NavigationContainer>
       </AuthContext.Provider>
     </PaperProvider>
-
-
   );
 }
 

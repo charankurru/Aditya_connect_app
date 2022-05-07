@@ -9,6 +9,7 @@ import {
     Platform,
     StyleSheet,
     ScrollView,
+    StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 //import LinearGradient from 'react-native-linear-gradient';
@@ -102,7 +103,7 @@ const EditProfile = ({ route, navigation }) => {
 
     return (
         <SafeAreaView style={styles.container}>
-
+            <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <View style={styles.userInfoSection}>
                 <View style={{
                     flexDirection: 'row', marginTop: 15,
@@ -291,8 +292,8 @@ export default EditProfile
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingLeft: 10
-        // backgroundColor: '#009387'
+        paddingLeft: 10,
+        backgroundColor: '#fff'
     },
     userInfoSection: {
         paddingHorizontal: 30,
@@ -324,15 +325,12 @@ const styles = StyleSheet.create({
     action: {
         flexDirection: 'row',
         marginTop: 10,
-        borderBottomWidth: 11,
+        borderBottomWidth: 3,
         borderBottomColor: '#f2f2f2',
         paddingBottom: 5
     },
     textInput: {
-        // flex: 1,
         marginTop: Platform.OS === 'ios' ? 0 : -4,
-        // paddingLeft: 10,
-        // color: '#05375a',
         flex: 1,
         paddingLeft: 10,
         color: '#05375a',
