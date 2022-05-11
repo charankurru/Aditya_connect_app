@@ -8,7 +8,6 @@ import Feedback from './src/Screens/DashBoard/Feedback'
 import { AuthContext } from './src/Components/context';
 import RootStackScreen from './src/Screens/Authentication/RootStackScreen'
 import { Provider as PaperProvider } from 'react-native-paper';
-// import AsyncStorage from '@react-native-community/async-storage';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 const Drawer = createDrawerNavigator();
 import { DrawerContent } from './src/Components/DrawerContent';
@@ -48,7 +47,8 @@ const App = () => {
     collegeId: null,
     courseId: null,
     departmentId: null,
-    messagesList: null
+    rollNumber: null,
+    mobileNumber: null
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -63,7 +63,8 @@ const App = () => {
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
-          messagesList: action.messagesList,
+          rollNumber: action.rollNumber,
+          mobileNumber:action.mobileNumber
         };
       case 'LOGIN':
         return {
@@ -76,7 +77,7 @@ const App = () => {
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
-          messagesList: action.messagesList,
+          rollNumber: action.rollNumber,
         };
       case 'LOGOUT':
         return {
@@ -99,9 +100,21 @@ const App = () => {
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
-          messagesList: action.messagesList,
+          rollNumber: action.rollNumber,
+          mobileNumber:action.mobileNumber,
           newUser: false
         };
+      case 'PROFILE_UPDATED':
+        return {
+          ...prevState,
+          userName: action.userName,
+          email: action.email,
+          mobileNumber:action.mobileNumber,
+          rollNumber: action.rollNumber,
+          collegeId: action.collegeId,
+          courseId: action.courseId,
+          departmentId: action.departmentId,
+        }
     }
   };
   const [loginState, dispatch] = React.useReducer(loginReducer, initialLoginState);
@@ -119,7 +132,7 @@ const App = () => {
           console.log(userdata);
           let { fullName, email, _id, collegeId } = userdata;
           if (res.data.userRecord[0]) {
-            let { collegeId, courseId, departmentId, messagesList } = res.data.userRecord[0];
+            let { collegeId, courseId, departmentId, rollNumber } = res.data.userRecord[0];
             await AsyncStorage.setItem('userToken', userToken);
             dispatch(
               {
@@ -133,7 +146,7 @@ const App = () => {
                 collegeId: collegeId,
                 courseId: courseId,
                 departmentId: departmentId,
-                messagesList: messagesList
+                rollNumber: rollNumber
               });
           } else {
             Alert.alert('Oops!', "something went wrong please try again in a while", [
@@ -184,7 +197,7 @@ const App = () => {
             { text: 'Okay' }
           ]);
           if (res.data.userRecord) {
-            let { collegeId, courseId, departmentId, messagesList } = res.data.userRecord
+            let { collegeId, courseId, departmentId, rollNumber,mobileNumber } = res.data.userRecord
             dispatch(
               {
                 type: 'DETAILS_SUBMITTED',
@@ -192,7 +205,8 @@ const App = () => {
                 collegeId: collegeId,
                 courseId: courseId,
                 departmentId: departmentId,
-                messagesList: messagesList
+                rollNumber: rollNumber,
+                mobileNumber:mobileNumber
               });
           }
         }
@@ -207,6 +221,19 @@ const App = () => {
           { text: 'Okay' }
         ]);
       }
+    },
+    editProfileUpdate : async (updatedData) =>{
+      dispatch(
+          {
+            type: 'PROFILE_UPDATED',
+            userName: updatedData.username,
+            email: updatedData.email,
+            collegeId: updatedData.collegeId,
+            courseId: updatedData.courseId,
+            departmentId: updatedData.departmentId,
+            rollNumber: updatedData.rollNumber,
+            mobileNumber: updatedData.mobileNumber
+          });
     }
   }), []);
 
@@ -225,7 +252,7 @@ const App = () => {
 
           let userRec = await getUserById(id);
           console.log(userRec);
-          let { collegeId, courseId, departmentId, messagesList } = userRec
+          let { collegeId, courseId, departmentId, rollNumber,mobileNumber } = userRec
           dispatch(
             {
               type: 'RETRIEVE_TOKEN',
@@ -237,7 +264,8 @@ const App = () => {
               collegeId: collegeId,
               courseId: courseId,
               departmentId: departmentId,
-              messagesList: messagesList
+              rollNumber: rollNumber,
+              mobileNumber:mobileNumber
             });
         }
       } catch (e) {

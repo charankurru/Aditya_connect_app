@@ -1,4 +1,4 @@
-import React, { useEffect, Component, useState, useRef } from 'react'
+import React, { useEffect, useContext, useState, useRef } from 'react'
 import { View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import {
     Avatar,
@@ -9,32 +9,19 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../../Components/context';
-import { GetUserbyId } from '../../API/services'
 import avatar7 from '../../../assets/avatar7.png';
 
-
 const UserProfile = ({ navigation }) => {
-    const isMountedRef = useRef(null);
-    const [data, setData] = useState(undefined);
 
+    const isMountedRef = useRef(null);
     const { loginState } = React.useContext(AuthContext);
+
     useEffect(() => {
         isMountedRef.current = true;
-        getUserdata();
         return () => isMountedRef.current = false;
     }, [])
 
-    const getUserdata = async () => {
-        GetUserbyId(loginState.id)
-            .then(res => {
-                if (res.data) {
-                    if (isMountedRef.current) { setData(res.data[0]) }
-                }
-            })
-            .catch(err => console.log(err))
-
-    }
-    if (data == undefined) {
+    if (loginState == undefined) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
                 <ActivityIndicator size="large" color="#009387" />
@@ -44,8 +31,7 @@ const UserProfile = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
-            {data && <>
-                {console.log(data)}
+            {loginState && <>
                 <View style={styles.userInfoSection}>
                     <View style={{
                         flexDirection: 'row', marginTop: 15,
@@ -61,14 +47,14 @@ const UserProfile = ({ navigation }) => {
                             <Title style={[styles.title, {
                                 marginTop: 15,
                                 marginBottom: 5,
-                            }]}>{data ? data.fullName : null}</Title>
-                            <Caption style={styles.caption}>{data ? data.rollNumber : null}</Caption>
+                            }]}>{loginState.userName}</Title>
+                            <Caption style={styles.caption}>{loginState.rollNumber}</Caption>
                         </View>
                     </View>
 
                     <View style={styles.button}>
                         <TouchableOpacity
-                            onPress={() => { navigation.navigate('EditProfile', data) }}
+                            onPress={() => { navigation.navigate('EditProfile', loginState) }}
                             style={[styles.signIn, {
                                 borderColor: 'black',
                                 borderWidth: 1,
@@ -88,7 +74,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="email" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data?.email}
+                                {loginState?.email}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -97,7 +83,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="phone" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data ? data.mobileNumber : null}
+                                {loginState ? loginState.mobileNumber : null}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -106,7 +92,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="heart-outline" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data.roleId ? data.roleId.roleName : null}
+                                {loginState.roleId ? loginState.roleId.roleName : null}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -116,7 +102,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="school" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data.courseId ? data.courseId.courseName : null}
+                                {loginState.courseId ? loginState.courseId.courseName : null}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -124,7 +110,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="google-classroom" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data.collegeId ? data.collegeId.collegeName : null}
+                                {loginState.collegeId ? loginState.collegeId.collegeName : null}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -133,7 +119,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="doorbell-video" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {data.departmentId ? data.departmentId.deptName : null}
+                                {loginState.departmentId ? loginState.departmentId.deptName : null}
                             </Text>
                         </View>
                     </TouchableRipple>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import { useState, useEffect, useContext } from 'react'
 import {
     View,
     Text,
@@ -12,7 +12,6 @@ import {
     StatusBar,
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
-//import LinearGradient from 'react-native-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
@@ -22,22 +21,26 @@ import avatar7 from '../../../assets/avatar7.png';
 import {
     Avatar,
 } from 'react-native-paper';
+import { updateUser } from "../../API/services";
 
 const EditProfile = ({ route, navigation }) => {
 
+    const { authContext: { editProfileUpdate } } = useContext(AuthContext);
+
     const editData = route.params;
+    console.log(editData);
 
-    const [colleges, setColleges] = React.useState([{}]);
-    const [courses, setCourses] = React.useState([{}]);
-    const [filteredColleges, setFilteredColleges] = React.useState([{}]);
-    const [depts, setDepts] = React.useState([{}]);
+    const [colleges, setColleges] = useState([{}]);
+    const [courses, setCourses] = useState([{}]);
+    const [filteredColleges, setFilteredColleges] = useState([{}]);
+    const [depts, setDepts] = useState([{}]);
 
-    const [data, setData] = React.useState({
-        fullName: editData.fullName,
+    const [data, setData] = useState({
+        fullName: editData.userName,
         email: editData.email,
-        id: editData._id,
-        rollNumber: editData.rollNumber,
-        mobileNumber: editData.mobileNumber,
+        id: editData.id,
+        rollNumber: editData.rollNumber ? editData.rollNumber : "",
+        mobileNumber: editData.mobileNumber ? editData.mobileNumber : "",
         courseId: editData.courseId ? editData.courseId._id : "",
         collegeId: editData.collegeId ? editData.collegeId._id : "",
         deptId: editData.departmentId ? editData.departmentId._id : "",
@@ -89,8 +92,33 @@ const EditProfile = ({ route, navigation }) => {
         setData({ ...data, deptId: dept })
     }
 
-    const updateUserProfile = () => {
+    const updateUserProfile = async () => {
         console.log(data);
+        try {
+            let res = await updateUser(data);
+            console.log(res);
+            if (res.data.token) {
+                let { collegeId, courseId, departmentId } = res.data.userRecord
+                navigation.goBack()
+                editProfileUpdate({
+                    username: data.fullName,
+                    email: data.email,
+                    collegeId: collegeId,
+                    courseId: courseId,
+                    departmentId: departmentId,
+                    rollNumber: data.rollNumber,
+                    mobileNumber: data.mobileNumber
+                })
+                console.log("need To go back now")
+
+            }
+
+        }
+        catch (e) {
+            console.log(e)
+        }
+
+
     }
 
     if (courses.length <= 1) {
