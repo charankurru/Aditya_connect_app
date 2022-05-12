@@ -1,8 +1,9 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList, ScrollView, ActivityIndicator } from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper'
 import { AuthContext } from '../../Components/context'
-import { GetUserbyId, SendMessage } from '../../API/services'
+import { GetMessage, SendMessage } from '../../API/services'
+import { LinearGradient } from 'expo-linear-gradient'
 const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 const FeedBackTextInput = (props) => {
     return (
@@ -15,16 +16,16 @@ const FeedBackTextInput = (props) => {
 const Feedback = () => {
     const [value, onChangeText] = React.useState('');
     const { loginState } = useContext(AuthContext);
-    const [user, setUser] = useState({});
     const [messagesList, setMessagesList] = useState();
+    const [isLoading, setLoading] = useState(false)
 
     useEffect(async () => {
         try {
-            let user = await GetUserbyId(loginState.id);
-            if (user && user.data.length > 0) {
+            let resPosts = await GetMessage(loginState.id);
+            console.log(resPosts);
+            if (resPosts && resPosts.data.posts.length > 0) {
                 console.log("data fetched")
-                setUser(user.data[0]);
-                setMessagesList(user.data[0].messagesList)
+                setMessagesList(resPosts.data.posts)
             }
         } catch (error) {
             console.log(error);
@@ -33,15 +34,16 @@ const Feedback = () => {
     }, [])
 
     const submitFeedback = async () => {
+        setLoading(true);
         console.log(value);
         try {
             let res = await SendMessage({
                 message: value,
                 postedBy: loginState.id
             })
-            console.log(res)
+            setLoading(false);
             if (res && res.data.data) {
-                setMessagesList([...messagesList, res.data.data])
+                messagesList.unshift(res.data.data);
                 onChangeText("")
             }
         } catch (error) {
@@ -59,59 +61,66 @@ const Feedback = () => {
         </Card>
     );
     return (
-        <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
-            <Card>
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-            </Card>
+        <ScrollView>
+            <View style={styles.container}>
+                <StatusBar backgroundColor='#009387' barStyle="light-content" />
+                <Card>
+                    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
+                </Card>
 
-            <Card elevated elevation={2}>
-                <View style={{ padding: 10 }}>
-                    <FeedBackTextInput
-                        style={{
-                            borderColor: '#009387',
-                            borderWidth: 1,
-                            borderRadius: 10,
-                            textAlignVertical: 'top',
-                            fontSize: 18,
-                            fontWeight: 'bold',
-                            padding: 7,
-                        }}
-                        placeholder="Please Provide your Valuable Feedback here..."
-                        multiline
-                        numberOfLines={7}
-                        value={value}
-                        onChangeText={text => onChangeText(text)}
+                <Card elevated elevation={2}>
+                    <View style={{ padding: 10 }}>
+                        <FeedBackTextInput
+                            style={{
+                                borderColor: '#009387',
+                                borderWidth: 1,
+                                borderRadius: 10,
+                                textAlignVertical: 'top',
+                                fontSize: 18,
+                                fontWeight: 'bold',
+                                padding: 7,
+                            }}
+                            placeholder="Please Provide your Valuable Feedback here..."
+                            multiline
+                            numberOfLines={7}
+                            value={value}
+                            onChangeText={text => onChangeText(text)}
 
-                    />
-                </View>
-            </Card>
-            <TouchableOpacity
-                onPress={() => { submitFeedback() }}
-                style={[styles.signIn, {
-                    borderColor: '#009387',
-                    borderWidth: 1,
-                    marginTop: 15
-                }]}
-            >
-                <Text style={[styles.textSign, {
-                    color: '#009387'
-                }]}>Submit</Text>
-            </TouchableOpacity>
-            <View>
-                {messagesList ?
-                    <FlatList
-                        data={messagesList}
-                        renderItem={renderMessage}
-                        keyExtractor={item => item._id}
-                    />
-                    :
-                    <View style={{ flex: 1, alignItems: 'center', marginTop: 15 }}>
-                        <Text>No Messages you have Posted yet</Text>
+                        />
                     </View>
-                }
-            </View>
-        </View >
+                </Card>
+                <TouchableOpacity
+                    onPress={() => { submitFeedback() }}
+                    style={[styles.signIn, {
+                        marginTop: 15
+                    }]}
+                >
+                    <LinearGradient
+                        colors={['#08d4c4', '#01ab9d']}
+                        style={styles.signIn}
+                    >
+                        {isLoading ? <ActivityIndicator size="large" color='#fff' /> : <Text style={[styles.textSign, {
+                            color: '#fff'
+                        }]}>Submit</Text>}
+                    </LinearGradient>
+                </TouchableOpacity>
+
+                <View>
+                    {messagesList ?
+                        <FlatList
+                            data={messagesList}
+                            renderItem={renderMessage}
+                            keyExtractor={item => item._id}
+                        />
+                        :
+                        <View style={{ flex: 1, alignItems: 'center', marginTop: 15 }}>
+                            <Text>No Messages you have Posted yet</Text>
+                        </View>
+                    }
+                </View>
+
+            </View >
+        </ScrollView>
     )
 }
 
@@ -181,3 +190,4 @@ const styles = StyleSheet.create({
         borderRadius: 10
     }
 });
+

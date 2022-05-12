@@ -21,7 +21,7 @@ export function DrawerContent(props) {
     const paperTheme = useTheme();
 
     const { authContext: { signOut, toggleTheme }, loginState } = React.useContext(AuthContext);
-    console.log(loginState)
+    // console.log(loginState)
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
@@ -32,14 +32,13 @@ export function DrawerContent(props) {
                                 source={{
                                     uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
                                 }}
-                                size={50}
+                                size={80}
                             />
-                            <View style={{ marginLeft: 15, flexDirection: 'column' }}>
-                                <Title style={styles.title}>{loginState.userName}</Title>
-                                <Caption style={styles.caption}>{loginState.email}</Caption>
-                            </View>
                         </View>
-
+                        <View style={{ marginLeft: 2, flexDirection: 'column' }}>
+                            <Title style={styles.title}>{loginState.userName}</Title>
+                            <Caption style={styles.caption}>{loginState.email}</Caption>
+                        </View>
                     </View>
 
                     <Drawer.Section style={styles.drawerSection}>
@@ -123,16 +122,24 @@ const styles = StyleSheet.create({
         flex: 1,
     },
     userInfoSection: {
-        paddingLeft: 20,
+        paddingLeft: 17,
+        borderBottomColor: '#f4f4f4',
+        borderBottomWidth: 1,
+        backgroundColor: '#009387',
+        marginTop: -5
     },
     title: {
         fontSize: 16,
         marginTop: 3,
         fontWeight: 'bold',
+        color: 'white'
     },
     caption: {
         fontSize: 14,
+        marginTop: -1,
         lineHeight: 14,
+        color: 'white',
+        marginBottom: 10
     },
     row: {
         marginTop: 20,

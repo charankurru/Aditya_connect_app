@@ -95,41 +95,22 @@ const SignInScreen = ({ navigation }) => {
 
     const loginHandle = async (userName, password) => {
 
-        // const foundUser = Users.filter(item => {
-        //     return userName == item.username && password == item.password;
-        // });
-
-        // if (data.username.length == 0 || data.password.length == 0) {
-        //     Alert.alert('Wrong Input!', 'Username or password field cannot be empty.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
-
-        // if (foundUser.length == 0) {
-        //     Alert.alert('Invalid User!', 'Username or password is incorrect.', [
-        //         { text: 'Okay' }
-        //     ]);
-        //     return;
-        // }
-        // setIsLoad(true);
+        setIsLoad(true);
         let foundUser = {
             email: userName,
             password: password
         }
         console.log(foundUser)
         let isLoginData = await signIn(foundUser);
-
         console.log(isLoginData)
         if (isLoginData) {
-            // setIsLoad(false);
             let { message, token } = isLoginData.data;
             if (!token) {
                 console.log(message);
                 Alert.alert('Invalid User!', message, [
                     { text: 'Okay' }
                 ]);
-                // setIsLoad(false);
+                setIsLoad(false);
             }
         }
     }
@@ -241,7 +222,7 @@ const SignInScreen = ({ navigation }) => {
                         >
                             {isLoad ?
                                 <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                    <ActivityIndicator size="large" color="#009387" />
+                                    <ActivityIndicator size="large" color="#fff" />
                                 </View>
                                 :
                                 <Text style={[styles.textSign, {

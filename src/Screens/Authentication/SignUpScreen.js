@@ -145,7 +145,6 @@ const SignInScreen = ({ navigation }) => {
             password: data.password
         }
         let isSuccess = await signUp(registerData);
-        setIsLoad(false);
         if (isSuccess) {
             let { doc, message } = isSuccess.data;
             if (doc) {
@@ -158,6 +157,7 @@ const SignInScreen = ({ navigation }) => {
                 Alert.alert('Invalid User!', message, [
                     { text: 'Okay' }
                 ]);
+                setIsLoad(false);
             }
         }
 
@@ -339,7 +339,7 @@ const SignInScreen = ({ navigation }) => {
                             >
                                 {isLoad ?
                                     <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                                        <ActivityIndicator size="large" color="#009387" />
+                                        <ActivityIndicator size="large" color="#fff" />
                                     </View>
                                     :
                                     <Text style={[styles.textSign, {

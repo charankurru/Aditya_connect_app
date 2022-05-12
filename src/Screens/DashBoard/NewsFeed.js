@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, useCallback, useContext } from 'react'
-import { View, ActivityIndicator, StatusBar, FlatList } from 'react-native'
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
+import { View, ActivityIndicator, StatusBar, FlatList, StyleSheet, ToastAndroid } from 'react-native'
+import { Avatar, Button, Card, Title, Paragraph, FAB } from 'react-native-paper';
 import { AuthContext } from '../../Components/context';
 import fetchPostsHook from './fetchPostsHook';
 
@@ -8,9 +8,22 @@ const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 const NewsFeed = () => {
 
-    const { loginState } = useContext(AuthContext);
+    const { loginState } = useContext(AuthContext)
     const [pageNumber, setPageNumber] = useState(1)
 
+    const showToastWithGravityAndOffset = () => {
+        ToastAndroid.showWithGravityAndOffset(
+            "Welcome to aditya Connect!",
+            ToastAndroid.LONG,
+            ToastAndroid.BOTTOM,
+            25,
+            50
+        );
+    };
+
+    useEffect(() => {
+        showToastWithGravityAndOffset();
+    }, [])
     const {
         posts,
         hasMore,
@@ -63,12 +76,28 @@ const NewsFeed = () => {
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={loadingIndicator()}
             />
+            <FAB
+                style={styles.fab}
+                icon="plus"
+                color="#fff"
+                onPress={() => console.log('Pressed')}
+            />
 
         </View>
     )
 }
 
 export default NewsFeed
+
+const styles = StyleSheet.create({
+    fab: {
+        position: 'absolute',
+        margin: 16,
+        right: 0,
+        bottom: 0,
+        fontSize: 24
+    },
+})
 
 
 

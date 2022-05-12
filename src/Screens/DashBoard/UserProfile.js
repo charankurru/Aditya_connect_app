@@ -83,7 +83,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="phone" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {loginState ? loginState.mobileNumber : null}
+                                {loginState.mobileNumber}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -92,7 +92,7 @@ const UserProfile = ({ navigation }) => {
                         <View style={styles.menuItem}>
                             <Icon name="heart-outline" color="#FF6347" size={25} />
                             <Text style={styles.menuItemText}>
-                                {loginState.roleId ? loginState.roleId.roleName : null}
+                                {loginState.roleId?.roleName}
                             </Text>
                         </View>
                     </TouchableRipple>
@@ -187,7 +187,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     title: {
-        fontSize: 24,
+        fontSize: 20,
         fontWeight: 'bold',
         color: 'black'
     },

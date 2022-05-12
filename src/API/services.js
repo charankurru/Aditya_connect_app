@@ -50,3 +50,7 @@ export const SendMessage = (data) => {
     return API.post("/users/post-message", data)
 }
 
+export const GetMessage = (id) => {
+    return API.get(`/users/get-messages/${id}`)
+}
+

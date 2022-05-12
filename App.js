@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Alert, StyleSheet } from 'react-native';
+import { View, Alert, StyleSheet, ToastAndroid } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import NewsFeed from './src/Screens/DashBoard/NewsFeed';
@@ -75,8 +75,7 @@ const App = () => {
           userName: action.userName,
           userToken: action.token,
           email: action.email,
-          // newUser: action.newUser,
-          newUser: true,
+          newUser: action.newUser,
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
@@ -145,13 +144,13 @@ const App = () => {
                 userName: fullName,
                 token: userToken,
                 newUser: userdata.newUser,
-                // newUser: true,
                 email: email,
                 collegeId: collegeId,
                 courseId: courseId,
                 departmentId: departmentId,
                 rollNumber: rollNumber
               });
+
           } else {
             Alert.alert('Oops!', "something went wrong please try again in a while", [
               { text: 'Okay' }
