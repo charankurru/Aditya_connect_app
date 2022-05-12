@@ -48,7 +48,8 @@ const App = () => {
     courseId: null,
     departmentId: null,
     rollNumber: null,
-    mobileNumber: null
+    mobileNumber: null,
+    roleId: null
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -64,7 +65,8 @@ const App = () => {
           courseId: action.courseId,
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
-          mobileNumber:action.mobileNumber
+          mobileNumber: action.mobileNumber,
+          roleId: action.roleId
         };
       case 'LOGIN':
         return {
@@ -73,7 +75,8 @@ const App = () => {
           userName: action.userName,
           userToken: action.token,
           email: action.email,
-          newUser: action.newUser,
+          // newUser: action.newUser,
+          newUser: true,
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
@@ -101,7 +104,8 @@ const App = () => {
           courseId: action.courseId,
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
-          mobileNumber:action.mobileNumber,
+          mobileNumber: action.mobileNumber,
+          roleId: action.roleId,
           newUser: false
         };
       case 'PROFILE_UPDATED':
@@ -109,7 +113,7 @@ const App = () => {
           ...prevState,
           userName: action.userName,
           email: action.email,
-          mobileNumber:action.mobileNumber,
+          mobileNumber: action.mobileNumber,
           rollNumber: action.rollNumber,
           collegeId: action.collegeId,
           courseId: action.courseId,
@@ -197,7 +201,7 @@ const App = () => {
             { text: 'Okay' }
           ]);
           if (res.data.userRecord) {
-            let { collegeId, courseId, departmentId, rollNumber,mobileNumber } = res.data.userRecord
+            let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = res.data.userRecord
             dispatch(
               {
                 type: 'DETAILS_SUBMITTED',
@@ -206,7 +210,8 @@ const App = () => {
                 courseId: courseId,
                 departmentId: departmentId,
                 rollNumber: rollNumber,
-                mobileNumber:mobileNumber
+                mobileNumber: mobileNumber,
+                roleId: roleId
               });
           }
         }
@@ -222,18 +227,18 @@ const App = () => {
         ]);
       }
     },
-    editProfileUpdate : async (updatedData) =>{
+    editProfileUpdate: async (updatedData) => {
       dispatch(
-          {
-            type: 'PROFILE_UPDATED',
-            userName: updatedData.username,
-            email: updatedData.email,
-            collegeId: updatedData.collegeId,
-            courseId: updatedData.courseId,
-            departmentId: updatedData.departmentId,
-            rollNumber: updatedData.rollNumber,
-            mobileNumber: updatedData.mobileNumber
-          });
+        {
+          type: 'PROFILE_UPDATED',
+          userName: updatedData.username,
+          email: updatedData.email,
+          collegeId: updatedData.collegeId,
+          courseId: updatedData.courseId,
+          departmentId: updatedData.departmentId,
+          rollNumber: updatedData.rollNumber,
+          mobileNumber: updatedData.mobileNumber
+        });
     }
   }), []);
 
@@ -252,7 +257,7 @@ const App = () => {
 
           let userRec = await getUserById(id);
           console.log(userRec);
-          let { collegeId, courseId, departmentId, rollNumber,mobileNumber } = userRec
+          let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = userRec
           dispatch(
             {
               type: 'RETRIEVE_TOKEN',
@@ -265,7 +270,8 @@ const App = () => {
               courseId: courseId,
               departmentId: departmentId,
               rollNumber: rollNumber,
-              mobileNumber:mobileNumber
+              mobileNumber: mobileNumber,
+              roleId: roleId
             });
         }
       } catch (e) {
@@ -281,18 +287,6 @@ const App = () => {
     } catch (error) {
       console.log(error);
     }
-    // return new Promise(function (resolve, reject) {
-    //   GetUserbyId(userId).then(
-    //     (response) => {
-    //       var result = response.data[0];
-    //       console.log('Processing Request');
-    //       resolve(result);
-    //     },
-    //     (error) => {
-    //       reject(error);
-    //     }
-    //   );
-    // });
   }
 
   function Root() {

@@ -1,7 +1,9 @@
-import React from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper';
-
+import React, { useEffect, useContext, useState } from 'react'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList } from 'react-native'
+import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper'
+import { AuthContext } from '../../Components/context'
+import { GetUserbyId, SendMessage } from '../../API/services'
+const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 const FeedBackTextInput = (props) => {
     return (
         <TextInput
@@ -11,13 +13,51 @@ const FeedBackTextInput = (props) => {
     );
 }
 const Feedback = () => {
-    const [value, onChangeText] = React.useState('Useless Multiline Placeholder');
+    const [value, onChangeText] = React.useState('');
+    const { loginState } = useContext(AuthContext);
+    const [user, setUser] = useState({});
+    const [messagesList, setMessagesList] = useState();
+
+    useEffect(async () => {
+        try {
+            let user = await GetUserbyId(loginState.id);
+            if (user && user.data.length > 0) {
+                console.log("data fetched")
+                setUser(user.data[0]);
+                setMessagesList(user.data[0].messagesList)
+            }
+        } catch (error) {
+            console.log(error);
+        }
+
+    }, [])
 
     const submitFeedback = async () => {
         console.log(value);
+        try {
+            let res = await SendMessage({
+                message: value,
+                postedBy: loginState.id
+            })
+            console.log(res)
+            if (res && res.data.data) {
+                setMessagesList([...messagesList, res.data.data])
+                onChangeText("")
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
-
+    const renderMessage = ({ item }) => (
+        <Card style={{ marginVertical: 3 }}>
+            <Card.Title title={loginState.userName} subtitle={item.createdAt} left={LeftContent} />
+            <Card.Content>
+                {/* <Title>Card title</Title> */}
+                <Paragraph>{item.message}</Paragraph>
+            </Card.Content>
+        </Card>
+    );
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
@@ -40,6 +80,7 @@ const Feedback = () => {
                         placeholder="Please Provide your Valuable Feedback here..."
                         multiline
                         numberOfLines={7}
+                        value={value}
                         onChangeText={text => onChangeText(text)}
 
                     />
@@ -57,7 +98,20 @@ const Feedback = () => {
                     color: '#009387'
                 }]}>Submit</Text>
             </TouchableOpacity>
-        </View>
+            <View>
+                {messagesList ?
+                    <FlatList
+                        data={messagesList}
+                        renderItem={renderMessage}
+                        keyExtractor={item => item._id}
+                    />
+                    :
+                    <View style={{ flex: 1, alignItems: 'center', marginTop: 15 }}>
+                        <Text>No Messages you have Posted yet</Text>
+                    </View>
+                }
+            </View>
+        </View >
     )
 }
 

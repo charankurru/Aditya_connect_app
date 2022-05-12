@@ -40,6 +40,7 @@ const UserDetailsScreen = ({ navigation }) => {
         courseId: '',
         collegeId: '',
         deptId: '',
+        roleId: ''
 
     });
 
@@ -97,8 +98,6 @@ const UserDetailsScreen = ({ navigation }) => {
         setData({ ...data, deptId: val, id: loginState.id });
     }
 
-
-
     const uIdInputChange = (val) => {
         if (val.length == 10) {
             setData({
@@ -134,6 +133,14 @@ const UserDetailsScreen = ({ navigation }) => {
 
     const updateUserProfile = () => {
         setIsLoad(true)
+        let Studentregex = /^([a-zA-Z0-9]+)$/
+        let teacherRegex = /^([0-9]+)$/
+        if (teacherRegex.test(data.uId)) {
+            data.roleId = "624032e1ec6f3f04845f3915";
+        }
+        else if (Studentregex.test(data.uId)) {
+            data.roleId = "624032e1ec6f3f04845f3914";
+        }
         console.log(data);
         detailsUpdate(data);
         setIsLoad(false)
