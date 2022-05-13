@@ -10,20 +10,26 @@ const NewsFeed = () => {
 
     const { loginState } = useContext(AuthContext)
     const [pageNumber, setPageNumber] = useState(1)
+    // const [pageNumber, setPageNumber] = useState({
+    //     pno: 1,
+    //     operation: 'LazyFetch'
+    // })
+    const [refresh, setRefresh] = useState(false)
 
-    const showToastWithGravityAndOffset = () => {
-        ToastAndroid.showWithGravityAndOffset(
-            "Welcome to aditya Connect!",
-            ToastAndroid.LONG,
-            ToastAndroid.BOTTOM,
-            25,
-            50
-        );
-    };
+    // const showToastWithGravityAndOffset = () => {
+    //     ToastAndroid.showWithGravityAndOffset(
+    //         "Welcome to aditya Connect!",
+    //         ToastAndroid.LONG,
+    //         ToastAndroid.BOTTOM,
+    //         25,
+    //         50
+    //     );
+    // };
 
-    useEffect(() => {
-        showToastWithGravityAndOffset();
-    }, [])
+    // useEffect(() => {
+    //     showToastWithGravityAndOffset();
+    // }, [])
+
     const {
         posts,
         hasMore,
@@ -53,6 +59,9 @@ const NewsFeed = () => {
         if (hasMore) {
             setPageNumber(prevPageNumber => prevPageNumber + 1)
         }
+        else {
+            console.log("No More data available")
+        }
 
     }
 
@@ -65,16 +74,26 @@ const NewsFeed = () => {
         )
     }
 
+    const refreshingOnPull = () => {
+        setRefresh(true)
+        setTimeout(() => {
+            setRefresh(false)
+        }, 1000);
+    }
+
     console.log()
     return (
         <View style={{ flex: 1, }}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <FlatList
                 data={posts}
-                onEndReached={() => { loadMore() }}
+                onEndReached={loadMore}
+                onEndReachedThreshold={1}
                 keyExtractor={item => item._id}
+                // renderFooter={loadingIndicator}
+                refreshing={refresh}
+                onRefresh={refreshingOnPull}
                 renderItem={({ item }) => (<MyCard post={item} />)}
-                ListFooterComponent={loadingIndicator()}
             />
             <FAB
                 style={styles.fab}
