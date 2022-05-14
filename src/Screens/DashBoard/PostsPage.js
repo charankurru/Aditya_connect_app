@@ -19,8 +19,6 @@ const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 const PostsPage = () => {
 
     let onEndReachedCalledDuringMomentum = false;
-
-    const [isLoading, setIsLoading] = useState(false);
     const [isMoreLoading, setIsMoreLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true)
     const [posts, setPosts] = useState([])
