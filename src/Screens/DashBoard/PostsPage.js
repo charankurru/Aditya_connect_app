@@ -23,6 +23,7 @@ const PostsPage = () => {
     const [hasMore, setHasMore] = useState(true)
     const [posts, setPosts] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
+    const [refresh, setRefresh] = useState(false)
 
     useEffect(() => {
         setTimeout(() => {
@@ -87,6 +88,18 @@ const PostsPage = () => {
         )
     }
 
+    const refreshingOnPull = () => {
+        setRefresh(true)
+        setTimeout(() => {
+            // setPosts((array) => {
+            //     return []
+            // })
+            // setPageNumber(1)
+            setRefresh(false)
+        }, 100);
+    }
+
+
 
     return (
         <View style={{ flex: 1, }}>
@@ -105,8 +118,8 @@ const PostsPage = () => {
                     }
                 }
                 }
-            // refreshing={refresh}
-            // onRefresh={refreshingOnPull}
+                refreshing={refresh}
+                onRefresh={refreshingOnPull}
 
             />
             <FAB
