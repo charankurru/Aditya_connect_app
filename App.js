@@ -18,6 +18,7 @@ const Stack = createNativeStackNavigator();
 import EditProfile from './src/Screens/DashBoard/EditProfile'
 import jwt_decode from "jwt-decode";
 import { GetUserbyId } from './src/API/services';
+import PostsPage from './src/Screens/DashBoard/PostsPage'
 
 
 const App = () => {
@@ -307,9 +308,10 @@ const App = () => {
             loginState.userToken !== null ? (
               loginState.newUser == true ? <UserDetailsScreen /> : (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                  <Drawer.Screen options={navigationOptions()} name="Home" component={NewsFeed} />
+                  <Drawer.Screen options={navigationOptions()} name="AdityaConnect" component={PostsPage} />
                   <Drawer.Screen options={navigationOptions()} name="Profile" component={Root} />
                   <Drawer.Screen options={navigationOptions()} name="Feedback" component={Feedback} />
+
                 </Drawer.Navigator>
               )
             ) :

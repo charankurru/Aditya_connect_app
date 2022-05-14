@@ -51,7 +51,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Home"
-                            onPress={() => { props.navigation.navigate('Home') }}
+                            onPress={() => { props.navigation.navigate('AdityaConnect') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (
@@ -74,28 +74,6 @@ export function DrawerContent(props) {
                             )}
                             label="FeedBack"
                             onPress={() => { props.navigation.navigate('Feedback') }}
-                        />
-                        <DrawerItem
-                            icon={({ color, size }) => (
-                                <Icon
-                                    name="home-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Settings"
-                            onPress={() => { props.navigation.navigate('NewProfile') }}
-                        />
-                        <DrawerItem
-                            icon={({ color, size }) => (
-                                <Icon
-                                    name="account-check-outline"
-                                    color={color}
-                                    size={size}
-                                />
-                            )}
-                            label="Support"
-                        // onPress={() => { props.navigation.navigate('SupportScreen') }}
                         />
                     </Drawer.Section>
                 </View>
