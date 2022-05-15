@@ -4,7 +4,6 @@ import {
     Text,
     TouchableOpacity,
     TextInput,
-    Platform,
     StyleSheet,
     StatusBar,
     Alert,
@@ -18,8 +17,6 @@ import Feather from 'react-native-vector-icons/Feather';
 import { useTheme } from 'react-native-paper';
 
 import { AuthContext } from '../../Components/context';
-
-import Users from "../../model/Users"
 
 const SignInScreen = ({ navigation }) => {
 
@@ -115,6 +112,10 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
+    const callForget = () => {
+        console.log("hello")
+    }
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
@@ -203,9 +204,7 @@ const SignInScreen = ({ navigation }) => {
                         <Text style={styles.errorMsg}>Password must be 8 characters long.</Text>
                     </Animatable.View>
                 }
-
-
-                <TouchableOpacity>
+                <TouchableOpacity onPress={() => navigation.navigate("PasswordRecovery", data.username)}>
                     <Text style={{ color: '#009387', marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
 

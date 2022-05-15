@@ -54,3 +54,15 @@ export const GetMessage = (id) => {
     return API.get(`/users/get-messages/${id}`)
 }
 
+export const RequestOTP = (email) => {
+    console.log(email)
+    return API.post('/users/send-otp', { email })
+}
+
+export const ValidateOTP = (data) => {
+    return API.post('/users/validate-otp', data)
+}
+
+export const UpdatePassword = (data) => {
+    return API.post('/users/update-password', data)
+}

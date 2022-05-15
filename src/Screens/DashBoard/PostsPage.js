@@ -69,10 +69,10 @@ const PostsPage = () => {
                     <Paragraph>{post.postMessage}</Paragraph>
                 </Card.Content>
                 <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-                <Card.Actions>
+                {/* <Card.Actions>
                     <Button>Cancel</Button>
                     <Button>Ok</Button>
-                </Card.Actions>
+                </Card.Actions> */}
             </Card>
         )
     }
@@ -90,15 +90,17 @@ const PostsPage = () => {
 
     const refreshingOnPull = () => {
         setRefresh(true)
-        setTimeout(() => {
-            // setPosts((array) => {
-            //     return []
-            // })
-            // setPageNumber(1)
+        setPosts([])
+        setTimeout(async () => {
+            setPageNumber(prevPageNumber => 1)
+            const res = await GetPosts(
+                { channelId: "1232", pageNumber: pageNumber, limit: 5 })
+            console.log("data fetched on pull")
+            console.log(res.data.result.length)
+            setPosts(res.data.result)
             setRefresh(false)
-        }, 100);
+        }, 1000);
     }
-
 
 
     return (

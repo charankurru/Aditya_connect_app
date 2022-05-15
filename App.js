@@ -81,6 +81,8 @@ const App = () => {
           courseId: action.courseId,
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
+          mobileNumner: action.mobileNumber,
+          roleId: action.roleId
         };
       case 'LOGOUT':
         return {
@@ -136,7 +138,7 @@ const App = () => {
           console.log(userdata);
           let { fullName, email, _id, collegeId } = userdata;
           if (res.data.userRecord[0]) {
-            let { collegeId, courseId, departmentId, rollNumber } = res.data.userRecord[0];
+            let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = res.data.userRecord[0];
             await AsyncStorage.setItem('userToken', userToken);
             dispatch(
               {
@@ -149,7 +151,9 @@ const App = () => {
                 collegeId: collegeId,
                 courseId: courseId,
                 departmentId: departmentId,
-                rollNumber: rollNumber
+                rollNumber: rollNumber,
+                mobileNumber: mobileNumber,
+                roleId: roleId
               });
 
           } else {
@@ -277,7 +281,7 @@ const App = () => {
       } catch (e) {
         console.log(e);
       }
-    }, 1000);
+    }, 100);
   }, []);
 
   const getUserById = async (userId) => {

@@ -30,7 +30,6 @@ const EditProfile = ({ route, navigation }) => {
     const { authContext: { editProfileUpdate } } = useContext(AuthContext);
 
     const editData = route.params;
-    console.log(editData);
 
     const [colleges, setColleges] = useState([{}]);
     const [courses, setCourses] = useState([{}]);
