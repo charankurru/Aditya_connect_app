@@ -75,6 +75,19 @@ export function DrawerContent(props) {
                             label="FeedBack"
                             onPress={() => { props.navigation.navigate('Feedback') }}
                         />
+
+                        <DrawerItem
+                            icon={({ color, size }) => (
+                                <Icon
+                                    name="bookmark-outline"
+                                    color={color}
+                                    size={size}
+                                />
+                            )}
+                            label="PDfViewer"
+                            onPress={() => { props.navigation.navigate('Pdf') }}
+                        />
+
                     </Drawer.Section>
                 </View>
             </DrawerContentScrollView>

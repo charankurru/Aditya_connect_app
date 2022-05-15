@@ -35,7 +35,6 @@ const PostsPage = () => {
 
     const getPosts = async () => {
         try {
-
             console.log(pageNumber);
             const res = await GetPosts(
                 { channelId: "1232", pageNumber: pageNumber, limit: 5 })
@@ -77,26 +76,49 @@ const PostsPage = () => {
         )
     }
 
+    const LoadCard = () => {
+        return (
+            <View style={styles.card}>
+                <View style={styles.header}>
+                    <View style={styles.title}>
+                        <View style={styles.skeletonText}></View>
+                        <View style={styles.skeletonText}></View>
+                    </View>
+                </View>
+                <View>
+                    <View style={styles.skeletonText}></View>
+                    <View style={styles.skeletonText}></View>
+                </View>
+            </View>
+        )
+    }
+
     const renderFooter = () => {
         if (!isMoreLoading) return true;
         return (
-            <ActivityIndicator
-                size='large'
-                color={'#D83E64'}
-                style={{ marginBottom: 10 }}
-            />
+            <>
+                <ActivityIndicator
+                    size='large'
+                    color={'#D83E64'}
+                    style={{ marginBottom: 10 }}
+                />
+                {/* <LoadCard /> */}
+            </>
         )
     }
 
     const refreshingOnPull = () => {
         setRefresh(true)
-        setTimeout(() => {
-            // setPosts((array) => {
-            //     return []
-            // })
-            // setPageNumber(1)
+        setPosts([])
+        setTimeout(async () => {
+            setPageNumber(prevPageNumber => 1)
+            const res = await GetPosts(
+                { channelId: "1232", pageNumber: pageNumber, limit: 5 })
+            console.log("data fetched on pull")
+            console.log(res.data.result.length)
+            setPosts(res.data.result)
             setRefresh(false)
-        }, 100);
+        }, 1000);
     }
 
 
@@ -143,4 +165,28 @@ const styles = StyleSheet.create({
         bottom: 0,
         fontSize: 24
     },
+    card: {
+        backgroundColor: 'white',
+        padding: 16,
+        borderRadius: 4,
+        height: 300
+    },
+    header: {
+        marginBottom: 1,
+        display: 'flex',
+        alignItems: 'center',
+    },
+
+    skeletonText: {
+        width: 100,
+        height: 10,
+        backgroundColor: 'black',
+        marginBottom: .25,
+        borderRadius: .125
+    },
+
+    title: {
+        fontWeight: 'bold'
+    }
+
 })

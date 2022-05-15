@@ -33,6 +33,7 @@
     "react-native-dotenv": "^3.3.1",
     "react-native-gesture-handler": "~2.1.0",
     "react-native-paper": "^4.12.1",
+    "react-native-pdf-view": "^0.3.2",
     "react-native-safe-area-context": "~3.3.2",
     "react-native-screens": "~3.10.1",
     "react-native-skeleton-placeholder": "^5.0.0",
