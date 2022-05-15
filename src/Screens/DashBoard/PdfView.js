@@ -5,35 +5,24 @@ import React, {
 
 import {
     StyleSheet,
-    View
+    View,
+    Text
 } from 'react-native';
-
 import PDFView from 'react-native-pdf-view';
-import { WebView } from 'react-native-webview';
 
 const PdfView = () => {
     let docUrl = "http://docs.google.com/gview?embedded=true&url="
-    let pdfUrl = "http://www.africau.edu/images/default/sample.pdf";
-    return (
+        (
+            <PDFView ref={(pdf) => { this.pdfView = pdf; }}
+                src={docUrl}
+                onLoadComplete={(pageCount) => {
+                    this.pdfView.setNativeProps({
+                        zoom: 1.5
+                    });
+                }}
+                style={styles.pdf} />
+        )
 
-        <WebView
-            style={{ flex: 1, backgroundColor: 'white' }}
-            source={{
-                uri: docUrl + pdfUrl,
-            }}
-            bounces={true}
-            useWebKit={true}
-            scrollEnabled={true}
-        />
-        // <PDFView ref={(pdf) => { this.pdfView = pdf; }}
-        //     src={pdfUrl}
-        //     onLoadComplete={(pageCount) => {
-        //         this.pdfView.setNativeProps({
-        //             zoom: 1.5
-        //         });
-        //     }}
-        //     style={styles.pdf} />
-    )
 }
 
 export default PdfView
