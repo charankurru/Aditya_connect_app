@@ -1,5 +1,5 @@
 import React, { useEffect, useContext, useState } from 'react'
-import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList, ScrollView, ActivityIndicator } from 'react-native'
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList, ScrollView, ActivityIndicator, ToastAndroid } from 'react-native'
 import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper'
 import { AuthContext } from '../../Components/context'
 import { GetMessage, SendMessage } from '../../API/services'
@@ -45,6 +45,11 @@ const Feedback = () => {
             if (res && res.data.data) {
                 messagesList.unshift(res.data.data);
                 onChangeText("")
+                ToastAndroid.showWithGravity(
+                    "Feedback submitted successfully !",
+                    ToastAndroid.SHORT,
+                    ToastAndroid.BOTTOM
+                )
             }
         } catch (error) {
             console.log(error)

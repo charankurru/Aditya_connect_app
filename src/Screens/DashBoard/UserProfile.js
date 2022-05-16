@@ -9,7 +9,7 @@ import {
 } from 'react-native-paper';
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../../Components/context';
-import avatar7 from '../../../assets/avatar7.png';
+import AvatarText from '../../Components/AvatarText'
 
 const UserProfile = ({ navigation }) => {
 
@@ -36,9 +36,9 @@ const UserProfile = ({ navigation }) => {
                     <View style={{
                         flexDirection: 'row', marginTop: 15,
                     }}>
-                        <Avatar.Image
-                            source={avatar7}
+                        <AvatarText
                             size={80}
+                            name={loginState.userName}
                         />
                         <View style={{
                             marginLeft: 20, borderBottomColor: 'black',

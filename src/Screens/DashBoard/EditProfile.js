@@ -18,7 +18,7 @@ import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData } from '../../API/services';
-import avatar7 from '../../../assets/avatar7.png';
+import AvatarText from '../../Components/AvatarText'
 import {
     Avatar,
 } from 'react-native-paper';
@@ -145,8 +145,8 @@ const EditProfile = ({ route, navigation }) => {
                 <View style={{
                     flexDirection: 'row', marginTop: 15,
                 }}>
-                    <Avatar.Image
-                        source={avatar7}
+                    <AvatarText
+                        name={data.fullName}
                         size={80}
                     />
 

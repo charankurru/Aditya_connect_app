@@ -5,16 +5,13 @@ import React, {
 import {
     StyleSheet,
     View,
-    Image,
-    Text,
     FlatList,
     ActivityIndicator,
-    RefreshControl,
     StatusBar,
+    Text
 } from 'react-native';
-import { Avatar, Button, Card, Title, Paragraph, FAB } from 'react-native-paper';
+import { Modal, Portal, Avatar, Card, Paragraph, FAB } from 'react-native-paper';
 import { GetPosts } from '../../API/services';
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
 
 const PostsPage = () => {
 
@@ -35,12 +32,9 @@ const PostsPage = () => {
 
     const getPosts = async () => {
         try {
-
-            console.log(pageNumber);
             const res = await GetPosts(
                 { channelId: "1232", pageNumber: pageNumber, limit: 5 })
             console.log(res)
-            console.log("data fetched")
             setPosts([...posts, ...res.data.result])
             setHasMore(res.data.result.length > 0)
 
@@ -52,8 +46,6 @@ const PostsPage = () => {
     const getMore = () => {
         setIsMoreLoading(true)
         setTimeout(async () => {
-            console.log(isMoreLoading)
-            console.log(pageNumber)
             await getPosts();
             setIsMoreLoading(false)
             onEndReachedCalledDuringMomentum = true;
@@ -62,9 +54,11 @@ const PostsPage = () => {
 
     const MyCard = (props) => {
         let { post } = props;
+        let nameArray = post.postedBy?.adminName.split(" ")
+        let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0];
         return (
             <Card key={post.key} elevation={5}>
-                <Card.Title title={post.postedBy?.adminName} subtitle={post.createdAt} left={LeftContent} />
+                <Card.Title title={post.postedBy?.adminName} subtitle={post.createdAt} left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />} />
                 <Card.Content>
                     <Paragraph>{post.postMessage}</Paragraph>
                 </Card.Content>
@@ -82,7 +76,7 @@ const PostsPage = () => {
         return (
             <ActivityIndicator
                 size='large'
-                color={'#D83E64'}
+                color={'#009387'}
                 style={{ marginBottom: 10 }}
             />
         )
@@ -95,17 +89,27 @@ const PostsPage = () => {
             setPageNumber(prevPageNumber => 1)
             const res = await GetPosts(
                 { channelId: "1232", pageNumber: pageNumber, limit: 5 })
-            console.log("data fetched on pull")
-            console.log(res.data.result.length)
             setPosts(res.data.result)
             setRefresh(false)
         }, 1000);
     }
 
+    const [visible, setVisible] = useState(false);
+
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+    const containerStyle = { backgroundColor: 'white', padding: 20, marginLeft: 'auto', marginRight: 'auto' };
 
     return (
         <View style={{ flex: 1, }}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
+
+            <Portal>
+                <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
+                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                </Modal>
+            </Portal>
+
             <FlatList
                 data={posts}
                 keyExtractor={item => item._id}
@@ -115,20 +119,19 @@ const PostsPage = () => {
                 onMomentumScrollBegin={() => { onEndReachedCalledDuringMomentum = false; }}
                 onEndReached={() => {
                     if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
-                        console.log("trying")
                         setPageNumber(prevPageNumber => prevPageNumber + 1)
                     }
                 }
                 }
                 refreshing={refresh}
                 onRefresh={refreshingOnPull}
-
             />
             <FAB
+
                 style={styles.fab}
-                icon="plus"
+                icon="filter"
                 color="#fff"
-                onPress={() => console.log('Pressed')}
+                onPress={showModal}
             />
 
         </View>

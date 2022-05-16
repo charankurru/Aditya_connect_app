@@ -15,25 +15,21 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { AuthContext } from './context';
+import AvatarText from './AvatarText'
 
 export function DrawerContent(props) {
 
     const paperTheme = useTheme();
 
     const { authContext: { signOut, toggleTheme }, loginState } = React.useContext(AuthContext);
-    // console.log(loginState)
+
     return (
         <View style={{ flex: 1 }}>
             <DrawerContentScrollView {...props}>
                 <View style={styles.drawerContent}>
                     <View style={styles.userInfoSection}>
                         <View style={{ flexDirection: 'row', marginTop: 15 }}>
-                            <Avatar.Image
-                                source={{
-                                    uri: 'https://api.adorable.io/avatars/50/abott@adorable.png'
-                                }}
-                                size={80}
-                            />
+                            <AvatarText size={80} name={loginState.userName} />
                         </View>
                         <View style={{ marginLeft: 2, flexDirection: 'column' }}>
                             <Title style={styles.title}>{loginState.userName}</Title>
