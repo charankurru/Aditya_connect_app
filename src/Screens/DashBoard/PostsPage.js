@@ -10,9 +10,11 @@ import {
     StatusBar,
     Text
 } from 'react-native';
-import { Modal, Portal, Avatar, Card, Paragraph, FAB } from 'react-native-paper';
+import { Modal, Portal, Avatar, Card, Paragraph, FAB, } from 'react-native-paper';
 import { GetPosts } from '../../API/services';
-
+import momentTime from '../../Components/momentTime'
+import PostCategories from '../../Data/Postcategories.json'
+import CheckBox from '../../Components/CheckBox'
 const PostsPage = () => {
 
     let onEndReachedCalledDuringMomentum = false;
@@ -58,7 +60,7 @@ const PostsPage = () => {
         let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0];
         return (
             <Card key={post.key} elevation={5}>
-                <Card.Title title={post.postedBy?.adminName} subtitle={post.createdAt} left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />} />
+                <Card.Title title={post.postedBy?.adminName} subtitle={momentTime(post.createdAt)} left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />} />
                 <Card.Content>
                     <Paragraph>{post.postMessage}</Paragraph>
                 </Card.Content>
@@ -98,15 +100,40 @@ const PostsPage = () => {
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
-    const containerStyle = { backgroundColor: 'white', padding: 20, marginLeft: 'auto', marginRight: 'auto' };
+    const containerStyle = {
+        backgroundColor: 'white',
+        padding: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    };
+
+    let checkDict = {}
+    PostCategories.forEach(category => {
+        checkDict[category._id] = false
+    })
+    const [checked, setChecked] = React.useState(checkDict)
+
+    const checkPressed = (id) => {
+        setChecked({
+            ...checked,
+            [id]: !checked[id]
+        })
+    }
 
     return (
         <View style={{ flex: 1, }}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
-
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
-                    <Text>Example Modal.  Click outside this area to dismiss.</Text>
+                    <Text>Select the category you want !</Text>
+                    {PostCategories?.map((category) => (
+                        <CheckBox
+                            status={checked[category._id] ? 'checked' : 'unchecked'}
+                            label={category.categoryName}
+                            id={category._id}
+                            onPress={checkPressed}
+                        />
+                    ))}
                 </Modal>
             </Portal>
 

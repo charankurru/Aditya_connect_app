@@ -1,10 +1,13 @@
 import React, { useEffect, useContext, useState } from 'react'
 import { View, Text, TextInput, TouchableOpacity, StyleSheet, StatusBar, FlatList, ScrollView, ActivityIndicator, ToastAndroid } from 'react-native'
-import { Avatar, Button, Card, Title, Paragraph } from 'react-native-paper'
+import { Card, Paragraph } from 'react-native-paper'
 import { AuthContext } from '../../Components/context'
 import { GetMessage, SendMessage } from '../../API/services'
 import { LinearGradient } from 'expo-linear-gradient'
-const LeftContent = props => <Avatar.Icon {...props} icon="folder" />
+import momentTime from '../../Components/momentTime'
+import AvatarText from '../../Components/AvatarText'
+
+
 const FeedBackTextInput = (props) => {
     return (
         <TextInput
@@ -58,7 +61,8 @@ const Feedback = () => {
 
     const renderMessage = ({ item }) => (
         <Card style={{ marginVertical: 3 }}>
-            <Card.Title title={loginState.userName} subtitle={item.createdAt} left={LeftContent} />
+            <Card.Title title={loginState.userName} subtitle={momentTime(item.createdAt)}
+                left={() => <AvatarText size={40} name={loginState.userName} />} />
             <Card.Content>
                 {/* <Title>Card title</Title> */}
                 <Paragraph>{item.message}</Paragraph>
