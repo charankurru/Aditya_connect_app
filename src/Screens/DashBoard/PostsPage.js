@@ -128,6 +128,7 @@ const PostsPage = () => {
                     <Text>Select the category you want !</Text>
                     {PostCategories?.map((category) => (
                         <CheckBox
+                            key={category._id}
                             status={checked[category._id] ? 'checked' : 'unchecked'}
                             label={category.categoryName}
                             id={category._id}
@@ -154,7 +155,6 @@ const PostsPage = () => {
                 onRefresh={refreshingOnPull}
             />
             <FAB
-
                 style={styles.fab}
                 icon="filter"
                 color="#fff"
