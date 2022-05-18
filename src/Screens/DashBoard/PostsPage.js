@@ -1,6 +1,6 @@
 import React, {
     useState,
-    useEffect
+    useEffect, useCallback
 } from 'react';
 import {
     StyleSheet,
@@ -11,47 +11,53 @@ import {
     Text
 } from 'react-native';
 import { Modal, Portal, Avatar, Card, Paragraph, FAB, } from 'react-native-paper';
-import { GetPosts } from '../../API/services';
 import momentTime from '../../Components/momentTime'
 import PostCategories from '../../Data/Postcategories.json'
 import CheckBox from '../../Components/CheckBox'
+import { GetCategoriesData } from '../../API/services';
+import fetchPostsHook from './fetchPostsHook';
 const PostsPage = () => {
 
-    let onEndReachedCalledDuringMomentum = false;
-    const [isMoreLoading, setIsMoreLoading] = useState(false);
-    const [hasMore, setHasMore] = useState(true)
-    const [posts, setPosts] = useState([])
+    const [categories, setCategories] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [refresh, setRefresh] = useState(false)
+    const [visible, setVisible] = useState(false);
+    const [categoryChecks, setChecked] = useState(undefined)
+    const containerStyle = {
+        backgroundColor: 'white',
+        padding: 20,
+        marginLeft: 'auto',
+        marginRight: 'auto'
+    };
 
     useEffect(() => {
-        setTimeout(() => {
-            if (hasMore) {
-                getMore();
-            }
-        }, 100);
-    }, [pageNumber]);
+        if (categories.length == 0) {
+            getCategories();
+        }
+        performFilteringPosts()
+    }, [categoryChecks]);
 
-    const getPosts = async () => {
+    const { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts }
+        = fetchPostsHook(pageNumber, "1232", categoryChecks)
+
+    const showModal = () => setVisible(true);
+    const hideModal = () => setVisible(false);
+
+    const getCategories = async () => {
         try {
-            const res = await GetPosts(
-                { channelId: "1232", pageNumber: pageNumber, limit: 5 })
+            let res = await GetCategoriesData();
             console.log(res)
-            setPosts([...posts, ...res.data.result])
-            setHasMore(res.data.result.length > 0)
+            setCategories(res.data.result)
+            let categoryCheckDict = {}
+            res.data.result.forEach(category => {
+                categoryCheckDict[category._id] = false
+            })
+            setChecked(categoryCheckDict)
 
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
 
-    const getMore = () => {
-        setIsMoreLoading(true)
-        setTimeout(async () => {
-            await getPosts();
-            setIsMoreLoading(false)
-            onEndReachedCalledDuringMomentum = true;
-        }, 100);
     }
 
     const MyCard = (props) => {
@@ -86,37 +92,25 @@ const PostsPage = () => {
 
     const refreshingOnPull = () => {
         setRefresh(true)
-        setPosts([])
         setTimeout(async () => {
             setPageNumber(prevPageNumber => 1)
-            const res = await GetPosts(
-                { channelId: "1232", pageNumber: pageNumber, limit: 5 })
-            setPosts(res.data.result)
             setRefresh(false)
         }, 1000);
     }
 
-    const [visible, setVisible] = useState(false);
-
-    const showModal = () => setVisible(true);
-    const hideModal = () => setVisible(false);
-    const containerStyle = {
-        backgroundColor: 'white',
-        padding: 20,
-        marginLeft: 'auto',
-        marginRight: 'auto'
-    };
-
-    let checkDict = {}
-    PostCategories.forEach(category => {
-        checkDict[category._id] = false
-    })
-    const [checked, setChecked] = React.useState(checkDict)
+    const performFilteringPosts = useCallback(() => {
+        console.log("Filtering posts started.........")
+        let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
+        console.log(filteredPosts)
+        filteredPosts = filteredPosts.length == 0 ? posts : filteredPosts
+        setFilterPosts(filteredPosts);
+    }, [categoryChecks]);
 
     const checkPressed = (id) => {
+        console.log(id)
         setChecked({
-            ...checked,
-            [id]: !checked[id]
+            ...categoryChecks,
+            [id]: !categoryChecks[id]
         })
     }
 
@@ -126,10 +120,10 @@ const PostsPage = () => {
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                     <Text>Select the category you want !</Text>
-                    {PostCategories?.map((category) => (
+                    {categories?.map((category) => (
                         <CheckBox
                             key={category._id}
-                            status={checked[category._id] ? 'checked' : 'unchecked'}
+                            status={categoryChecks && categoryChecks[category._id] ? 'checked' : 'unchecked'}
                             label={category.categoryName}
                             id={category._id}
                             onPress={checkPressed}
@@ -139,7 +133,7 @@ const PostsPage = () => {
             </Portal>
 
             <FlatList
-                data={posts}
+                data={filterPosts.length == 0 ? posts : filterPosts}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={renderFooter}
