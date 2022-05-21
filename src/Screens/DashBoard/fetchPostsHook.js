@@ -17,18 +17,35 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
         }, 100);
     }, [pageNumber]);
 
-    const performFilteringPosts = useCallback(() => {
+    const checkForNoFilter = () => {
+        if (categoryChecks) {
+            for (var key in categoryChecks) {
+                if (categoryChecks[key]) {
+                    console.log(categoryChecks[key])
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    const performFilteringPosts = () => {
+        if (checkForNoFilter()) {
+            console.log("No filters applied")
+            setFilterPosts(posts)
+            return
+        }
+        console.log(pageNumber)
         if (categoryChecks) {
             let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
             console.log(filteredPosts)
-            filteredPosts = filteredPosts.length == 0 ? posts : filteredPosts
             setFilterPosts(filteredPosts);
         }
         else {
             console.log("In else")
             setFilterPosts(posts);
         }
-    }, [posts]);
+    }
 
     const getPosts = async () => {
         try {
@@ -36,11 +53,16 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
                 setPosts([]);
                 setFilterPosts([]);
             }
+            console.log(pageNumber)
             const res = await GetPosts(
                 { channelId: "1232", pageNumber: pageNumber, limit: 5 })
             console.log(res)
             setPosts([...posts, ...res.data.result])
             setHasMore(res.data.result.length > 0)
+            if (!categoryChecks) {
+                setFilterPosts(res.data.result)
+                return
+            }
             performFilteringPosts()
         } catch (error) {
             console.log(error)

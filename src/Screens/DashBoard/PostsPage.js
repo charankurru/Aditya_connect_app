@@ -98,13 +98,36 @@ const PostsPage = () => {
         }, 1000);
     }
 
-    const performFilteringPosts = useCallback(() => {
+    const checkForNoFilter = () => {
+        if (categoryChecks) {
+            for (var key in categoryChecks) {
+                if (categoryChecks[key]) {
+                    console.log(categoryChecks[key])
+                    return false
+                }
+            }
+        }
+        return true
+    }
+
+    const performFilteringPosts = () => {
+        console.log(categoryChecks)
+        if (checkForNoFilter()) {
+            console.log("No filters applied")
+            setFilterPosts(posts)
+            return
+        }
         console.log("Filtering posts started.........")
         let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
         console.log(filteredPosts)
-        filteredPosts = filteredPosts.length == 0 ? posts : filteredPosts
+        if (hasMore && filteredPosts.length == 0) {
+            console.log("HasMore ==> ", hasMore)
+            console.log(posts)
+            setFilterPosts([posts[0]])
+            return
+        }
         setFilterPosts(filteredPosts);
-    }, [categoryChecks]);
+    }
 
     const checkPressed = (id) => {
         console.log(id)
@@ -131,9 +154,8 @@ const PostsPage = () => {
                     ))}
                 </Modal>
             </Portal>
-
             <FlatList
-                data={filterPosts.length == 0 ? posts : filterPosts}
+                data={filterPosts}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={renderFooter}
