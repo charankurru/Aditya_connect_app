@@ -12,7 +12,6 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
 
     useEffect(() => {
         setTimeout(() => {
-            console.log("pull refresh")
             if (hasMore) {
                 getMore();
             }
@@ -56,8 +55,6 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
                 console.log("setting arrays to empty")
                 setPosts([]);
                 setFilterPosts([]);
-                console.log(posts.length)
-                console.log(filterPosts.length)
             }
             console.log(pageNumber)
             const res = await GetPosts(
@@ -77,10 +74,10 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
     const getMore = () => {
         setIsMoreLoading(true)
         setTimeout(async () => {
+            setOnEndReachedCalledDuringMomentum(true)
             await getPosts();
             setIsMoreLoading(false)
-            setOnEndReachedCalledDuringMomentum(true)
-        }, 100);
+        }, 1000);
     }
 
     return { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts, setOnEndReachedCalledDuringMomentum }

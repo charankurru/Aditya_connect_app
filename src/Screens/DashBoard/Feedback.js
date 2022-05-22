@@ -70,13 +70,9 @@ const Feedback = () => {
         </Card>
     );
     return (
-        <ScrollView>
+        <>
             <View style={styles.container}>
                 <StatusBar backgroundColor='#009387' barStyle="light-content" />
-                <Card>
-                    <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-                </Card>
-
                 <Card elevated elevation={2}>
                     <View style={{ padding: 10 }}>
                         <FeedBackTextInput
@@ -101,7 +97,8 @@ const Feedback = () => {
                 <TouchableOpacity
                     onPress={() => { submitFeedback() }}
                     style={[styles.signIn, {
-                        marginTop: 15
+                        marginTop: 15,
+                        padding: 10
                     }]}
                 >
                     <LinearGradient
@@ -129,7 +126,7 @@ const Feedback = () => {
                 </View>
 
             </View >
-        </ScrollView>
+        </>
     )
 }
 

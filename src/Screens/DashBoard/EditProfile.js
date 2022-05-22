@@ -28,9 +28,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 const EditProfile = ({ route, navigation }) => {
 
     const { authContext: { editProfileUpdate } } = useContext(AuthContext);
-
     const editData = route.params;
-
     const [colleges, setColleges] = useState([{}]);
     const [courses, setCourses] = useState([{}]);
     const [filteredColleges, setFilteredColleges] = useState([{}]);
@@ -294,7 +292,7 @@ const EditProfile = ({ route, navigation }) => {
                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Department</Text>
                 <View>
                     <Picker
-                        selectedValue={data.deptId._id}
+                        selectedValue={data.deptId}
                         onValueChange={(itemValue, itemIndex) =>
                             deptSelected(itemValue)}>
 

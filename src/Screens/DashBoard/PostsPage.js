@@ -16,7 +16,7 @@ import CheckBox from '../../Components/CheckBox'
 import { GetCategoriesData } from '../../API/services';
 import fetchPostsHook from './fetchPostsHook';
 const PostsPage = () => {
-
+    let vital = false;
     const [categories, setCategories] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [refresh, setRefresh] = useState(false)
@@ -155,9 +155,15 @@ const PostsPage = () => {
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={renderFooter}
                 onEndReachedThreshold={0.5}
-                onMomentumScrollBegin={() => { setOnEndReachedCalledDuringMomentum(false) }}
+                onMomentumScrollBegin={() => {
+                    console.log("When momentum is Started")
+                    setOnEndReachedCalledDuringMomentum(false)
+                }}
                 onEndReached={() => {
+                    console.log('on end reached  ' + 'isMoreLoading :: ' + isMoreLoading + '   oneEndMome :: ' + onEndReachedCalledDuringMomentum)
+
                     if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
+                        console.log('on end reached inside loop')
                         setPageNumber(prevPageNumber => prevPageNumber + 1)
                     }
                 }

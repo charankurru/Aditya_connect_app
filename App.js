@@ -194,13 +194,12 @@ const App = () => {
         res = await SignUp(data);
         console.log(res);
       } catch (error) {
-        console.log(error.message);
+        console.log(error)
         Alert.alert('Invalid User!', "something went wrong please try again in a while", [
           { text: 'Okay' }
         ]);
       }
       return res;
-
     },
     detailsUpdate: async (updateData) => {
       try {
