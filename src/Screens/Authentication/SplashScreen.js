@@ -26,6 +26,7 @@ const SplashScreen = ({ navigation }) => {
                     style={styles.logo}
                     resizeMode="stretch"
                 />
+                <Text style={{ marginTop: -80 }}>Aditya Connect</Text>
             </View>
             <Animatable.View
                 style={[styles.footer, {
@@ -68,7 +69,7 @@ const SplashScreen = ({ navigation }) => {
 export default SplashScreen;
 
 const { height } = Dimensions.get("screen");
-const height_logo = height * 0.28;
+const height_logo = height * 0.40;
 
 const styles = StyleSheet.create({
     container: {
@@ -123,29 +124,3 @@ const styles = StyleSheet.create({
 
 
 
-
-{/* <ImageBackground source={require('../../assets/bg1.png')} style={{ width: '100%', height: '100%' }}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
-            <View style={styles.header}>
-                <Text style={styles.text_header}>Welcome!</Text>
-            </View>
-            <Animatable.View
-                style={styles.footer}
-                animation="fadeInUpBig"
-            >
-                <Text style={[styles.title, {
-                    color: colors.text
-                }]}>Stay connected with everyone!</Text>
-                <Text style={styles.text}>Sign in with account</Text>
-                <View style={styles.button}>
-                    <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}>
-                        <Text >Get Started</Text>
-                        <MaterialIcons
-                            name="navigate-next"
-                            color="#fff"
-                            size={20}
-                        />
-                    </TouchableOpacity>
-                </View>
-            </Animatable.View>
-        </ImageBackground> */}

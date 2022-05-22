@@ -82,7 +82,7 @@ const App = () => {
           courseId: action.courseId,
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
-          mobileNumner: action.mobileNumber,
+          mobileNumber: action.mobileNumber,
           roleId: action.roleId,
           isLoading: false
         };
@@ -142,13 +142,12 @@ const App = () => {
       let res;
       try {
         res = await Login(foundUser);
-        console.log(res)
         if (res.data && res.data.token) {
           const userToken = res.data.token;
           const userdata = parseJwt(userToken);
-          console.log(userdata);
           let { fullName, email, _id, collegeId } = userdata;
           if (res.data.userRecord[0]) {
+            console.log(res.data.userRecord[0])
             let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = res.data.userRecord[0];
             await AsyncStorage.setItem('userToken', userToken);
             dispatch(
