@@ -2,15 +2,17 @@ import { useEffect, useState, useCallback } from 'react'
 import axios from 'axios'
 import { GetPosts } from '../../API/services';
 
-export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
-    let onEndReachedCalledDuringMomentum = false;
+export default function fetchPostsHook(pageNumber, channelId, categoryChecks, setPageNumber) {
+    // let onEndReachedCalledDuringMomentum = false;
     const [isMoreLoading, setIsMoreLoading] = useState(false);
     const [hasMore, setHasMore] = useState(true)
     const [posts, setPosts] = useState([])
     const [filterPosts, setFilterPosts] = useState([])
+    const [onEndReachedCalledDuringMomentum, setOnEndReachedCalledDuringMomentum] = useState(false)
 
     useEffect(() => {
         setTimeout(() => {
+            console.log("pull refresh")
             if (hasMore) {
                 getMore();
             }
@@ -32,13 +34,14 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
     const performFilteringPosts = () => {
         if (checkForNoFilter()) {
             console.log("No filters applied")
-            setFilterPosts(posts)
             return
         }
         console.log(pageNumber)
         if (categoryChecks) {
             let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
-            console.log(filteredPosts)
+            if (hasMore && filteredPosts.length == 0) {
+                setPageNumber(prevPageNumber => prevPageNumber + 1)
+            }
             setFilterPosts(filteredPosts);
         }
         else {
@@ -50,13 +53,15 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
     const getPosts = async () => {
         try {
             if (pageNumber == 1) {
+                console.log("setting arrays to empty")
                 setPosts([]);
                 setFilterPosts([]);
+                console.log(posts.length)
+                console.log(filterPosts.length)
             }
             console.log(pageNumber)
             const res = await GetPosts(
                 { channelId: "1232", pageNumber: pageNumber, limit: 5 })
-            console.log(res)
             setPosts([...posts, ...res.data.result])
             setHasMore(res.data.result.length > 0)
             if (!categoryChecks) {
@@ -74,9 +79,9 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks) {
         setTimeout(async () => {
             await getPosts();
             setIsMoreLoading(false)
-            onEndReachedCalledDuringMomentum = true;
+            setOnEndReachedCalledDuringMomentum(true)
         }, 100);
     }
 
-    return { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts }
+    return { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts, setOnEndReachedCalledDuringMomentum }
 }

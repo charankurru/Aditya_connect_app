@@ -12,7 +12,6 @@ import {
 } from 'react-native';
 import { Modal, Portal, Avatar, Card, Paragraph, FAB, } from 'react-native-paper';
 import momentTime from '../../Components/momentTime'
-import PostCategories from '../../Data/Postcategories.json'
 import CheckBox from '../../Components/CheckBox'
 import { GetCategoriesData } from '../../API/services';
 import fetchPostsHook from './fetchPostsHook';
@@ -37,8 +36,8 @@ const PostsPage = () => {
         performFilteringPosts()
     }, [categoryChecks]);
 
-    const { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts }
-        = fetchPostsHook(pageNumber, "1232", categoryChecks)
+    const { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts, setOnEndReachedCalledDuringMomentum }
+        = fetchPostsHook(pageNumber, "1232", categoryChecks, setPageNumber)
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
@@ -71,10 +70,6 @@ const PostsPage = () => {
                     <Paragraph>{post.postMessage}</Paragraph>
                 </Card.Content>
                 <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-                {/* <Card.Actions>
-                    <Button>Cancel</Button>
-                    <Button>Ok</Button>
-                </Card.Actions> */}
             </Card>
         )
     }
@@ -93,7 +88,9 @@ const PostsPage = () => {
     const refreshingOnPull = () => {
         setRefresh(true)
         setTimeout(async () => {
-            setPageNumber(prevPageNumber => 1)
+            console.log("setting pageNumber to 1")
+            setPageNumber(1)
+            console.log(pageNumber)
             setRefresh(false)
         }, 1000);
     }
@@ -119,11 +116,8 @@ const PostsPage = () => {
         }
         console.log("Filtering posts started.........")
         let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
-        console.log(filteredPosts)
         if (hasMore && filteredPosts.length == 0) {
-            console.log("HasMore ==> ", hasMore)
-            console.log(posts)
-            setFilterPosts([posts[0]])
+            setPageNumber(prevPageNumber => prevPageNumber + 1)
             return
         }
         setFilterPosts(filteredPosts);
@@ -154,13 +148,14 @@ const PostsPage = () => {
                     ))}
                 </Modal>
             </Portal>
+
             <FlatList
                 data={filterPosts}
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={renderFooter}
                 onEndReachedThreshold={0.5}
-                onMomentumScrollBegin={() => { onEndReachedCalledDuringMomentum = false; }}
+                onMomentumScrollBegin={() => { setOnEndReachedCalledDuringMomentum(false) }}
                 onEndReached={() => {
                     if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
                         setPageNumber(prevPageNumber => prevPageNumber + 1)

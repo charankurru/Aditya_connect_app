@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react';
-import { View, Alert, StyleSheet, ToastAndroid } from 'react-native';
+import { View, Alert, StyleSheet, ToastAndroid, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
-import NewsFeed from './src/Screens/DashBoard/NewsFeed';
 import UserProfile from './src/Screens/DashBoard/UserProfile'
 import Feedback from './src/Screens/DashBoard/Feedback'
 import { AuthContext } from './src/Components/context';
@@ -50,7 +49,8 @@ const App = () => {
     departmentId: null,
     rollNumber: null,
     mobileNumber: null,
-    roleId: null
+    roleId: null,
+    isLoading: true
   };
   const loginReducer = (prevState, action) => {
     switch (action.type) {
@@ -67,7 +67,8 @@ const App = () => {
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
           mobileNumber: action.mobileNumber,
-          roleId: action.roleId
+          roleId: action.roleId,
+          isLoading: false
         };
       case 'LOGIN':
         return {
@@ -82,14 +83,16 @@ const App = () => {
           departmentId: action.departmentId,
           rollNumber: action.rollNumber,
           mobileNumner: action.mobileNumber,
-          roleId: action.roleId
+          roleId: action.roleId,
+          isLoading: false
         };
       case 'LOGOUT':
         return {
           ...prevState,
           userName: null,
           userToken: null,
-          email: null
+          email: null,
+          isLoading: false
         };
       case 'REGISTER':
         return {
@@ -97,6 +100,7 @@ const App = () => {
           userName: action.id,
           userToken: action.token,
           email: action.email,
+          isLoading: false
         };
       case 'DETAILS_SUBMITTED':
         return {
@@ -108,7 +112,8 @@ const App = () => {
           rollNumber: action.rollNumber,
           mobileNumber: action.mobileNumber,
           roleId: action.roleId,
-          newUser: false
+          newUser: false,
+          isLoading: false
         };
       case 'PROFILE_UPDATED':
         return {
@@ -120,6 +125,12 @@ const App = () => {
           collegeId: action.collegeId,
           courseId: action.courseId,
           departmentId: action.departmentId,
+          isLoading: false
+        };
+      case 'BEGIN':
+        return {
+          ...prevState,
+          isLoading: false
         }
     }
   };
@@ -248,6 +259,7 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(async () => {
+      console.log("init")
       let userToken, username, id, isnewUser, email;
       userToken = null;
       try {
@@ -258,7 +270,6 @@ const App = () => {
           id = userdata._id;
           isnewUser = userdata['newUser']
           email = userdata['email'];
-
           let userRec = await getUserById(id);
           console.log(userRec);
           let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = userRec
@@ -276,6 +287,11 @@ const App = () => {
               rollNumber: rollNumber,
               mobileNumber: mobileNumber,
               roleId: roleId
+            });
+        } else {
+          dispatch(
+            {
+              type: 'BEGIN',
             });
         }
       } catch (e) {
@@ -302,6 +318,14 @@ const App = () => {
         <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Navigator>
     );
+  }
+
+  if (loginState.isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+        <ActivityIndicator size="large" color="#009387" />
+      </View>
+    )
   }
 
   return (
