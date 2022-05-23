@@ -36,7 +36,7 @@ const PostsPage = () => {
         performFilteringPosts()
     }, [categoryChecks]);
 
-    const { isMoreLoading, posts, filterPosts, hasMore, onEndReachedCalledDuringMomentum, setFilterPosts, setOnEndReachedCalledDuringMomentum }
+    const { isMoreLoading, posts, filterPosts, hasMore, setFilterPosts, }
         = fetchPostsHook(pageNumber, "1232", categoryChecks, setPageNumber)
 
     const showModal = () => setVisible(true);
@@ -108,7 +108,6 @@ const PostsPage = () => {
     }
 
     const performFilteringPosts = () => {
-        console.log(categoryChecks)
         if (checkForNoFilter()) {
             console.log("No filters applied")
             setFilterPosts(posts)
@@ -118,6 +117,7 @@ const PostsPage = () => {
         let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
         if (hasMore && filteredPosts.length == 0) {
             setPageNumber(prevPageNumber => prevPageNumber + 1)
+            setFilterPosts(filteredPosts);
             return
         }
         setFilterPosts(filteredPosts);
@@ -154,16 +154,9 @@ const PostsPage = () => {
                 keyExtractor={item => item._id}
                 renderItem={({ item }) => (<MyCard post={item} />)}
                 ListFooterComponent={renderFooter}
-                onEndReachedThreshold={0.5}
-                onMomentumScrollBegin={() => {
-                    console.log("When momentum is Started")
-                    setOnEndReachedCalledDuringMomentum(false)
-                }}
+                onEndReachedThreshold={0.1}
                 onEndReached={() => {
-                    console.log('on end reached  ' + 'isMoreLoading :: ' + isMoreLoading + '   oneEndMome :: ' + onEndReachedCalledDuringMomentum)
-
-                    if (!onEndReachedCalledDuringMomentum && !isMoreLoading) {
-                        console.log('on end reached inside loop')
+                    if (hasMore && !isMoreLoading) {
                         setPageNumber(prevPageNumber => prevPageNumber + 1)
                     }
                 }
