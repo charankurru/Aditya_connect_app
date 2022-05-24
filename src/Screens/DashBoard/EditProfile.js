@@ -57,7 +57,6 @@ const EditProfile = ({ route, navigation }) => {
     const getColleges = () => {
         GetCollegesData()
             .then((data) => {
-                // console.log(data.data.colleges);
                 setColleges(data.data.colleges)
                 let Engineering_colleges = data.data.colleges.filter(college => college.courseId.courseName === 'Engineering')
                 setFilteredColleges(Engineering_colleges)
@@ -83,7 +82,6 @@ const EditProfile = ({ route, navigation }) => {
     }
 
     const filterDepartment = (college_Id) => {
-        // console.log(college_Id)
         setData({ ...data, collegeId: college_Id })
         setDepts(colleges.filter(college => college._id === college_Id)[0].departments)
     }
@@ -93,12 +91,10 @@ const EditProfile = ({ route, navigation }) => {
     }
 
     const updateUserProfile = async () => {
-        console.log(data);
         setLoading(true);
         try {
             let res = await updateUser(data);
             setLoading(false);
-            console.log(res);
             if (res.data.token) {
                 let { collegeId, courseId, departmentId } = res.data.userRecord
                 navigation.goBack()
@@ -116,7 +112,6 @@ const EditProfile = ({ route, navigation }) => {
                     ToastAndroid.SHORT,
                     ToastAndroid.BOTTOM
                 );
-                console.log("need To go back now")
 
             }
 

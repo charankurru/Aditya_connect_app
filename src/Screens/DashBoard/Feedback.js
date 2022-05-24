@@ -25,9 +25,7 @@ const Feedback = () => {
     useEffect(async () => {
         try {
             let resPosts = await GetMessage(loginState.id);
-            console.log(resPosts);
             if (resPosts && resPosts.data.posts.length > 0) {
-                console.log("data fetched")
                 setMessagesList(resPosts.data.posts)
             }
         } catch (error) {
@@ -38,7 +36,6 @@ const Feedback = () => {
 
     const submitFeedback = async () => {
         setLoading(true);
-        console.log(value);
         try {
             let res = await SendMessage({
                 message: value,

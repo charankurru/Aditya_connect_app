@@ -10,14 +10,26 @@ import {
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../../Components/context';
 import AvatarText from '../../Components/AvatarText'
-
+import { GetUserInstitueData } from '../../API/services'
 const UserProfile = ({ navigation }) => {
 
     const isMountedRef = useRef(null);
-    const { loginState } = React.useContext(AuthContext);
+    const { loginState } = useContext(AuthContext);
+    const [youInstitueData, setInstitueData] = useState({})
 
     useEffect(() => {
         isMountedRef.current = true;
+        console.log(loginState)
+        GetUserInstitueData({
+            collegeId: loginState.collegeId?._id,
+            courseId: loginState.courseId?._id,
+            departmentId: loginState.departmentId?._id
+        })
+            .then(data => {
+                console.log(data)
+                setInstitueData(data.data)
+            })
+            .catch(data => { console.log(error) })
         return () => isMountedRef.current = false;
     }, [])
 
@@ -130,12 +142,12 @@ const UserProfile = ({ navigation }) => {
                         borderRightColor: '#dddddd',
                         borderRightWidth: 1
                     }]}>
-                        <Title>₹140.50</Title>
-                        <Caption>Wallet</Caption>
+                        <Title>{youInstitueData?.studentsCountOfDeptId}</Title>
+                        <Caption>Your department count</Caption>
                     </View>
                     <View style={styles.infoBox}>
-                        <Title>12</Title>
-                        <Caption>Orders</Caption>
+                        <Title>{youInstitueData?.studentsCountOfCollegeId}</Title>
+                        <Caption>Your college count</Caption>
                     </View>
                 </View>
                 <View style={styles.infoBoxWrapper}>
@@ -143,12 +155,12 @@ const UserProfile = ({ navigation }) => {
                         borderRightColor: '#dddddd',
                         borderRightWidth: 1
                     }]}>
-                        <Title>₹140.50</Title>
-                        <Caption>Wallet</Caption>
+                        <Title>{youInstitueData?.studentsCountOfCourseId}</Title>
+                        <Caption> {loginState.courseId?.courseName} count</Caption>
                     </View>
                     <View style={styles.infoBox}>
-                        <Title>12</Title>
-                        <Caption>Orders</Caption>
+                        <Title>{youInstitueData?.totalUsers}</Title>
+                        <Caption>Total users</Caption>
                     </View>
                 </View>
 

@@ -123,8 +123,6 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const register = async () => {
-        console.log(data);
-        console.log(data.username.length);
         if (data.password !== data.confirm_password) {
             Alert.alert('Sorry !', "Please Provide valid data", [
                 { text: 'Okay' }
@@ -138,7 +136,6 @@ const SignInScreen = ({ navigation }) => {
             return;
         }
         setIsLoad(true);
-        console.log(data);
         let registerData = {
             email: data.email,
             fullName: data.username,

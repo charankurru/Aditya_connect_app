@@ -97,23 +97,16 @@ const SignInScreen = ({ navigation }) => {
             email: userName,
             password: password
         }
-        console.log(foundUser)
         let isLoginData = await signIn(foundUser);
-        console.log(isLoginData)
         if (isLoginData) {
             let { message, token } = isLoginData.data;
             if (!token) {
-                console.log(message);
                 Alert.alert('Invalid User!', message, [
                     { text: 'Okay' }
                 ]);
                 setIsLoad(false);
             }
         }
-    }
-
-    const callForget = () => {
-        console.log("hello")
     }
 
     return (

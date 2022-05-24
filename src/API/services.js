@@ -66,3 +66,8 @@ export const ValidateOTP = (data) => {
 export const UpdatePassword = (data) => {
     return API.post('/users/update-password', data)
 }
+
+export const GetUserInstitueData = (data) => {
+    console.log(data)
+    return API.post('/users/get-institue-data', data)
+}

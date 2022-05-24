@@ -1,6 +1,6 @@
 import React, {
     useState,
-    useEffect, useCallback
+    useEffect, useMemo
 } from 'react';
 import {
     StyleSheet,
@@ -10,13 +10,12 @@ import {
     StatusBar,
     Text
 } from 'react-native';
-import { Modal, Portal, Avatar, Card, Paragraph, FAB, } from 'react-native-paper';
-import momentTime from '../../Components/momentTime'
+import { Modal, Portal, FAB, } from 'react-native-paper';
 import CheckBox from '../../Components/CheckBox'
 import { GetCategoriesData } from '../../API/services';
 import fetchPostsHook from './fetchPostsHook';
+import FeedCard from '../../Components/FeedCard';
 const PostsPage = () => {
-    let vital = false;
     const [categories, setCategories] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [refresh, setRefresh] = useState(false)
@@ -45,7 +44,6 @@ const PostsPage = () => {
     const getCategories = async () => {
         try {
             let res = await GetCategoriesData();
-            console.log(res)
             setCategories(res.data.result)
             let categoryCheckDict = {}
             res.data.result.forEach(category => {
@@ -57,21 +55,6 @@ const PostsPage = () => {
             console.log(error);
         }
 
-    }
-
-    const MyCard = (props) => {
-        let { post } = props;
-        let nameArray = post.postedBy?.adminName.split(" ")
-        let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0];
-        return (
-            <Card key={post.key} elevation={5}>
-                <Card.Title title={post.postedBy?.adminName} subtitle={momentTime(post.createdAt)} left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />} />
-                <Card.Content>
-                    <Paragraph>{post.postMessage}</Paragraph>
-                </Card.Content>
-                <Card.Cover source={{ uri: 'https://picsum.photos/700' }} />
-            </Card>
-        )
     }
 
     const renderFooter = () => {
@@ -88,9 +71,7 @@ const PostsPage = () => {
     const refreshingOnPull = () => {
         setRefresh(true)
         setTimeout(async () => {
-            console.log("setting pageNumber to 1")
             setPageNumber(1)
-            console.log(pageNumber)
             setRefresh(false)
         }, 1000);
     }
@@ -99,7 +80,6 @@ const PostsPage = () => {
         if (categoryChecks) {
             for (var key in categoryChecks) {
                 if (categoryChecks[key]) {
-                    console.log(categoryChecks[key])
                     return false
                 }
             }
@@ -109,11 +89,9 @@ const PostsPage = () => {
 
     const performFilteringPosts = () => {
         if (checkForNoFilter()) {
-            console.log("No filters applied")
             setFilterPosts(posts)
             return
         }
-        console.log("Filtering posts started.........")
         let filteredPosts = posts.filter(post => categoryChecks[post.categoryId])
         if (hasMore && filteredPosts.length == 0) {
             setPageNumber(prevPageNumber => prevPageNumber + 1)
@@ -124,7 +102,6 @@ const PostsPage = () => {
     }
 
     const checkPressed = (id) => {
-        console.log(id)
         setChecked({
             ...categoryChecks,
             [id]: !categoryChecks[id]
@@ -152,7 +129,7 @@ const PostsPage = () => {
             <FlatList
                 data={filterPosts}
                 keyExtractor={item => item._id}
-                renderItem={({ item }) => (<MyCard post={item} />)}
+                renderItem={({ item }) => (<FeedCard post={item} />)}
                 ListFooterComponent={renderFooter}
                 onEndReachedThreshold={0.1}
                 onEndReached={() => {

@@ -26,7 +26,6 @@ const SplashScreen = ({ navigation }) => {
                     style={styles.logo}
                     resizeMode="stretch"
                 />
-                <Text style={{ marginTop: -80 }}>Aditya Connect</Text>
             </View>
             <Animatable.View
                 style={[styles.footer, {

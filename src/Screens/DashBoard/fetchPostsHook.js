@@ -20,7 +20,6 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
         if (categoryChecks) {
             for (var key in categoryChecks) {
                 if (categoryChecks[key]) {
-                    console.log(categoryChecks[key])
                     return false
                 }
             }
@@ -31,11 +30,9 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
     const performFilteringPosts = (newPosts) => {
         if (checkForNoFilter()) {
             setFilterPosts([...filterPosts, ...newPosts]);
-            console.log("No filters applied")
             return
         }
         let filteredPosts = newPosts.filter(post => categoryChecks[post.categoryId])
-        console.log(filteredPosts)
         if (hasMore && filteredPosts.length == 0) {
             setPageNumber(prevPageNumber => prevPageNumber + 1)
             return

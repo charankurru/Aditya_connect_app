@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
     View,
     Text,
@@ -18,18 +18,21 @@ import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData } from '../../API/services';
-import { Animated } from 'react-native-web';
+import * as Device from 'expo-device';
+import * as Notifications from 'expo-notifications';
+
+Notifications.setNotificationHandler({
+    handleNotification: async () => ({
+        shouldShowAlert: true,
+        shouldPlaySound: false,
+        shouldSetBadge: false,
+    }),
+});
+
+
 const UserDetailsScreen = ({ navigation }) => {
 
     const [isLoad, setIsLoad] = React.useState(false);
-
-    const initState = {
-        mobileNumber: '',
-        empId: '',
-        courseId: '',
-        collegeId: '',
-        DeptId: '',
-    }
 
     const [data, setData] = React.useState({
         id: '',
@@ -40,9 +43,13 @@ const UserDetailsScreen = ({ navigation }) => {
         courseId: '',
         collegeId: '',
         deptId: '',
-        roleId: ''
-
+        roleId: '',
+        notificationId: '1234567'
     });
+
+    const [notification, setNotification] = useState(false);
+    const notificationListener = useRef();
+    const responseListener = useRef();
 
     const { authContext: { detailsUpdate }, loginState } = React.useContext(AuthContext);
 
@@ -54,12 +61,64 @@ const UserDetailsScreen = ({ navigation }) => {
     useEffect(() => {
         getColleges();
         getCourses();
+
+        registerForPushNotificationsAsync().then(token => {
+            setData({
+                ...data,
+                notificationId: token
+            })
+        });
+
+        // This listener is fired whenever a notification is received while the app is foregrounded
+        notificationListener.current = Notifications.addNotificationReceivedListener(notification => {
+            setNotification(notification);
+        });
+
+        // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
+        responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
+            console.log(response);
+        });
+
+        return () => {
+            Notifications.removeNotificationSubscription(notificationListener.current);
+            Notifications.removeNotificationSubscription(responseListener.current);
+        };
     }, [])
+
+    async function registerForPushNotificationsAsync() {
+        let token;
+        if (Device.isDevice) {
+            const { status: existingStatus } = await Notifications.getPermissionsAsync();
+            let finalStatus = existingStatus;
+            if (existingStatus !== 'granted') {
+                const { status } = await Notifications.requestPermissionsAsync();
+                finalStatus = status;
+            }
+            if (finalStatus !== 'granted') {
+                alert('Failed to get push token for push notification!');
+                return;
+            }
+            token = (await Notifications.getExpoPushTokenAsync()).data;
+            console.log(token);
+        } else {
+            alert('Must use physical device for Push Notifications');
+        }
+
+        if (Platform.OS === 'android') {
+            Notifications.setNotificationChannelAsync('default', {
+                name: 'default',
+                importance: Notifications.AndroidImportance.MAX,
+                vibrationPattern: [0, 250, 250, 250],
+                lightColor: '#FF231F7C',
+            });
+        }
+
+        return token;
+    }
 
     const getColleges = () => {
         GetCollegesData()
             .then((data) => {
-                console.log(data.data.colleges);
                 setColleges(data.data.colleges)
                 let Engineering_colleges = data.data.colleges.filter(college => college.courseId.courseName === 'Engineering')
                 setFilteredColleges(Engineering_colleges)
@@ -71,7 +130,6 @@ const UserDetailsScreen = ({ navigation }) => {
     const getCourses = () => {
         GetCoursesData()
             .then((data) => {
-                console.log(data.data.result)
                 setCourses(data.data.result)
             })
             .catch((error) => { console.log(error) })
@@ -79,7 +137,6 @@ const UserDetailsScreen = ({ navigation }) => {
 
     const filterColleges = (course_Id) => {
         setData({ ...data, courseId: course_Id })
-        console.log(course_Id)
         if (colleges.length > 1) {
             let cols = colleges.filter(college => college.courseId._id === course_Id)
             setFilteredColleges(cols)
@@ -87,14 +144,11 @@ const UserDetailsScreen = ({ navigation }) => {
     }
 
     const filterDepartment = (college_Id) => {
-        console.log(college_Id)
         setData({ ...data, collegeId: college_Id })
         setDepts(colleges.filter(college => college._id === college_Id)[0].departments)
     }
 
     const deptSelected = (val) => {
-        console.log(loginState)
-        console.log(val);
         setData({ ...data, deptId: val, id: loginState.id });
     }
 
@@ -141,7 +195,6 @@ const UserDetailsScreen = ({ navigation }) => {
         else if (Studentregex.test(data.uId)) {
             data.roleId = "624032e1ec6f3f04845f3914";
         }
-        console.log(data);
         detailsUpdate(data);
         setIsLoad(false)
     }

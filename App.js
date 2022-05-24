@@ -147,7 +147,6 @@ const App = () => {
           const userdata = parseJwt(userToken);
           let { fullName, email, _id, collegeId } = userdata;
           if (res.data.userRecord[0]) {
-            console.log(res.data.userRecord[0])
             let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = res.data.userRecord[0];
             await AsyncStorage.setItem('userToken', userToken);
             dispatch(
@@ -184,7 +183,7 @@ const App = () => {
       try {
         await AsyncStorage.removeItem('userToken');
       } catch (e) {
-        console.log(e);
+        console.log(e.message);
       }
       dispatch({ type: 'LOGOUT' });
     },
@@ -192,7 +191,6 @@ const App = () => {
       let res
       try {
         res = await SignUp(data);
-        console.log(res);
       } catch (error) {
         console.log(error)
         Alert.alert('Invalid User!', "something went wrong please try again in a while", [
@@ -206,7 +204,6 @@ const App = () => {
         const res = await updateUser(updateData);
         let userToken;
         if (res && res.data.token) {
-          console.log(res)
           userToken = res.data.token
           const userdata = parseJwt(userToken);
           await AsyncStorage.setItem('userToken', userToken);
@@ -257,7 +254,6 @@ const App = () => {
 
   useEffect(() => {
     setTimeout(async () => {
-      console.log("init")
       let userToken, username, id, isnewUser, email;
       userToken = null;
       try {
@@ -269,7 +265,6 @@ const App = () => {
           isnewUser = userdata['newUser']
           email = userdata['email'];
           let userRec = await getUserById(id);
-          console.log(userRec);
           let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = userRec
           dispatch(
             {
