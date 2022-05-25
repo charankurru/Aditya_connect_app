@@ -19,9 +19,6 @@ import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData } from '../../API/services';
 import AvatarText from '../../Components/AvatarText'
-import {
-    Avatar,
-} from 'react-native-paper';
 import { updateUser } from "../../API/services";
 import { LinearGradient } from 'expo-linear-gradient';
 

@@ -38,8 +38,13 @@ const SignInScreen = ({ navigation }) => {
 
     const [isLoad, setIsLoad] = React.useState(false);
 
+    const emailValidation = (email) => {
+        let emailRegex = /^([a-zA-Z0-9\.-]+)@(aec|acet|acoe).(edu).(in)$/
+        return emailRegex.test(email)
+    }
+
     const emailInputChange = (val) => {
-        if (val.length !== 0) {
+        if (emailValidation(val)) {
             setData({
                 ...data,
                 email: val,
@@ -129,7 +134,7 @@ const SignInScreen = ({ navigation }) => {
             ]);
             return;
         }
-        if (data.username.length < 6 && data.password.length < 6 && data.password.length < 6 && data.confirm_password.length < 6) {
+        if (data.username.length < 6 || data.password.length < 6 || data.confirm_password.length < 6 || data.email.length == 0 || !data.isValidEmail) {
             Alert.alert('Sorry !', "Please Provide valid data", [
                 { text: 'Okay' }
             ]);
@@ -200,7 +205,7 @@ const SignInScreen = ({ navigation }) => {
                     </View>
                     {data.isValidEmail ? null :
                         <Animatable.View animation="fadeInLeft" duration={500}>
-                            <Text style={styles.errorMsg}>Please provide valid email address</Text>
+                            <Text style={styles.errorMsg}>Please provide valid college email id</Text>
                         </Animatable.View>
                     }
 

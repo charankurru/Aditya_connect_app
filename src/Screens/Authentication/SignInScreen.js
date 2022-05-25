@@ -35,8 +35,13 @@ const SignInScreen = ({ navigation }) => {
 
     const { authContext: { signIn } } = React.useContext(AuthContext);
 
+    const emailValidation = (email) => {
+        let emailRegex = /^([a-zA-Z0-9\.-]+)@(aec|acet|acoe|gmail).(edu).(in)$/
+        return emailRegex.test(email)
+    }
+
     const emailInputChange = (val) => {
-        if (val.trim().length >= 4) {
+        if (emailValidation(val)) {
             setData({
                 ...data,
                 username: val,
@@ -109,6 +114,7 @@ const SignInScreen = ({ navigation }) => {
         }
     }
 
+
     return (
         <View style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
@@ -152,7 +158,7 @@ const SignInScreen = ({ navigation }) => {
                 </View>
                 {data.isValidUser ? null :
                     <Animatable.View animation="fadeInLeft" duration={500}>
-                        <Text style={styles.errorMsg}>Username must be 4 characters long.</Text>
+                        <Text style={styles.errorMsg}>Please enter valid college email Id</Text>
                     </Animatable.View>
                 }
 
@@ -203,6 +209,7 @@ const SignInScreen = ({ navigation }) => {
 
                 <View style={styles.button}>
                     <TouchableOpacity
+                        disabled={(!data.isValidUser || !data.isValidPassword || data.username.length === 0 || data.password.length === 0)}
                         style={[styles.signIn, {
                             marginTop: 15
                         }]}

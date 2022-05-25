@@ -17,7 +17,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { Picker } from '@react-native-picker/picker';
 import { AuthContext } from '../../Components/context';
-import { GetCollegesData, GetCoursesData } from '../../API/services';
+import { GetCollegesData, GetCoursesData, GetRoles } from '../../API/services';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
 
@@ -61,6 +61,11 @@ const UserDetailsScreen = ({ navigation }) => {
     useEffect(() => {
         getColleges();
         getCourses();
+        GetRoles()
+            .then(data => {
+                console.log(data)
+            })
+            .catch(() => console.log(error));
 
         registerForPushNotificationsAsync().then(token => {
             setData({
@@ -190,10 +195,16 @@ const UserDetailsScreen = ({ navigation }) => {
         let Studentregex = /^([a-zA-Z0-9]+)$/
         let teacherRegex = /^([0-9]+)$/
         if (teacherRegex.test(data.uId)) {
-            data.roleId = "624032e1ec6f3f04845f3915";
+            setData({
+                ...data,
+                roleId: "624032e1ec6f3f04845f3915"
+            })
         }
         else if (Studentregex.test(data.uId)) {
-            data.roleId = "624032e1ec6f3f04845f3914";
+            setData({
+                ...data,
+                roleId: "624032e1ec6f3f04845f3914"
+            })
         }
         detailsUpdate(data);
         setIsLoad(false)
