@@ -202,10 +202,10 @@ const App = () => {
     detailsUpdate: async (updateData) => {
       try {
         const res = await updateUser(updateData);
+        console.log(res)
         let userToken;
         if (res && res.data.token) {
           userToken = res.data.token
-          const userdata = parseJwt(userToken);
           await AsyncStorage.setItem('userToken', userToken);
           Alert.alert('yeah....!', "Details submited Successfully", [
             { text: 'Okay' }

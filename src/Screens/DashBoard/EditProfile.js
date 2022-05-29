@@ -144,6 +144,8 @@ const EditProfile = ({ route, navigation }) => {
             </View>
 
             <ScrollView>
+
+                {/* username */}
                 <View style={[styles.action, { marginTop: 25 }]}>
                     <FontAwesome
                         name="user-o"
@@ -170,7 +172,7 @@ const EditProfile = ({ route, navigation }) => {
                         : null}
                 </View>
 
-
+                {/* email */}
                 <View style={[styles.action, { marginTop: 25 }]}>
                     <FontAwesome
                         name="envelope-o"
@@ -197,7 +199,7 @@ const EditProfile = ({ route, navigation }) => {
                         : null}
                 </View>
 
-
+                {/* roll number */}
                 <View style={[styles.action, { marginTop: 25 }]}>
                     <FontAwesome
                         name="id-badge"
@@ -224,7 +226,7 @@ const EditProfile = ({ route, navigation }) => {
                         : null}
                 </View>
 
-
+                {/* mobile number */}
                 <View style={[styles.action, { marginTop: 25 }]}>
                     <FontAwesome
                         name="phone"

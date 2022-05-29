@@ -19,7 +19,7 @@ const FeedBackTextInput = (props) => {
 const Feedback = () => {
     const [value, onChangeText] = React.useState('');
     const { loginState } = useContext(AuthContext);
-    const [messagesList, setMessagesList] = useState();
+    const [messagesList, setMessagesList] = useState([]);
     const [isLoading, setLoading] = useState(false)
 
     useEffect(async () => {

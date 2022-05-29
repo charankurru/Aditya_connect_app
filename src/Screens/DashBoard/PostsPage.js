@@ -71,7 +71,7 @@ const PostsPage = () => {
     const refreshingOnPull = () => {
         setRefresh(true)
         setTimeout(async () => {
-            setPageNumber(1)
+            // setPageNumber(1)
             setRefresh(false)
         }, 1000);
     }

@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "Aditya_connect_app",
-    "slug": "Aditya_connect_app",
+    "name": "Aditya connect",
+    "slug": "Adityaconnect",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -9,6 +9,9 @@
       "image": "./assets/splash1.png",
       "resizeMode": "contain",
       "backgroundColor": "#009387"
+    },
+    "notification": {
+      "icon": "./assets/icon.png"
     },
     "updates": {
       "fallbackToCacheTimeout": 0
@@ -19,9 +22,10 @@
     },
     "android": {
       "adaptiveIcon": {
-        "foregroundImage": "./assets/adaptive-icon.png",
+        "foregroundImage": "./assets/icon.png",
         "backgroundColor": "#FFFFFF"
-      }
+      },
+      "package": "com.adityaconnect.app"
     },
     "web": {
       "favicon": "./assets/favicon.png"

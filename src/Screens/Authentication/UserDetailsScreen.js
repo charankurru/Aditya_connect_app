@@ -24,8 +24,8 @@ import * as Notifications from 'expo-notifications';
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
         shouldShowAlert: true,
-        shouldPlaySound: false,
-        shouldSetBadge: false,
+        shouldPlaySound: true,
+        shouldSetBadge: true,
     }),
 });
 
@@ -63,7 +63,7 @@ const UserDetailsScreen = ({ navigation }) => {
         getCourses();
         GetRoles()
             .then(data => {
-                console.log(data)
+                // console.log(data)
             })
             .catch(() => console.log(error));
 
@@ -81,7 +81,7 @@ const UserDetailsScreen = ({ navigation }) => {
 
         // This listener is fired whenever a user taps on or interacts with a notification (works when app is foregrounded, backgrounded, or killed)
         responseListener.current = Notifications.addNotificationResponseReceivedListener(response => {
-            console.log(response);
+            // console.log(response)
         });
 
         return () => {
@@ -104,7 +104,7 @@ const UserDetailsScreen = ({ navigation }) => {
                 return;
             }
             token = (await Notifications.getExpoPushTokenAsync()).data;
-            console.log(token);
+            // console.log(token)
         } else {
             alert('Must use physical device for Push Notifications');
         }
@@ -194,19 +194,17 @@ const UserDetailsScreen = ({ navigation }) => {
         setIsLoad(true)
         let Studentregex = /^([a-zA-Z0-9]+)$/
         let teacherRegex = /^([0-9]+)$/
+
         if (teacherRegex.test(data.uId)) {
-            setData({
-                ...data,
-                roleId: "624032e1ec6f3f04845f3915"
-            })
+            console.log("teacher")
+            data.roleId = "624032e1ec6f3f04845f3915"
         }
         else if (Studentregex.test(data.uId)) {
-            setData({
-                ...data,
-                roleId: "624032e1ec6f3f04845f3914"
-            })
+            console.log("Student")
+            data.roleId = "624032e1ec6f3f04845f3914"
         }
-        detailsUpdate(data);
+        console.log(data)
+        detailsUpdate(data)
         setIsLoad(false)
     }
 
@@ -223,7 +221,7 @@ const UserDetailsScreen = ({ navigation }) => {
                 style={styles.footer}
             >
                 <ScrollView>
-                    <Text style={styles.text_footer}>Rollnumber</Text>
+                    <Text style={styles.text_footer}>Roll Number</Text>
                     <View style={styles.action}>
                         <FontAwesome
                             name="user-o"
