@@ -46,7 +46,7 @@ const UserProfile = ({ navigation }) => {
             {loginState && <>
                 <View style={styles.userInfoSection}>
                     <View style={{
-                        flexDirection: 'row', marginTop: 15,
+                        flexDirection: 'row', flexWrap: 'wrap', marginTop: 15,
                     }}>
                         <AvatarText
                             size={80}

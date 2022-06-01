@@ -34,15 +34,17 @@ const EditProfile = ({ route, navigation }) => {
 
     const [data, setData] = useState({
         fullName: editData.userName,
+        isValidUser: true,
         email: editData.email,
+        isValidEmail: true,
         id: editData.id,
         rollNumber: editData.rollNumber ? editData.rollNumber : "",
+        isValidRollNumber: true,
         mobileNumber: editData.mobileNumber ? editData.mobileNumber : "",
+        isValidMobileNumber: true,
         courseId: editData.courseId ? editData.courseId._id : "",
         collegeId: editData.collegeId ? editData.collegeId._id : "",
         deptId: editData.departmentId ? editData.departmentId._id : "",
-        check_uIdInputChange: false,
-        check_mobileInputChange: false,
 
     });
 
@@ -87,7 +89,84 @@ const EditProfile = ({ route, navigation }) => {
         setData({ ...data, deptId: dept })
     }
 
+    // validations for userName
+    const userInputChange = (val) => {
+        if (val.length >= 6) {
+            setData({
+                ...data,
+                fullName: val,
+                isValidUser: true
+            });
+        } else {
+            setData({
+                ...data,
+                fullName: val,
+                isValidUser: false
+            });
+        }
+    }
+
+    // validations for email
+    const emailValidation = (email) => {
+        let emailRegex = /^([a-zA-Z0-9\.-]+)@(aec|acet|acoe).(edu).(in)$/
+        return emailRegex.test(email)
+    }
+
+    const emailInputChange = (val) => {
+        if (emailValidation(val)) {
+            setData({
+                ...data,
+                email: val,
+                isValidEmail: true
+            });
+        } else {
+            setData({
+                ...data,
+                email: val,
+                isValidEmail: false
+            });
+        }
+    }
+
+    // validatiosn for yser rollNumber
+    const uIdInputChange = (val) => {
+        if (val.length == 4) {
+            setData({
+                ...data,
+                rollNumber: val,
+                isValidRollNumber: true
+            });
+        } else {
+            setData({
+                ...data,
+                rollNumber: val,
+                isValidRollNumber: false
+            });
+        }
+    }
+
+    // validations for mobile Number
+    const mobileInputChange = (val) => {
+        if (val.length == 10) {
+            setData({
+                ...data,
+                mobileNumber: val,
+                isValidMobileNumber: true
+            });
+        } else {
+            setData({
+                ...data,
+                mobileNumber: val,
+                isValidMobileNumber: false
+            });
+        }
+    }
+
+
     const updateUserProfile = async () => {
+        if (!data.isValidUser || !data.isValidEmail || !data.isValidRollNumber || !data.isValidMobileNumber) {
+            return
+        }
         setLoading(true);
         try {
             let res = await updateUser(data);
@@ -157,20 +236,14 @@ const EditProfile = ({ route, navigation }) => {
                         placeholder="Your Id number"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => setData({ ...data, fullName: val })}
+                        onChangeText={userInputChange}
                     />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
                 </View>
+                {data.isValidUser ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>UserName Should consists Of 6 Characters or More</Text>
+                    </Animatable.View>
+                }
 
                 {/* email */}
                 <View style={[styles.action, { marginTop: 25 }]}>
@@ -184,20 +257,14 @@ const EditProfile = ({ route, navigation }) => {
                         placeholder="Your Id number"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => setData({ ...data, email: val })}
+                        onChangeText={emailInputChange}
                     />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
                 </View>
+                {data.isValidEmail ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter valid college email Id</Text>
+                    </Animatable.View>
+                }
 
                 {/* roll number */}
                 <View style={[styles.action, { marginTop: 25 }]}>
@@ -211,20 +278,14 @@ const EditProfile = ({ route, navigation }) => {
                         placeholder="Your Id number"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => setData({ ...data, rollNumber: val })}
+                        onChangeText={uIdInputChange}
                     />
-                    {data.check_textInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
                 </View>
+                {data.isValidRollNumber ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter valid Roll Number</Text>
+                    </Animatable.View>
+                }
 
                 {/* mobile number */}
                 <View style={[styles.action, { marginTop: 25 }]}>
@@ -238,20 +299,14 @@ const EditProfile = ({ route, navigation }) => {
                         placeholder="Your Mobile Number"
                         style={styles.textInput}
                         autoCapitalize="none"
-                        onChangeText={(val) => setData({ ...data, mobileNumber: val })}
+                        onChangeText={mobileInputChange}
                     />
-                    {data.check_mobileInputChange ?
-                        <Animatable.View
-                            animation="bounceIn"
-                        >
-                            <Feather
-                                name="check-circle"
-                                color="green"
-                                size={20}
-                            />
-                        </Animatable.View>
-                        : null}
                 </View>
+                {data.isValidMobileNumber ? null :
+                    <Animatable.View animation="fadeInLeft" duration={500}>
+                        <Text style={styles.errorMsg}>Please enter valid Mobile Number</Text>
+                    </Animatable.View>
+                }
 
 
                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Course</Text>
@@ -354,6 +409,10 @@ const styles = StyleSheet.create({
     text_footer: {
         color: '#05375a',
         fontSize: 18
+    },
+    errorMsg: {
+        color: '#FF0000',
+        fontSize: 14,
     },
     action: {
         flexDirection: 'row',

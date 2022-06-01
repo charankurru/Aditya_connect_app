@@ -129,7 +129,7 @@ const PostsPage = () => {
             <FlatList
                 data={filterPosts}
                 keyExtractor={item => item._id}
-                renderItem={({ item }) => (<FeedCard post={item} />)}
+                renderItem={({ item, index }) => (<FeedCard index={index} post={item} />)}
                 ListFooterComponent={renderFooter}
                 onEndReachedThreshold={0.1}
                 onEndReached={() => {
