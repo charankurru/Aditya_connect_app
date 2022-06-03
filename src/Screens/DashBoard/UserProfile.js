@@ -1,7 +1,6 @@
 import React, { useEffect, useContext, useState, useRef } from 'react'
-import { View, SafeAreaView, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
+import { View, SafeAreaView, ScrollView, StyleSheet, TouchableOpacity, ActivityIndicator, StatusBar } from 'react-native';
 import {
-    Avatar,
     Title,
     Caption,
     Text,
@@ -19,14 +18,12 @@ const UserProfile = ({ navigation }) => {
 
     useEffect(() => {
         isMountedRef.current = true;
-        console.log(loginState)
         GetUserInstitueData({
             collegeId: loginState.collegeId?._id,
             courseId: loginState.courseId?._id,
             departmentId: loginState.departmentId?._id
         })
             .then(data => {
-                console.log(data)
                 setInstitueData(data.data)
             })
             .catch(data => { console.log(error) })
@@ -43,128 +40,133 @@ const UserProfile = ({ navigation }) => {
     return (
         <SafeAreaView style={styles.container}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
-            {loginState && <>
-                <View style={styles.userInfoSection}>
-                    <View style={{
-                        flexDirection: 'row', flexWrap: 'wrap', marginTop: 15,
-                    }}>
-                        <AvatarText
-                            size={80}
-                            name={loginState.userName}
-                        />
+            <ScrollView>
+                {loginState && <>
+                    <View style={styles.userInfoSection}>
                         <View style={{
-                            marginLeft: 20, borderBottomColor: 'black',
-                            borderBottomWidth: 1,
+                            flexDirection: 'row', marginTop: 15,
                         }}>
-                            <Title style={[styles.title, {
-                                marginTop: 15,
-                                marginBottom: 5,
-                            }]}>{loginState.userName}</Title>
-                            <Caption style={styles.caption}>{loginState.rollNumber}</Caption>
+                            <AvatarText
+                                size={80}
+                                name={loginState.userName}
+                            />
+                            <View style={{
+                                marginLeft: 10, borderBottomColor: 'black',
+                                borderBottomWidth: 1,
+                            }}>
+                                <View style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap' }}>
+                                    <Title style={[styles.title, {
+                                        marginTop: 15,
+                                        marginBottom: 5,
+                                    }]}>{loginState.userName}</Title>
+
+                                </View>
+                                <Caption style={styles.caption}>{loginState.rollNumber}</Caption>
+                            </View>
+                        </View>
+
+                        <View style={styles.button}>
+                            <TouchableOpacity
+                                onPress={() => { navigation.navigate('EditProfile', loginState) }}
+                                style={[styles.signIn, {
+                                    borderColor: 'black',
+                                    borderWidth: 1,
+                                    marginTop: 15
+                                }]}
+                            >
+                                <Text style={[styles.textSign, {
+                                    color: 'black'
+                                }]}>Edit Profile</Text>
+                            </TouchableOpacity>
+
                         </View>
                     </View>
 
-                    <View style={styles.button}>
-                        <TouchableOpacity
-                            onPress={() => { navigation.navigate('EditProfile', loginState) }}
-                            style={[styles.signIn, {
-                                borderColor: 'black',
-                                borderWidth: 1,
-                                marginTop: 15
-                            }]}
-                        >
-                            <Text style={[styles.textSign, {
-                                color: 'black'
-                            }]}>Edit Profile</Text>
-                        </TouchableOpacity>
+                    <View style={styles.menuWrapper}>
+                        <TouchableRipple onPress={() => { }}>
+                            <View style={styles.menuItem}>
+                                <Icon name="email" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState?.email}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
 
+                        <TouchableRipple onPress={() => { }}>
+                            <View style={styles.menuItem}>
+                                <Icon name="phone" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState.mobileNumber}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+
+                        <TouchableRipple onPress={() => { }}>
+                            <View style={styles.menuItem}>
+                                <Icon name="heart-outline" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState.roleId?.roleName}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+
+
+                        <TouchableRipple onPress={() => { }}>
+                            <View style={styles.menuItem}>
+                                <Icon name="school" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState.courseId ? loginState.courseId.courseName : null}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                        <TouchableRipple onPress={() => { }}>
+                            <View style={styles.menuItem}>
+                                <Icon name="google-classroom" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState.collegeId ? loginState.collegeId.collegeName : null}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
+                        {/* onPress={myCustomShare} */}
+                        <TouchableRipple >
+                            <View style={styles.menuItem}>
+                                <Icon name="doorbell-video" color="#FF6347" size={25} />
+                                <Text style={styles.menuItemText}>
+                                    {loginState.departmentId ? loginState.departmentId.deptName : null}
+                                </Text>
+                            </View>
+                        </TouchableRipple>
                     </View>
-                </View>
 
-                <View style={styles.menuWrapper}>
-                    <TouchableRipple onPress={() => { }}>
-                        <View style={styles.menuItem}>
-                            <Icon name="email" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState?.email}
-                            </Text>
+                    <View style={styles.infoBoxWrapper}>
+                        <View style={[styles.infoBox, {
+                            borderRightColor: '#dddddd',
+                            borderRightWidth: 1
+                        }]}>
+                            <Title>{youInstitueData?.studentsCountOfDeptId}</Title>
+                            <Caption>Your department count</Caption>
                         </View>
-                    </TouchableRipple>
-
-                    <TouchableRipple onPress={() => { }}>
-                        <View style={styles.menuItem}>
-                            <Icon name="phone" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState.mobileNumber}
-                            </Text>
+                        <View style={styles.infoBox}>
+                            <Title>{youInstitueData?.studentsCountOfCollegeId}</Title>
+                            <Caption>Your college count</Caption>
                         </View>
-                    </TouchableRipple>
-
-                    <TouchableRipple onPress={() => { }}>
-                        <View style={styles.menuItem}>
-                            <Icon name="heart-outline" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState.roleId?.roleName}
-                            </Text>
-                        </View>
-                    </TouchableRipple>
-
-
-                    <TouchableRipple onPress={() => { }}>
-                        <View style={styles.menuItem}>
-                            <Icon name="school" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState.courseId ? loginState.courseId.courseName : null}
-                            </Text>
-                        </View>
-                    </TouchableRipple>
-                    <TouchableRipple onPress={() => { }}>
-                        <View style={styles.menuItem}>
-                            <Icon name="google-classroom" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState.collegeId ? loginState.collegeId.collegeName : null}
-                            </Text>
-                        </View>
-                    </TouchableRipple>
-                    {/* onPress={myCustomShare} */}
-                    <TouchableRipple >
-                        <View style={styles.menuItem}>
-                            <Icon name="doorbell-video" color="#FF6347" size={25} />
-                            <Text style={styles.menuItemText}>
-                                {loginState.departmentId ? loginState.departmentId.deptName : null}
-                            </Text>
-                        </View>
-                    </TouchableRipple>
-                </View>
-
-                <View style={styles.infoBoxWrapper}>
-                    <View style={[styles.infoBox, {
-                        borderRightColor: '#dddddd',
-                        borderRightWidth: 1
-                    }]}>
-                        <Title>{youInstitueData?.studentsCountOfDeptId}</Title>
-                        <Caption>Your department count</Caption>
                     </View>
-                    <View style={styles.infoBox}>
-                        <Title>{youInstitueData?.studentsCountOfCollegeId}</Title>
-                        <Caption>Your college count</Caption>
+                    <View style={styles.infoBoxWrapper}>
+                        <View style={[styles.infoBox, {
+                            borderRightColor: '#dddddd',
+                            borderRightWidth: 1
+                        }]}>
+                            <Title>{youInstitueData?.studentsCountOfCourseId}</Title>
+                            <Caption> {loginState.courseId?.courseName} count</Caption>
+                        </View>
+                        <View style={styles.infoBox}>
+                            <Title>{youInstitueData?.totalUsers}</Title>
+                            <Caption>Total users</Caption>
+                        </View>
                     </View>
-                </View>
-                <View style={styles.infoBoxWrapper}>
-                    <View style={[styles.infoBox, {
-                        borderRightColor: '#dddddd',
-                        borderRightWidth: 1
-                    }]}>
-                        <Title>{youInstitueData?.studentsCountOfCourseId}</Title>
-                        <Caption> {loginState.courseId?.courseName} count</Caption>
-                    </View>
-                    <View style={styles.infoBox}>
-                        <Title>{youInstitueData?.totalUsers}</Title>
-                        <Caption>Total users</Caption>
-                    </View>
-                </View>
 
-            </>}
+                </>}
+            </ScrollView>
 
         </SafeAreaView >
     )

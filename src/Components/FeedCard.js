@@ -6,17 +6,20 @@ import Icon from 'react-native-vector-icons/AntDesign';
 import MaterialCommunityIcons from 'react-native-vector-icons/MaterialCommunityIcons'
 import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system'
-// import { downloadToFolder } from "expo-file-dl";
-import GestureHandler, { PinchGestureHandler } from 'react-native-gesture-handler'
-const screen = Dimensions.get('window');
+//import ImageViewer which will help us to zoom Image
+import ImageViewer from 'react-native-image-zoom-viewer';
 
 const FeedCard = (props) => {
 
-    const [statusHook, setStatus] = React.useState(false);
-    const [diaLog, setDialog] = React.useState(null);
-    const [scaleCustomer, SetScale] = React.useState(new Animated.Value(1));
+    const [diaLog, setDialog] = React.useState(null)
+    const [like, setLike] = React.useState(0)
 
     let { post, index } = props;
+    const images = [
+        {
+            url: post.mediaId
+        },
+    ];
     let media = post.mediaId
     let fileName, type = undefined
     if (media.length > 0) {
@@ -26,22 +29,6 @@ const FeedCard = (props) => {
     }
     let nameArray = post.postedBy?.adminName.split(" ")
     let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0];
-
-    const onPinchEvent = Animated.event([{ nativeEvent: { scale: scaleCustomer } }], {
-        useNativeDriver: true,
-    });
-
-    const onPinchStateChange = (event) => {
-        console.log("event pinch")
-        if (event.nativeEvent.oldState === GestureHandler.State.ACTIVE) {
-            Animated.spring(scaleCustomer, {
-                toValue: 1,
-                useNativeDriver: true,
-                bounciness: 1,
-            }).start();
-        }
-    };
-
 
     const DisplayImageOrPDF = (props) => {
         let { post, type, fileName } = props
@@ -56,7 +43,12 @@ const FeedCard = (props) => {
                 </TouchableOpacity>
             </View>
         )
-        else return <TouchableOpacity onPress={() => setDialog(index)}><Card.Cover source={{ uri: post.mediaId }} /></TouchableOpacity>
+        else return <TouchableOpacity onPress={() => setDialog(index)}>
+            <Card.Cover source={{ uri: post.mediaId }} />
+            <View style={{ marginTop: 20 }}>
+
+            </View>
+        </TouchableOpacity>
     }
 
     const downloadFile = (mediaUrl) => {
@@ -69,7 +61,7 @@ const FeedCard = (props) => {
                     ToastAndroid.SHORT,
                     ToastAndroid.BOTTOM
                 );
-                // saveFile(uri);
+                saveFile(uri)
                 console.log(fileUri)
                 console.log(uri)
                 ToastAndroid.showWithGravity(
@@ -86,7 +78,6 @@ const FeedCard = (props) => {
     const saveFile = async (fileUri) => {
         try {
             let { status } = await MediaLibrary.requestPermissionsAsync()
-            setStatus(status === 'granted')
             if (status) {
                 const asset = await MediaLibrary.createAssetAsync(fileUri)
                 await MediaLibrary.createAlbumAsync("Download", asset, false)
@@ -100,9 +91,22 @@ const FeedCard = (props) => {
         }
     }
 
+    const likePost = async () => {
+        if (like) {
+            //perform unliking the post
+            setLike(0)
+            //Decrement the count
+        }
+        else {
+            //perform like the post
+            setLike(1)
+            //increment the count
+        }
+    }
+
 
     return (
-        <>
+        <View style={{ paddingLeft: 10, paddingRight: 10, paddingTop: 7 }}>
             <Modal
                 animationType="slide"
                 transparent={true}
@@ -113,16 +117,9 @@ const FeedCard = (props) => {
             >
                 <View style={styles.centeredView}>
 
-                    <PinchGestureHandler
-                        onGestureEvent={onPinchEvent}
-                        onHandlerStateChange={onPinchStateChange}
-                    >
 
-                        <Animated.Image style={[styles.tinyLogo, {
-                            transform: [{ scale: scaleCustomer }],
-                        }]} source={{ uri: post.mediaId }} />
+                    <ImageViewer style={styles.tinyLogo} imageUrls={images} renderIndicator={() => null} />
 
-                    </PinchGestureHandler>
 
                     <View style={{ display: 'flex', flexDirection: 'row', }}>
 
@@ -143,24 +140,31 @@ const FeedCard = (props) => {
                 </View>
             </Modal>
 
-            <Card key={post.key} elevation={5} style={{ padding: 5, marginTop: 1 }}>
+            <Card key={post.key} elevation={5} style={{
+                padding: 1, marginTop: 1, borderRadius: 25
+            }}>
 
-                <Card.Title title={post.postedBy?.adminName} subtitle={"Placement co-ordinator"} left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />}
+                <Card.Title
+                    style={styles.bottomDrawerSection}
+                    title={post.postedBy?.adminName}
+                    subtitle={"Placement co-ordinator"}
+                    left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />}
                     right={(props) => <Text style={{ marginRight: 10 }}>{momentTime(post.createdAt)}</Text>} />
 
-                <Card.Content>
+                <Card.Content style={{ marginBottom: 10 }}>
                     <Paragraph>{post.postMessage}</Paragraph>
                 </Card.Content>
 
                 {type ? <DisplayImageOrPDF post={post} type={type} fileName={fileName} /> : null}
 
-                <Card.Actions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity><Icon name="like2" size={30} color="green" /></TouchableOpacity>
-                    <Text style={{ flex: 1, marginLeft: 10 }}>10</Text>
-                </Card.Actions>
+
+                {/* <Card.Actions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <TouchableOpacity onPress={() => likePost()}><Icon name={like ? "like1" : "like2"} size={30} color="#23bd1e" /></TouchableOpacity>
+                    <Text style={{ flex: 1, marginLeft: 10 }}>{post.likes}</Text>
+                </Card.Actions> */}
 
             </Card>
-        </>
+        </View>
     )
 }
 
@@ -174,12 +178,17 @@ const styles = StyleSheet.create({
         backgroundColor: 'black'
     },
     tinyLogo: {
-        resizeMode: 'contain',
-        width: screen.width,
-        height: screen.width,
-        // width: '100%',
+        // resizeMode: 'contain',
+        width: '100%',
         // height: undefined,
         // aspectRatio: 1
+    },
+    bottomDrawerSection: {
+        marginBottom: 10,
+        borderBottomColor: '#D3D3D3',
+        // backgroundColor: '#F5F5F5',
+        borderBottomWidth: 1,
+        // borderRadius: 25
     },
     button: {
         borderRadius: 20,

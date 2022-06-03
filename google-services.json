@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "259047530169",
+    "project_id": "aditya-connect-f6acf",
+    "storage_bucket": "aditya-connect-f6acf.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:259047530169:android:c12470340901c8856fc568",
+        "android_client_info": {
+          "package_name": "com.adityaconnect.app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "259047530169-dpv1mgjfokj7s9tf9j1b08j7f40b6mrt.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAJAf74WpmIRpB7bh0bef_M9XconavqxHI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "259047530169-dpv1mgjfokj7s9tf9j1b08j7f40b6mrt.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

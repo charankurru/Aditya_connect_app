@@ -42,9 +42,9 @@ const EditProfile = ({ route, navigation }) => {
         isValidRollNumber: true,
         mobileNumber: editData.mobileNumber ? editData.mobileNumber : "",
         isValidMobileNumber: true,
-        courseId: editData.courseId ? editData.courseId._id : "",
-        collegeId: editData.collegeId ? editData.collegeId._id : "",
-        deptId: editData.departmentId ? editData.departmentId._id : "",
+        courseId: editData.courseId ? editData.courseId?._id : "",
+        collegeId: editData.collegeId ? editData.collegeId?._id : "",
+        deptId: editData.departmentId ? editData.departmentId?._id : "",
 
     });
 
@@ -75,7 +75,6 @@ const EditProfile = ({ route, navigation }) => {
 
     const filterColleges = (course_Id) => {
         setData({ ...data, courseId: course_Id })
-        // console.log(course_Id)
         let cols = colleges.filter(college => college.courseId._id === course_Id)
         setFilteredColleges(cols)
     }
@@ -341,7 +340,7 @@ const EditProfile = ({ route, navigation }) => {
                 <Text style={[styles.text_footer, { marginTop: 25 }]}>Department</Text>
                 <View>
                     <Picker
-                        selectedValue={data.deptId}
+                        selectedValue={data?.deptId}
                         onValueChange={(itemValue, itemIndex) =>
                             deptSelected(itemValue)}>
 
