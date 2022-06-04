@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { View, Alert, StyleSheet, ToastAndroid, ActivityIndicator } from 'react-native';
+import { View, Alert, StyleSheet, ToastAndroid, Text, ActivityIndicator } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createDrawerNavigator } from '@react-navigation/drawer';
 import UserProfile from './src/Screens/DashBoard/UserProfile'
@@ -265,6 +265,12 @@ const App = () => {
           isnewUser = userdata['newUser']
           email = userdata['email'];
           let userRec = await getUserById(id);
+          if (!userRec) {
+            dispatch(
+              {
+                type: 'BEGIN',
+              });
+          }
           let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = userRec
           dispatch(
             {
@@ -329,7 +335,7 @@ const App = () => {
             loginState.userToken !== null ? (
               loginState.newUser == true ? <UserDetailsScreen /> : (
                 <Drawer.Navigator drawerContent={props => <DrawerContent {...props} />}>
-                  <Drawer.Screen options={navigationOptions()} name="AdityaConnect" component={PostsPage} />
+                  <Drawer.Screen options={navigationOptions()} name="Aditya Connect" component={PostsPage} />
                   <Drawer.Screen options={navigationOptions()} name="Profile" component={Root} />
                   <Drawer.Screen options={navigationOptions()} name="Feedback" component={Feedback} />
 

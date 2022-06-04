@@ -60,7 +60,9 @@ const SignInScreen = ({ navigation }) => {
             });
         }
     }
+
     const userInputChange = (val) => {
+        val = val.trim()
         if (val.length >= 6) {
             setData({
                 ...data,
@@ -79,6 +81,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const handlePasswordChange = (val) => {
+        val = val.trim()
         if (val.trim().length >= 6) {
             setData({
                 ...data,
@@ -96,6 +99,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const handleConfirmPasswordChange = (val) => {
+        val = val.trim()
         if (val.trim() == data.password) {
             setData({
                 ...data,
@@ -142,7 +146,7 @@ const SignInScreen = ({ navigation }) => {
         }
         setIsLoad(true);
         let registerData = {
-            email: data.email,
+            email: data.email.toLowerCase(),
             fullName: data.username,
             password: data.password
         }
@@ -150,7 +154,7 @@ const SignInScreen = ({ navigation }) => {
         if (isSuccess) {
             let { doc, message } = isSuccess.data;
             if (doc) {
-                Alert.alert('Ola....!', message, [
+                Alert.alert('hola....!', message, [
                     { text: 'Okay' }
                 ]);
                 navigation.goBack()

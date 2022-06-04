@@ -47,7 +47,7 @@ export function DrawerContent(props) {
                                 />
                             )}
                             label="Home"
-                            onPress={() => { props.navigation.navigate('AdityaConnect') }}
+                            onPress={() => { props.navigation.navigate('Aditya Connect') }}
                         />
                         <DrawerItem
                             icon={({ color, size }) => (

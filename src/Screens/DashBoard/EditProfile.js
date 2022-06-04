@@ -90,6 +90,7 @@ const EditProfile = ({ route, navigation }) => {
 
     // validations for userName
     const userInputChange = (val) => {
+        val = val.trim()
         if (val.length >= 6) {
             setData({
                 ...data,
@@ -129,7 +130,8 @@ const EditProfile = ({ route, navigation }) => {
 
     // validatiosn for yser rollNumber
     const uIdInputChange = (val) => {
-        if (val.length == 4) {
+        val = val.trim()
+        if (val.length >= 4) {
             setData({
                 ...data,
                 rollNumber: val,
@@ -146,6 +148,7 @@ const EditProfile = ({ route, navigation }) => {
 
     // validations for mobile Number
     const mobileInputChange = (val) => {
+        val = val.trim()
         if (val.length == 10) {
             setData({
                 ...data,

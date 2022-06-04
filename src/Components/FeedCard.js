@@ -1,5 +1,5 @@
 import React, { memo } from 'react'
-import { Text, View, ToastAndroid, Alert, Dimensions, TouchableOpacity, Modal, StyleSheet, Image, Animated } from 'react-native'
+import { Text, View, ToastAndroid, Alert, Dimensions, TouchableHighlight, TouchableOpacity, Modal, StyleSheet, Image, Animated } from 'react-native'
 import { Avatar, Card, Paragraph } from 'react-native-paper';
 import momentTime from './momentTime'
 import Icon from 'react-native-vector-icons/AntDesign';
@@ -116,26 +116,22 @@ const FeedCard = (props) => {
                 }}
             >
                 <View style={styles.centeredView}>
-
-
-                    <ImageViewer style={styles.tinyLogo} imageUrls={images} renderIndicator={() => null} />
-
-
-                    <View style={{ display: 'flex', flexDirection: 'row', }}>
+                    <View style={{ marginRight: -130, marginLeft: 150, display: 'flex', flexDirection: 'row', }}>
 
                         {/* button for downLoading */}
                         <TouchableOpacity onPress={() => downloadFile(post.mediaId)} style={{ display: 'flex', flexDirection: 'row', marginRight: 30 }}>
-                            <Text style={{ color: 'white', fontSize: 18 }}>download  </Text>
+                            {/* <Text style={{ color: 'white', fontSize: 18 }}>download  </Text> */}
                             <Icon name="download" size={25} color="white" />
                         </TouchableOpacity>
 
                         {/* button for closing the modal */}
                         <TouchableOpacity onPress={() => setDialog(null)} style={{ display: 'flex', flexDirection: 'row', }}>
-                            <Text style={{ color: 'white', fontSize: 18, }}>close </Text>
+                            {/* <Text style={{ color: 'white', fontSize: 18, }}>close </Text> */}
                             <Icon name="close" size={25} color="white" />
                         </TouchableOpacity>
 
                     </View>
+                    <ImageViewer style={styles.tinyLogo} imageUrls={images} renderIndicator={() => null} />
 
                 </View>
             </Modal>
@@ -149,10 +145,15 @@ const FeedCard = (props) => {
                     title={post.postedBy?.adminName}
                     subtitle={"Placement co-ordinator"}
                     left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />}
-                    right={(props) => <Text style={{ marginRight: 10 }}>{momentTime(post.createdAt)}</Text>} />
+                    right={(props) =>
+                        <Text style={{ marginRight: 10, color: "#05375a", fontSize: 12 }}>
+                            <MaterialCommunityIcons name="clock-outline" />
+                            {momentTime(post.createdAt)}
+                        </Text>} />
 
                 <Card.Content style={{ marginBottom: 10 }}>
-                    <Paragraph>{post.postMessage}</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: 16, color: "#05375a" }}>{post.postTitle}</Paragraph>
+                    <Paragraph style={{ textAlign: 'justify', letterSpacing: 0.5 }}>{post.postMessage}</Paragraph>
                 </Card.Content>
 
                 {type ? <DisplayImageOrPDF post={post} type={type} fileName={fileName} /> : null}
@@ -184,6 +185,7 @@ const styles = StyleSheet.create({
         // aspectRatio: 1
     },
     bottomDrawerSection: {
+        color: '#05375a',
         marginBottom: 10,
         borderBottomColor: '#D3D3D3',
         // backgroundColor: '#F5F5F5',

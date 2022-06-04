@@ -32,11 +32,13 @@ Notifications.setNotificationHandler({
 
 const UserDetailsScreen = ({ navigation }) => {
 
+    const { authContext: { detailsUpdate }, loginState } = React.useContext(AuthContext);
+
     const [isLoad, setIsLoad] = React.useState(false);
 
     const [data, setData] = React.useState({
         id: '',
-        uId: '',
+        uId: loginState?.rollNumber,
         mobileNumber: '',
         check_uIdInputChange: false,
         check_mobileInputChange: false,
@@ -50,8 +52,6 @@ const UserDetailsScreen = ({ navigation }) => {
     const [notification, setNotification] = useState(false);
     const notificationListener = useRef();
     const responseListener = useRef();
-
-    const { authContext: { detailsUpdate }, loginState } = React.useContext(AuthContext);
 
     const [colleges, setColleges] = React.useState([{}]);
     const [courses, setCourses] = React.useState([{}]);
@@ -158,6 +158,7 @@ const UserDetailsScreen = ({ navigation }) => {
     }
 
     const uIdInputChange = (val) => {
+        val = val.trim()
         if (val.length == 10) {
             setData({
                 ...data,
@@ -174,6 +175,7 @@ const UserDetailsScreen = ({ navigation }) => {
     }
 
     const mobileInputChange = (val) => {
+        val = val.trim()
         if (val.length == 10) {
             setData({
                 ...data,
@@ -191,6 +193,9 @@ const UserDetailsScreen = ({ navigation }) => {
 
 
     const updateUserProfile = () => {
+        if (!data.check_mobileInputChange || !data.check_uIdInputChange) {
+            return
+        }
         setIsLoad(true)
         let Studentregex = /^([a-zA-Z0-9]+)$/
         let teacherRegex = /^([0-9]+)$/
@@ -229,6 +234,8 @@ const UserDetailsScreen = ({ navigation }) => {
                             size={20}
                         />
                         <TextInput
+                            value={data.uId}
+                            editable={false} selectTextOnFocus={false}
                             placeholder="Your Id number"
                             style={styles.textInput}
                             autoCapitalize="none"

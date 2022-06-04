@@ -99,7 +99,7 @@ const SignInScreen = ({ navigation }) => {
 
         setIsLoad(true);
         let foundUser = {
-            email: userName,
+            email: userName.toLowerCase(),
             password: password
         }
         let isLoginData = await signIn(foundUser);
