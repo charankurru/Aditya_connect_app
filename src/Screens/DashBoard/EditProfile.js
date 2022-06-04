@@ -235,7 +235,7 @@ const EditProfile = ({ route, navigation }) => {
                     />
                     <TextInput
                         value={data.fullName}
-                        placeholder="Your Id number"
+                        placeholder="username"
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={userInputChange}
@@ -256,7 +256,7 @@ const EditProfile = ({ route, navigation }) => {
                     />
                     <TextInput
                         value={data.email}
-                        placeholder="Your Id number"
+                        placeholder="Your email"
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={emailInputChange}
@@ -277,7 +277,7 @@ const EditProfile = ({ route, navigation }) => {
                     />
                     <TextInput
                         value={data.rollNumber}
-                        placeholder="Your Id number"
+                        placeholder="Your roll number"
                         style={styles.textInput}
                         autoCapitalize="none"
                         onChangeText={uIdInputChange}

@@ -40,7 +40,7 @@ const UserDetailsScreen = ({ navigation }) => {
         id: '',
         uId: loginState?.rollNumber,
         mobileNumber: '',
-        check_uIdInputChange: false,
+        check_textInputChange: true,
         check_mobileInputChange: false,
         courseId: '',
         collegeId: '',
@@ -193,7 +193,8 @@ const UserDetailsScreen = ({ navigation }) => {
 
 
     const updateUserProfile = () => {
-        if (!data.check_mobileInputChange || !data.check_uIdInputChange) {
+        if (!data.check_mobileInputChange || !data.check_textInputChange) {
+            Alert.alert("Data is not valid")
             return
         }
         setIsLoad(true)

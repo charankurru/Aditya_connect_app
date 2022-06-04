@@ -27,8 +27,9 @@ const FeedCard = (props) => {
         type = fileName.split(".")[1]
         console.log(type)
     }
-    let nameArray = post.postedBy?.adminName.split(" ")
-    let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0];
+    console.log(post.postedBy)
+    let nameArray = post.postedBy ? post.postedBy.adminName.split(" ") : "Anonymous admin"
+    let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0]
 
     const DisplayImageOrPDF = (props) => {
         let { post, type, fileName } = props
@@ -142,7 +143,7 @@ const FeedCard = (props) => {
 
                 <Card.Title
                     style={styles.bottomDrawerSection}
-                    title={post.postedBy?.adminName}
+                    title={post.postedBy ? post.postedBy?.adminName : "Anonymous User"}
                     subtitle={"Placement co-ordinator"}
                     left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />}
                     right={(props) =>
@@ -159,10 +160,10 @@ const FeedCard = (props) => {
                 {type ? <DisplayImageOrPDF post={post} type={type} fileName={fileName} /> : null}
 
 
-                {/* <Card.Actions style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Card.Actions style={{ marginLeft: 15, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <TouchableOpacity onPress={() => likePost()}><Icon name={like ? "like1" : "like2"} size={30} color="#23bd1e" /></TouchableOpacity>
                     <Text style={{ flex: 1, marginLeft: 10 }}>{post.likes}</Text>
-                </Card.Actions> */}
+                </Card.Actions>
 
             </Card>
         </View>

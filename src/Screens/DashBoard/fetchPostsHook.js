@@ -48,8 +48,9 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
                 setFilterPosts([]);
             }
             const res = await GetPosts(
-                { channelId: "1232", pageNumber: pageNumber, limit: 5 })
+                { channelId: "1232", pageNumber: pageNumber, limit: 26 })
             setPosts([...posts, ...res.data.result])
+            console.log(res.data.result)
             setHasMore(res.data.result.length > 0)
             if (!categoryChecks) {
                 setFilterPosts([...filterPosts, ...res.data.result])

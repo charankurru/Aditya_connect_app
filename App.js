@@ -147,7 +147,7 @@ const App = () => {
           const userdata = parseJwt(userToken);
           let { fullName, email, _id, collegeId } = userdata;
           if (res.data.userRecord[0]) {
-            let { collegeId, courseId, departmentId, rollNumber, mobileNumber, roleId } = res.data.userRecord[0];
+            let { collegeId, courseId, departmentId, mobileNumber, roleId } = res.data.userRecord[0];
             await AsyncStorage.setItem('userToken', userToken);
             dispatch(
               {
@@ -160,7 +160,7 @@ const App = () => {
                 collegeId: collegeId,
                 courseId: courseId,
                 departmentId: departmentId,
-                rollNumber: rollNumber,
+                rollNumber: email.split('@')[0],
                 mobileNumber: mobileNumber,
                 roleId: roleId
               });
