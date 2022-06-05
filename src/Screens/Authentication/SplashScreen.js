@@ -35,7 +35,7 @@ const SplashScreen = ({ navigation }) => {
             >
                 <Text style={[styles.title, {
                     color: colors.text
-                }]}>Stay connected with everyone!</Text>
+                }]}>Stay connected with Aditya Institution!</Text>
                 <Text style={styles.text}>Sign in with account</Text>
                 <View style={styles.button}>
                     <TouchableOpacity onPress={() => navigation.navigate('SignInScreen')}

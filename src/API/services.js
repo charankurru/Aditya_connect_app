@@ -62,3 +62,7 @@ export const GetUserInstitueData = (data) => {
     console.log(data)
     return API.post('/users/get-institue-data', data)
 }
+
+export const LikeOrDislikePost = (data) => {
+    return API.post('/users/like-or-dislike-post', data)
+}

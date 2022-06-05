@@ -1,6 +1,6 @@
 import React, {
     useState,
-    useEffect, useMemo
+    useEffect, useMemo, useContext
 } from 'react';
 import {
     StyleSheet,
@@ -15,7 +15,11 @@ import CheckBox from '../../Components/CheckBox'
 import { GetCategoriesData } from '../../API/services';
 import fetchPostsHook from './fetchPostsHook';
 import FeedCard from '../../Components/FeedCard';
+import { AuthContext } from '../../Components/context';
 const PostsPage = () => {
+
+    const { loginState } = useContext(AuthContext);
+
     const [categories, setCategories] = useState([])
     const [pageNumber, setPageNumber] = useState(1)
     const [refresh, setRefresh] = useState(false)
@@ -35,8 +39,8 @@ const PostsPage = () => {
         performFilteringPosts()
     }, [categoryChecks]);
 
-    const { isMoreLoading, posts, filterPosts, hasMore, setFilterPosts, }
-        = fetchPostsHook(pageNumber, "1232", categoryChecks, setPageNumber)
+    const { isMoreLoading, posts, filterPosts, hasMore, setFilterPosts, setPosts, setHasMore, getMore }
+        = fetchPostsHook(pageNumber, loginState.collegeId._id, categoryChecks, setPageNumber)
 
     const showModal = () => setVisible(true);
     const hideModal = () => setVisible(false);
@@ -68,12 +72,14 @@ const PostsPage = () => {
         )
     }
 
-    const refreshingOnPull = () => {
+    const refreshingOnPull = async () => {
         setRefresh(true)
-        setTimeout(async () => {
-            // setPageNumber(1)
-            setRefresh(false)
-        }, 1000);
+        setPageNumber(1)
+        setPosts([])
+        setFilterPosts([])
+        setHasMore(true)
+        await getMore()
+        setRefresh(false)
     }
 
     const checkForNoFilter = () => {
@@ -129,7 +135,7 @@ const PostsPage = () => {
             <FlatList
                 data={filterPosts}
                 keyExtractor={item => item._id}
-                renderItem={({ item, index }) => (<FeedCard index={index} post={item} />)}
+                renderItem={({ item, index }) => (<FeedCard index={index} post={item} userId={loginState.id} />)}
                 ListFooterComponent={renderFooter}
                 onEndReachedThreshold={0.1}
                 onEndReached={() => {

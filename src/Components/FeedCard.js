@@ -8,13 +8,14 @@ import * as MediaLibrary from 'expo-media-library';
 import * as FileSystem from 'expo-file-system'
 //import ImageViewer which will help us to zoom Image
 import ImageViewer from 'react-native-image-zoom-viewer';
+import { LikeOrDislikePost } from '../API/services';
 
 const FeedCard = (props) => {
 
     const [diaLog, setDialog] = React.useState(null)
-    const [like, setLike] = React.useState(0)
 
-    let { post, index } = props;
+
+    let { post, index, userId } = props;
     const images = [
         {
             url: post.mediaId
@@ -25,11 +26,12 @@ const FeedCard = (props) => {
     if (media.length > 0) {
         fileName = post.mediaId.split("---")[1]
         type = fileName.split(".")[1]
-        console.log(type)
     }
-    console.log(post.postedBy)
     let nameArray = post.postedBy ? post.postedBy.adminName.split(" ") : "Anonymous admin"
     let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0]
+
+    const [likes, setLikes] = React.useState(post.likedUsersList ? post.likedUsersList?.length : 0)
+    const [like, setLike] = React.useState(post.likedUsersList?.length > 0 && post.likedUsersList.includes(userId) ? 1 : 0)
 
     const DisplayImageOrPDF = (props) => {
         let { post, type, fileName } = props
@@ -63,8 +65,6 @@ const FeedCard = (props) => {
                     ToastAndroid.BOTTOM
                 );
                 saveFile(uri)
-                console.log(fileUri)
-                console.log(uri)
                 ToastAndroid.showWithGravity(
                     "Download completed ....!",
                     ToastAndroid.SHORT,
@@ -97,11 +97,32 @@ const FeedCard = (props) => {
             //perform unliking the post
             setLike(0)
             //Decrement the count
+
+            setLikes(prev => prev - 1)
+            LikeOrDislikePost({
+                postId: post._id,
+                userId: userId,
+                action: -1
+            })
+                .then(res => {
+                    console.log("Liked the post")
+                })
+                .catch(err => { console.log(err) })
         }
         else {
             //perform like the post
             setLike(1)
             //increment the count
+            setLikes(prev => prev + 1)
+            LikeOrDislikePost({
+                postId: post._id,
+                userId: userId,
+                action: 1
+            })
+                .then(res => {
+                    console.log("DisLiked the post")
+                })
+                .catch(err => { console.log(err) })
         }
     }
 
@@ -161,8 +182,8 @@ const FeedCard = (props) => {
 
 
                 <Card.Actions style={{ marginLeft: 15, display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                    <TouchableOpacity onPress={() => likePost()}><Icon name={like ? "like1" : "like2"} size={30} color="#23bd1e" /></TouchableOpacity>
-                    <Text style={{ flex: 1, marginLeft: 10 }}>{post.likes}</Text>
+                    <TouchableOpacity onPress={() => likePost()}><Icon name={like ? "heart" : "hearto"} size={30} color="red" /></TouchableOpacity>
+                    <Text style={{ flex: 1, marginLeft: 10 }}>{likes}</Text>
                 </Card.Actions>
 
             </Card>

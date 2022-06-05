@@ -6,7 +6,8 @@ import {
     TextInput,
     StyleSheet,
     StatusBar,
-    ActivityIndicator
+    ActivityIndicator,
+    ToastAndroid
 } from 'react-native';
 import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
@@ -19,7 +20,7 @@ const ForgetPassword = ({ route, navigation }) => {
     const mail = route.params;
     const { colors } = useTheme();
     const [data, setData] = React.useState({
-        email: mail,
+        email: mail.toLowerCase(),
         otp: '',
         dbOtp: '',
         check_emailInputChange: false,
@@ -75,6 +76,7 @@ const ForgetPassword = ({ route, navigation }) => {
         setIsLoad(true);
         const res = await RequestOTP(data.email)
         let { resCode, OTP } = res.data;
+        console.log(OTP)
         if (resCode === "200") {
             setOptSent(true)
             setIsLoad(false)
@@ -82,6 +84,11 @@ const ForgetPassword = ({ route, navigation }) => {
                 ...data,
                 dbOtp: OTP
             })
+            ToastAndroid.showWithGravity(
+                "OTP sent to your email",
+                ToastAndroid.SHORT,
+                ToastAndroid.BOTTOM
+            );
         }
         else if (resCode === "400") {
             console.log("email not found")
@@ -89,6 +96,7 @@ const ForgetPassword = ({ route, navigation }) => {
     }
 
     const validateOTP = () => {
+        console.log(data.otp + " === ?" + data.dbOtp)
         if (data.otp == data.dbOtp) {
             console.log("otp Validated")
             setData({
@@ -97,6 +105,11 @@ const ForgetPassword = ({ route, navigation }) => {
             })
         }
         else {
+            setData({
+                ...data,
+                isValidOTP: false
+
+            })
             console.log("Incorrect otp")
         }
     }
@@ -359,7 +372,7 @@ const ForgetPassword = ({ route, navigation }) => {
                                 </View>
                                 {data.isValidOTP ? null :
                                     <Animatable.View animation="fadeInLeft" duration={500}>
-                                        <Text style={styles.errorMsg}>OTP must be 4 characters long.</Text>
+                                        <Text style={styles.errorMsg}>In valid OTP</Text>
                                     </Animatable.View>
                                 }
                                 <TouchableOpacity onPress={() => reset()}>

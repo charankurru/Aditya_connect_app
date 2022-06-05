@@ -221,7 +221,7 @@ const SignInScreen = ({ navigation }) => {
                             size={20}
                         />
                         <TextInput
-                            placeholder="Your Username"
+                            placeholder="Your full name"
                             style={styles.textInput}
                             autoCapitalize="none"
                             onChangeText={(val) => userInputChange(val)}

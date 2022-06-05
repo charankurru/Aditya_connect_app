@@ -46,7 +46,7 @@ const UserDetailsScreen = ({ navigation }) => {
         collegeId: '',
         deptId: '',
         roleId: '',
-        notificationId: '1234567'
+        notificationId: ''
     });
 
     const [notification, setNotification] = useState(false);

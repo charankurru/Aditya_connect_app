@@ -40,20 +40,14 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
         setFilterPosts([...filterPosts, ...filteredPosts]);
     }
 
-
     const getPosts = async () => {
         try {
-            if (pageNumber == 1) {
-                setPosts([]);
-                setFilterPosts([]);
-            }
             const res = await GetPosts(
-                { channelId: "1232", pageNumber: pageNumber, limit: 26 })
-            setPosts([...posts, ...res.data.result])
-            console.log(res.data.result)
+                { channelId: channelId, pageNumber: pageNumber, limit: 20 })
+            setPosts(prev => [...(pageNumber !== 1 ? prev : []), ...res.data.result])
             setHasMore(res.data.result.length > 0)
-            if (!categoryChecks) {
-                setFilterPosts([...filterPosts, ...res.data.result])
+            if (!categoryChecks || checkForNoFilter()) {
+                setFilterPosts(prev => [...(pageNumber !== 1 ? prev : []), ...res.data.result])
                 return
             }
             performFilteringPosts(res.data.result)
@@ -62,13 +56,11 @@ export default function fetchPostsHook(pageNumber, channelId, categoryChecks, se
         }
     }
 
-    const getMore = () => {
+    const getMore = async () => {
         setIsMoreLoading(true)
-        setTimeout(async () => {
-            await getPosts();
-            setIsMoreLoading(false)
-        }, 1000);
+        await getPosts();
+        setIsMoreLoading(false)
     }
 
-    return { isMoreLoading, posts, filterPosts, hasMore, setFilterPosts }
+    return { isMoreLoading, posts, filterPosts, hasMore, setFilterPosts, setPosts, setHasMore, getMore }
 }
