@@ -38,9 +38,9 @@ const UserDetailsScreen = ({ navigation }) => {
 
     const [data, setData] = React.useState({
         id: '',
-        uId: loginState?.rollNumber,
+        uId: '',
         mobileNumber: '',
-        check_textInputChange: true,
+        check_textInputChange: false,
         check_mobileInputChange: false,
         courseId: '',
         collegeId: '',
@@ -159,7 +159,7 @@ const UserDetailsScreen = ({ navigation }) => {
 
     const uIdInputChange = (val) => {
         val = val.trim()
-        if (val.length == 10) {
+        if (val.length >= 4) {
             setData({
                 ...data,
                 uId: val,
@@ -193,8 +193,10 @@ const UserDetailsScreen = ({ navigation }) => {
 
 
     const updateUserProfile = () => {
-        if (!data.check_mobileInputChange || !data.check_textInputChange) {
-            Alert.alert("Data is not valid")
+        if (!data.check_mobileInputChange || !data.check_textInputChange || data.courseId.length == 0 || data.collegeId.length == 0 || data.deptId.length == 0) {
+            Alert.alert("Invalid Data", "Please enter all fields data correctly", [{
+                text: "okay"
+            }]);
             return
         }
         setIsLoad(true)
@@ -236,7 +238,6 @@ const UserDetailsScreen = ({ navigation }) => {
                         />
                         <TextInput
                             value={data.uId}
-                            editable={false} selectTextOnFocus={false}
                             placeholder="Your Id number"
                             style={styles.textInput}
                             autoCapitalize="none"

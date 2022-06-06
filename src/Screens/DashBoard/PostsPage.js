@@ -115,7 +115,7 @@ const PostsPage = () => {
     }
 
     return (
-        <View style={{ flex: 1, }}>
+        <View style={{ flex: 1, backgroundColor: '#D3D3D3' }}>
             <StatusBar backgroundColor='#009387' barStyle="light-content" />
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
