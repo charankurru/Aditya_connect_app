@@ -103,6 +103,7 @@ const styles = StyleSheet.create({
         marginTop: -5
     },
     title: {
+        textTransform: 'capitalize',
         fontSize: 16,
         marginTop: 3,
         fontWeight: 'bold',

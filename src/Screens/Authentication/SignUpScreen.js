@@ -147,9 +147,10 @@ const SignInScreen = ({ navigation }) => {
         setIsLoad(true);
         let registerData = {
             email: data.email.toLowerCase(),
-            fullName: data.username,
+            fullName: data.username.charAt(0).toUpperCase() + data.username.slice(1),
             password: data.password
         }
+        console.log(registerData);
         let isSuccess = await signUp(registerData);
         if (isSuccess) {
             let { doc, message } = isSuccess.data;

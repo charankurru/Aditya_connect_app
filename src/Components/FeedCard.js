@@ -29,6 +29,8 @@ const FeedCard = (props) => {
     }
     let nameArray = post.postedBy ? post.postedBy.adminName.split(" ") : "Anonymous admin"
     let textLabel = nameArray.length > 1 ? nameArray[0][0] + nameArray[1][0] : nameArray[0][0]
+    textLabel = textLabel.toUpperCase()
+
 
     const [likes, setLikes] = React.useState(post.likedUsersList ? post.likedUsersList?.length : 0)
     const [like, setLike] = React.useState(post.likedUsersList?.length > 0 && post.likedUsersList.includes(userId) ? 1 : 0)
@@ -159,7 +161,7 @@ const FeedCard = (props) => {
             </Modal>
 
             <Card key={post.key} elevation={5} style={{
-                padding: 1, marginTop: 1, borderRadius: 25
+                padding: 1, marginTop: 1, borderRadius: 20
             }}>
 
                 <Card.Title
