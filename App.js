@@ -18,7 +18,7 @@ import EditProfile from './src/Screens/DashBoard/EditProfile'
 import jwt_decode from "jwt-decode";
 import { GetUserbyId } from './src/API/services';
 import PostsPage from './src/Screens/DashBoard/PostsPage'
-
+import PdfView from './src/Screens/DashBoard/PdfView'
 
 const App = () => {
 
@@ -338,6 +338,7 @@ const App = () => {
                   <Drawer.Screen options={navigationOptions()} name="Aditya Connect" component={PostsPage} />
                   <Drawer.Screen options={navigationOptions()} name="Profile" component={Root} />
                   <Drawer.Screen options={navigationOptions()} name="Feedback" component={Feedback} />
+                  <Drawer.Screen options={navigationOptions()} name="PdfView" component={PdfView} />
 
                 </Drawer.Navigator>
               )

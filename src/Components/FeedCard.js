@@ -83,7 +83,12 @@ const FeedCard = (props) => {
             let { status } = await MediaLibrary.requestPermissionsAsync()
             if (status) {
                 const asset = await MediaLibrary.createAssetAsync(fileUri)
-                await MediaLibrary.createAlbumAsync("Download", asset, false)
+                const album = await MediaLibrary.getAlbumAsync('Download');
+                if (album == null) {
+                    await MediaLibrary.createAlbumAsync('Download', asset, false);
+                } else {
+                    await MediaLibrary.addAssetsToAlbumAsync([asset], album, false);
+                }
             }
         } catch (error) {
             ToastAndroid.showWithGravity(
