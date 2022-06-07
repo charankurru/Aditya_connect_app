@@ -44,6 +44,7 @@ const SignInScreen = ({ navigation }) => {
     }
 
     const emailInputChange = (val) => {
+        val = val.trim()
         if (emailValidation(val)) {
             setData({
                 ...data,
