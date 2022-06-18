@@ -16,6 +16,8 @@ import { GetCategoriesData } from '../../API/services';
 import fetchPostsHook from './fetchPostsHook';
 import FeedCard from '../../Components/FeedCard';
 import { AuthContext } from '../../Components/context';
+import { themeColor, gradientColorArray } from '../../Components/colors'
+
 const PostsPage = () => {
 
     const { loginState } = useContext(AuthContext);
@@ -66,7 +68,7 @@ const PostsPage = () => {
         return (
             <ActivityIndicator
                 size='large'
-                color={'#009387'}
+                color={themeColor}
                 style={{ marginBottom: 10 }}
             />
         )
@@ -116,7 +118,7 @@ const PostsPage = () => {
 
     return (
         <View style={{ flex: 1, backgroundColor: '#D3D3D3' }}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <Portal>
                 <Modal visible={visible} onDismiss={hideModal} contentContainerStyle={containerStyle}>
                     <Text>Select the category you want !</Text>
@@ -150,7 +152,7 @@ const PostsPage = () => {
             <FAB
                 style={styles.fab}
                 icon="filter"
-                color="#fff"
+                color='#fff'
                 onPress={showModal}
             />
 
@@ -166,6 +168,7 @@ const styles = StyleSheet.create({
         margin: 16,
         right: 0,
         bottom: 0,
-        fontSize: 24
+        fontSize: 24,
+        backgroundColor: themeColor,
     },
 })

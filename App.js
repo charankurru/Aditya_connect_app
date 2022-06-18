@@ -18,14 +18,14 @@ import EditProfile from './src/Screens/DashBoard/EditProfile'
 import jwt_decode from "jwt-decode";
 import { GetUserbyId } from './src/API/services';
 import PostsPage from './src/Screens/DashBoard/PostsPage'
-
+import { themeColor, gradientColorArray, gradientColor1, gradientColor2 } from './src/Components/colors'
 
 const App = () => {
 
   const navigationOptions = () => {
     return {
       headerStyle: {
-        backgroundColor: '#009387',
+        backgroundColor: themeColor,
       },
       headerTitleStyle: {
         color: '#fff',
@@ -322,7 +322,7 @@ const App = () => {
   if (loginState.isLoading) {
     return (
       <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-        <ActivityIndicator size="large" color="#009387" />
+        <ActivityIndicator size="large" color={themeColor} />
       </View>
     )
   }

@@ -15,6 +15,7 @@ import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { RequestOTP, UpdatePassword } from '../../API/services';
 import { useTheme } from 'react-native-paper';
+import { themeColor, gradientColorArray } from '../../Components/colors'
 
 const ForgetPassword = ({ route, navigation }) => {
     const mail = route.params;
@@ -183,7 +184,7 @@ const ForgetPassword = ({ route, navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.View animation="fadeInLeft" duration={800}>
                     <Text style={styles.text_header}>Password Reset</Text>
@@ -376,7 +377,7 @@ const ForgetPassword = ({ route, navigation }) => {
                                     </Animatable.View>
                                 }
                                 <TouchableOpacity onPress={() => reset()}>
-                                    <Text style={{ color: '#009387', marginTop: 15 }}>Resend OTP ?</Text>
+                                    <Text style={{ color: themeColor, marginTop: 15 }}>Resend OTP ?</Text>
                                 </TouchableOpacity>
 
                             </View>
@@ -390,7 +391,7 @@ const ForgetPassword = ({ route, navigation }) => {
                                 onPress={() => { isOtpSent ? validateOTP() : reset() }}
                             >
                                 <LinearGradient
-                                    colors={['#08d4c4', '#01ab9d']}
+                                    colors={gradientColorArray}
                                     style={styles.signIn}
                                 >
                                     {isLoad ?
@@ -417,7 +418,7 @@ export default ForgetPassword
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: themeColor
     },
     header: {
         flex: 1,

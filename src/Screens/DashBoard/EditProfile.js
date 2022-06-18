@@ -21,6 +21,7 @@ import { GetCollegesData, GetCoursesData } from '../../API/services';
 import AvatarText from '../../Components/AvatarText'
 import { updateUser } from "../../API/services";
 import { LinearGradient } from 'expo-linear-gradient';
+import { themeColor, gradientColorArray } from '../../Components/colors'
 
 const EditProfile = ({ route, navigation }) => {
 
@@ -204,14 +205,14 @@ const EditProfile = ({ route, navigation }) => {
     if (courses.length <= 1) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#009387" />
+                <ActivityIndicator size="large" color={themeColor} />
             </View>
         )
     }
 
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.userInfoSection}>
                 <View style={{
                     flexDirection: 'row', marginTop: 15,
@@ -361,7 +362,7 @@ const EditProfile = ({ route, navigation }) => {
                         style={styles.signIn}
                     >
                         <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
+                            colors={gradientColorArray}
                             style={styles.signIn}
                         >
                             {isLoading ?

@@ -16,6 +16,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
 import { AuthContext } from '../../Components/context';
+import { themeColor, gradientColorArray } from '../../Components/colors'
 
 const SignInScreen = ({ navigation }) => {
 
@@ -173,7 +174,7 @@ const SignInScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.View animation="fadeInLeft" duration={800}>
                     <Text style={styles.text_header}>Register Now!</Text>
@@ -342,7 +343,7 @@ const SignInScreen = ({ navigation }) => {
                             onPress={() => register()}
                         >
                             <LinearGradient
-                                colors={['#08d4c4', '#01ab9d']}
+                                colors={gradientColorArray}
                                 style={styles.signIn}
                             >
                                 {isLoad ?
@@ -365,7 +366,7 @@ const SignInScreen = ({ navigation }) => {
                         >
 
                             <LinearGradient
-                                colors={['#08d4c4', '#01ab9d']}
+                                colors={gradientColorArray}
                                 style={styles.signIn}
                             >
                                 <Text style={[styles.textSign, {
@@ -385,7 +386,7 @@ export default SignInScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: themeColor,
     },
     header: {
         flex: 1,

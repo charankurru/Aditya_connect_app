@@ -16,6 +16,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 
 import { AuthContext } from './context';
 import AvatarText from './AvatarText'
+import { themeColor } from './colors';
 
 export function DrawerContent(props) {
 
@@ -99,7 +100,7 @@ const styles = StyleSheet.create({
         paddingLeft: 17,
         borderBottomColor: '#f4f4f4',
         borderBottomWidth: 1,
-        backgroundColor: '#009387',
+        backgroundColor: themeColor,
         marginTop: -5
     },
     title: {

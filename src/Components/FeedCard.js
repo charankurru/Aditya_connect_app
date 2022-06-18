@@ -166,6 +166,7 @@ const FeedCard = (props) => {
 
                 <Card.Title
                     style={styles.bottomDrawerSection}
+                    titleStyle={{ fontSize: 16, marginBottom: -7 }}
                     title={post.postedBy ? post.postedBy?.adminName : "Anonymous User"}
                     subtitle={"Placement co-ordinator"}
                     left={(props) => <Avatar.Text {...props} color="white" label={textLabel} />}
@@ -173,10 +174,10 @@ const FeedCard = (props) => {
                         <Text style={{ marginRight: 10, color: "#05375a", fontSize: 12 }}>
                             <MaterialCommunityIcons name="clock-outline" />
                             {momentTime(post.createdAt)}
-                        </Text>} />
-
+                        </Text>}
+                />
                 <Card.Content style={{ marginBottom: 10 }}>
-                    <Paragraph style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: 16, color: "#05375a" }}>{post.postTitle}</Paragraph>
+                    <Paragraph style={{ fontWeight: 'bold', textTransform: 'capitalize', fontSize: 18, color: "#05375a" }}>{post.postTitle}</Paragraph>
                     <Paragraph style={{ textAlign: 'justify', letterSpacing: 0.5 }}>{post.postMessage}</Paragraph>
                 </Card.Content>
 
@@ -212,9 +213,8 @@ const styles = StyleSheet.create({
         color: '#05375a',
         marginBottom: 10,
         borderBottomColor: '#D3D3D3',
-        // backgroundColor: '#F5F5F5',
         borderBottomWidth: 1,
-        // borderRadius: 25
+        fontSize: 7
     },
     button: {
         borderRadius: 20,

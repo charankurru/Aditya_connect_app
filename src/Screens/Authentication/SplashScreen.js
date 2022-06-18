@@ -11,13 +11,14 @@ import * as Animatable from 'react-native-animatable';
 import MaterialIcons from 'react-native-vector-icons/MaterialIcons';
 import { useTheme } from '@react-navigation/native';
 import { LinearGradient } from 'expo-linear-gradient'
+import { themeColor, gradientColorArray } from '../../Components/colors'
 
 const SplashScreen = ({ navigation }) => {
     const { colors } = useTheme();
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.Image
                     animation="bounceIn"
@@ -44,7 +45,7 @@ const SplashScreen = ({ navigation }) => {
                         }]}
                     >
                         <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
+                            colors={gradientColorArray}
                             style={styles.signIn}
                         >
                             <Text style={[styles.textSign, {
@@ -73,7 +74,7 @@ const height_logo = height * 0.40;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387',
+        backgroundColor: themeColor,
     },
     header: {
         flex: 2,

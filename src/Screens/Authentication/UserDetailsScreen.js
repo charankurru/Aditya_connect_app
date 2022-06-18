@@ -20,6 +20,7 @@ import { AuthContext } from '../../Components/context';
 import { GetCollegesData, GetCoursesData, GetRoles } from '../../API/services';
 import * as Device from 'expo-device';
 import * as Notifications from 'expo-notifications';
+import { themeColor, gradientColorArray } from '../../Components/colors';
 
 Notifications.setNotificationHandler({
     handleNotification: async () => ({
@@ -218,7 +219,7 @@ const UserDetailsScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.View animation="fadeInLeft" duration={800}>
                     <Text style={styles.text_header}>Few Moments..... Please provide you information</Text>
@@ -333,7 +334,7 @@ const UserDetailsScreen = ({ navigation }) => {
                             }]}
                         >
                             <LinearGradient
-                                colors={['#08d4c4', '#01ab9d']}
+                                colors={gradientColorArray}
                                 style={styles.signIn}
                             >
                                 {isLoad ? <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center', }}>
@@ -355,7 +356,7 @@ export default UserDetailsScreen
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: themeColor
     },
     header: {
         flex: 1,

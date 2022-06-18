@@ -13,6 +13,7 @@ import * as Animatable from 'react-native-animatable';
 import { LinearGradient } from 'expo-linear-gradient';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import Feather from 'react-native-vector-icons/Feather';
+import { themeColor, gradientColorArray } from '../../Components/colors';
 
 import { useTheme } from 'react-native-paper';
 
@@ -118,7 +119,7 @@ const SignInScreen = ({ navigation }) => {
 
     return (
         <View style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <View style={styles.header}>
                 <Animatable.View animation="fadeInLeft" duration={800}>
                     <Text style={styles.text_header}>Welcome to Aditya Connect!</Text>
@@ -205,7 +206,7 @@ const SignInScreen = ({ navigation }) => {
                     </Animatable.View>
                 }
                 <TouchableOpacity onPress={() => navigation.navigate("PasswordRecovery", data.username)}>
-                    <Text style={{ color: '#009387', marginTop: 15 }}>Forgot password?</Text>
+                    <Text style={{ color: themeColor, marginTop: 15 }}>Forgot password?</Text>
                 </TouchableOpacity>
 
                 <View style={styles.button}>
@@ -217,7 +218,7 @@ const SignInScreen = ({ navigation }) => {
                         onPress={() => { loginHandle(data.username, data.password) }}
                     >
                         <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
+                            colors={gradientColorArray}
                             style={styles.signIn}
                         >
                             {isLoad ?
@@ -239,7 +240,7 @@ const SignInScreen = ({ navigation }) => {
                         }]}
                     >
                         <LinearGradient
-                            colors={['#08d4c4', '#01ab9d']}
+                            colors={gradientColorArray}
                             style={styles.signIn}
                         >
                             <Text style={[styles.textSign, {
@@ -258,7 +259,7 @@ export default SignInScreen;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        backgroundColor: '#009387'
+        backgroundColor: themeColor
     },
     header: {
         flex: 1,

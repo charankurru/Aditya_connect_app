@@ -10,6 +10,7 @@ import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { AuthContext } from '../../Components/context';
 import AvatarText from '../../Components/AvatarText'
 import { GetUserInstitueData } from '../../API/services'
+import { themeColor, gradientColorArray } from '../../Components/colors'
 const UserProfile = ({ navigation }) => {
 
     const isMountedRef = useRef(null);
@@ -33,13 +34,13 @@ const UserProfile = ({ navigation }) => {
     if (loginState == undefined) {
         return (
             <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
-                <ActivityIndicator size="large" color="#009387" />
+                <ActivityIndicator size="large" color={themeColor} />
             </View>
         )
     }
     return (
         <SafeAreaView style={styles.container}>
-            <StatusBar backgroundColor='#009387' barStyle="light-content" />
+            <StatusBar backgroundColor={themeColor} barStyle="light-content" />
             <ScrollView>
                 {loginState && <>
                     <View style={styles.userInfoSection}>

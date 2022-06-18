@@ -6,6 +6,7 @@ import { GetMessage, SendMessage } from '../../API/services'
 import { LinearGradient } from 'expo-linear-gradient'
 import momentTime from '../../Components/momentTime'
 import AvatarText from '../../Components/AvatarText'
+import { themeColor, gradientColorArray } from '../../Components/colors'
 
 
 const FeedBackTextInput = (props) => {
@@ -69,12 +70,12 @@ const Feedback = () => {
     return (
         <>
             <View style={styles.container}>
-                <StatusBar backgroundColor='#009387' barStyle="light-content" />
+                <StatusBar backgroundColor={themeColor} barStyle="light-content" />
                 <Card elevated elevation={2}>
                     <View style={{ padding: 10 }}>
                         <FeedBackTextInput
                             style={{
-                                borderColor: '#009387',
+                                borderColor: themeColor,
                                 borderWidth: 1,
                                 borderRadius: 10,
                                 textAlignVertical: 'top',
@@ -99,7 +100,7 @@ const Feedback = () => {
                     }]}
                 >
                     <LinearGradient
-                        colors={['#08d4c4', '#01ab9d']}
+                        colors={gradientColorArray}
                         style={styles.signIn}
                     >
                         {isLoading ? <ActivityIndicator size="large" color='#fff' /> : <Text style={[styles.textSign, {
@@ -173,7 +174,7 @@ const styles = StyleSheet.create({
     textInput: {
         flex: 1,
         paddingLeft: 10,
-        color: '#05375a',
+        color: themeColor,
         fontSize: 18,
         fontWeight: 'bold'
     },
